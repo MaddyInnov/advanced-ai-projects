@@ -43,21 +43,87 @@ in the dashboard and via `GET /api/demo-tenants`.
 - **Owner auth** — salted PBKDF2 password hashing + session tokens.
   ⚠️ *Demo-grade*: no expiry/rate-limiting — see limitations.
 
-## ML triage — real measured results (`results.json`)
-TF-IDF + multinomial logistic regression (NumPy, from scratch) on 600 generated
-support messages (480 train / 120 held-out test):
+## ML triage — REAL benchmark results (`results_real.json`, `eval_bitext.py`)
 
-| Metric | Result |
+The classifier (TF-IDF + from-scratch NumPy softmax logistic regression) was
+re-evaluated on a **real public benchmark**: the **Bitext customer-support
+dataset** on HuggingFace (`bitext/Bitext-customer-support-llm-chatbot-training-dataset`,
+**26,872 rows, 27 intents**, licence **CDLA-Sharing-1.0** as stated in the
+dataset's HF metadata). Bitext's card describes it as a hybrid corpus generated
+with Bitext's NLP/NLG technology — a public third-party benchmark, independent
+of this project's own templates.
+
+**Split hygiene first:** Bitext contains many duplicate utterances (24,072
+unique normalised texts; 1,318 duplicate groups), so a naive random split leaks
+them across train/test — **13.8% of naive test rows appear verbatim in naive
+train**. We therefore report both protocols and headline the honest one:
+deduplicate on normalised text *before* a stratified 80/20 split (seed 42;
+train 19,259 / test 4,813 unique utterances).
+
+### Final real result (headline)
+
+Selected on a validation split carved from the deduped train portion only;
+the deduped test split was touched exactly twice (baseline + final).
+
+| Metric (deduped test, n=4,813) | Baseline (project config as-is) | **Final (improved)** |
+|---|---|---|
+| Intent accuracy | 89.9% (95% CI 89.0–90.7) | **97.59% (95% CI 97.1–98.0)** |
+| Intent macro-F1 | 0.861 | **0.975** |
+| Category accuracy (2nd task, 11 classes) | 86.7% | **99.5%** |
+| Category macro-F1 | 0.824 | **0.995** |
+
+For contrast, the same baseline on the **naive (leaky) split** reads **94.75%**
+intent accuracy — ~4.9 points of that is duplicate leakage, which is why the
+deduped number is the headline. The baseline's weakest point was dramatic:
+`cancel_order` F1 = **0.0** on deduped data (its unique phrasings were absorbed
+by `change_order`); the final model scores **0.959** on it, and every intent is
+≥ 0.926 F1. Largest remaining confusions: `get_invoice`↔`check_invoice` and
+`place_order`→`change_order` (13 test rows each).
+
+**What the improvement phase changed** (all screened on validation only;
+full log with keep/drop decisions in `results_real.json`): word uni+bigrams
+(20k) + word-boundary char 3–5-grams (30k cap; 19,664 features fitted) TF-IDF,
+**inverse class weighting**, l2 = 1e-3, 600 epochs. The surprise lever was
+class weighting: raw Bitext rows are balanced, but *deduplication itself*
+unbalances the data (unique utterances per intent range 421–997), and fixing
+that took validation macro-F1 from 0.848 → 0.955 on its own; char n-grams and
+longer training pushed it to the 0.978 plateau (last three configs within
+0.0004 — plateau, stopped there). Levers that *hurt* on validation and were
+dropped: bigrams or char grams *without* class weighting, l2 = 1e-2, label
+smoothing. Train-size curve (validation): 25% of train → 96.8% accuracy,
+50% → 97.5%, so the result is close to data-saturated.
+
+Classifier config note: baseline training used `ml.py`'s exact features and
+full-batch GD hyper-parameters (max_vocab 3000, epochs 300, lr 0.5, l2 1e-4);
+execution ran on the sparse TF-IDF matrix after an equivalence check on the
+project's synthetic split reproduced the dense `ml.SoftmaxLR` predictions
+100% with max weight difference 0.0 (the dense matrix is ~99.7% zeros and the
+eval VM is CPU-shared). The shipped `triage_model.npz` was **not** retrained —
+Bitext's 27-intent schema differs from the product's 6 intents; the app and
+its 13 tests are unchanged and passing.
+
+### Priority: synthetic-only (no real labels)
+
+Bitext has **no priority labels**, so priority was **not** evaluated on real
+data. The priority numbers below remain **synthetic-only**.
+
+### Preliminary results — synthetic data (`results.json`)
+
+TF-IDF + multinomial logistic regression (NumPy, from scratch) on 600
+**synthetic, template-generated** support messages written for this project
+(480 train / 120 held-out test):
+
+| Metric (synthetic, preliminary) | Result |
 |---|---|
-| Intent accuracy | **100%** |
-| Intent macro-F1 | **1.000** |
-| Priority accuracy | **98.3%** |
-| Priority macro-F1 | **0.983** |
+| Intent accuracy | 100% |
+| Intent macro-F1 | 1.000 |
+| Priority accuracy (**synthetic-only**) | 98.3% |
+| Priority macro-F1 (**synthetic-only**) | 0.983 |
 | Training time | ~14 s on CPU |
 
-**Honest caveat:** the dataset is synthetic and template-generated, so these
-numbers are an upper bound — real customer language is messier. In delivery,
-the classifier is re-tuned on each client's real ticket history (see BUSINESS.md).
+**Honest caveat:** these are an upper bound on easy, self-written templates —
+the real-benchmark numbers above are the classifier claims. In delivery, the
+classifier is re-tuned on each client's real ticket history (see BUSINESS.md).
 
 ## Architecture
 ```
@@ -69,6 +135,7 @@ web/widget.html     embeddable chat widget  ──►  app.py  (http.server + sq
                                                     └─ analytics() from DB rows
 ml.py  TF-IDF + softmax LR (intent & priority heads) + sentiment + urgency rules
 train_ml.py -> triage_model.npz + results.json
+eval_bitext.py -> results_real.json  (real-benchmark eval; does not touch the shipped model)
 ```
 
 ## API reference
@@ -92,7 +159,9 @@ Python 3.12 · stdlib http.server + sqlite3 · NumPy · vanilla HTML/CSS/JS · z
 - Lexical TF-IDF retrieval — production swap: embeddings/LLM answers behind the
   same citation + confidence gate (roadmap in BUSINESS.md).
 - SQLite suits MVP scale; Postgres at growth. No payments yet (Razorpay/Stripe planned).
-- Triage numbers are on synthetic data (see caveat above).
+- Triage numbers: real-benchmark intent results in the section above (Bitext,
+  deduped split); priority figures are synthetic-only — no public dataset used
+  here carries priority labels.
 
 ## Screenshots (described)
 - **Landing:** hero "Your support inbox, answered by AI in seconds", 4 feature

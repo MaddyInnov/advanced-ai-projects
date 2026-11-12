@@ -1,0 +1,19 @@
+[b6_longer_clean] continuing from checkpoint_real_baseline.pt (epochs_total=12)
+[b6_longer_clean] epoch 1/12 train_loss 0.0703 val_noise_mse_ema 0.06282 (43s)
+[b6_longer_clean] epoch 2/12 train_loss 0.0615 val_noise_mse_ema 0.06203 (84s)
+[b6_longer_clean] epoch 3/12 train_loss 0.0620 val_noise_mse_ema 0.06120 (123s)
+[b6_longer_clean] epoch 4/12 train_loss 0.0606 val_noise_mse_ema 0.06049 (163s)
+[b6_longer_clean] epoch 5/12 train_loss 0.0608 val_noise_mse_ema 0.05997 (205s)
+[b6_longer_clean] epoch 6/12 train_loss 0.0604 val_noise_mse_ema 0.05949 (247s)
+[b6_longer_clean] epoch 7/12 train_loss 0.0589 val_noise_mse_ema 0.05905 (286s)
+[b6_longer_clean] epoch 8/12 train_loss 0.0578 val_noise_mse_ema 0.05874 (325s)
+[b6_longer_clean] epoch 9/12 train_loss 0.0588 val_noise_mse_ema 0.05847 (365s)
+[b6_longer_clean] epoch 10/12 train_loss 0.0574 val_noise_mse_ema 0.05828 (407s)
+[b6_longer_clean] epoch 11/12 train_loss 0.0569 val_noise_mse_ema 0.05817 (448s)
+[b6_longer_clean] epoch 12/12 train_loss 0.0576 val_noise_mse_ema 0.05811 (490s)
+[b6_longer_clean] done in 490s final loss 0.05759 val MSE 0.05811
+B6 val proxy 87.0% val MSE 0.05811 vs prior best baseline 81.0% / 0.06214 -> WINS
+saved samples_real_final_ddpm.png (70 samples)
+saved samples_real_final_ddim50.png (70 samples)
+B6 FINAL test: DDPM 100.0% DDIM 84.29%
+results_real.json updated

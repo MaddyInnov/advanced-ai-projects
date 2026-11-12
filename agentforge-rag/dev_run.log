@@ -1,0 +1,72 @@
+[data] corpus=5183 test_queries=300 test_qrel_rows=339 grades=[1] train_dev_queries=809
+[dev] porter self-check passed=True
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[dev] FastBM25 == BM25Index.scores: True
+[dev-diag] tfidf_only: {'recall_at_3': 0.5401, 'recall_at_5': 0.6655, 'ndcg_at_10': 0.575, 'mrr_at_10': 0.5162}
+[dev-diag] bm25_only_component_check: {'recall_at_3': 0.6535, 'recall_at_5': 0.7088, 'ndcg_at_10': 0.6512, 'mrr_at_10': 0.6119}
+[dev-diag] hybrid_default: {'recall_at_3': 0.6255, 'recall_at_5': 0.7188, 'ndcg_at_10': 0.6189, 'mrr_at_10': 0.5645}
+[dev-diag] hybrid_rerank_default: {'recall_at_3': 0.6201, 'recall_at_5': 0.7168, 'ndcg_at_10': 0.6375, 'mrr_at_10': 0.5961}
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[dev] starting point (hybrid first-stage, defaults): {'recall_at_3': 0.6255, 'recall_at_5': 0.7188, 'ndcg_at_10': 0.6189, 'mrr_at_10': 0.5645}
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 0.8, 'bm25_b': 0.35} -> dev nDCG@10=0.6533 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 0.8, 'bm25_b': 0.5} -> dev nDCG@10=0.6527 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 0.8, 'bm25_b': 0.65} -> dev nDCG@10=0.6486 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 0.8, 'bm25_b': 0.75} -> dev nDCG@10=0.6458 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.0, 'bm25_b': 0.35} -> dev nDCG@10=0.6551 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.6559 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.0, 'bm25_b': 0.65} -> dev nDCG@10=0.6558 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.0, 'bm25_b': 0.75} -> dev nDCG@10=0.6541 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.2, 'bm25_b': 0.35} -> dev nDCG@10=0.6548 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.2, 'bm25_b': 0.5} -> dev nDCG@10=0.6553 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.2, 'bm25_b': 0.65} -> dev nDCG@10=0.6513 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.2, 'bm25_b': 0.75} -> dev nDCG@10=0.6519 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.5, 'bm25_b': 0.35} -> dev nDCG@10=0.6517 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.5, 'bm25_b': 0.5} -> dev nDCG@10=0.6515 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.5, 'bm25_b': 0.65} -> dev nDCG@10=0.6506 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_grid :: {'bm25_k1': 1.5, 'bm25_b': 0.75} -> dev nDCG@10=0.6512 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] bm25_k1_b_selected :: {'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.6559 decision=adopted_as_component
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_score_alpha :: {'fusion': 'score', 'alpha': 0.0, 'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.6559 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_score_alpha :: {'fusion': 'score', 'alpha': 0.15, 'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.6555 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_score_alpha :: {'fusion': 'score', 'alpha': 0.3, 'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.6466 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_score_alpha :: {'fusion': 'score', 'alpha': 0.45, 'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.6494 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_score_alpha :: {'fusion': 'score', 'alpha': 0.55, 'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.6344 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_score_alpha :: {'fusion': 'score', 'alpha': 0.7, 'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.6096 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_score_alpha :: {'fusion': 'score', 'alpha': 0.85, 'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.5903 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_score_alpha :: {'fusion': 'score', 'alpha': 1.0, 'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.575 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_rrf :: {'fusion': 'rrf', 'k': 60, 'w_tfidf': 0.3, 'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.6608 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_rrf :: {'fusion': 'rrf', 'k': 60, 'w_tfidf': 0.5, 'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.648 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_rrf :: {'fusion': 'rrf', 'k': 60, 'w_tfidf': 0.7, 'bm25_k1': 1.0, 'bm25_b': 0.5} -> dev nDCG@10=0.6111 decision=screened
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] fusion_selected :: {'fusion': 'rrf', 'weight': 0.3} -> dev nDCG@10=0.6608 decision=adopted
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] rm3_prf :: {'alpha_prf': 0.5, 'feedback_docs': 10, 'expansion_terms': 15} -> dev nDCG@10=0.6085 decision=dropped
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[attempt] rm3_prf :: {'alpha_prf': 0.3, 'feedback_docs': 10, 'expansion_terms': 15} -> dev nDCG@10=0.6259 decision=dropped

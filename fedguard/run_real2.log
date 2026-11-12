@@ -1,0 +1,342 @@
+== fedavg_iid ({'kind': 'fed', 'partition': 'iid', 'rounds': 15, 'local_epochs': 3, 'lr': 0.08, 'batch_size': 32, 'mu': 0.0}) eval_test=True ==
+  [fedavg_iid] round 1/15 val 0.8036 test 0.8198
+  [fedavg_iid] round 2/15 val 0.9136 test 0.9223
+  [fedavg_iid] round 3/15 val 0.9330 test 0.9358
+  [fedavg_iid] round 4/15 val 0.9390 test 0.9434
+  [fedavg_iid] round 5/15 val 0.9458 test 0.9461
+  [fedavg_iid] round 6/15 val 0.9510 test 0.9521
+  [fedavg_iid] round 7/15 val 0.9522 test 0.9535
+  [fedavg_iid] round 8/15 val 0.9554 test 0.9562
+  [fedavg_iid] round 9/15 val 0.9544 test 0.9583
+  [fedavg_iid] round 10/15 val 0.9582 test 0.9607
+  [fedavg_iid] round 11/15 val 0.9588 test 0.9594
+  [fedavg_iid] round 12/15 val 0.9582 test 0.9612
+  [fedavg_iid] round 13/15 val 0.9590 test 0.9619
+  [fedavg_iid] round 14/15 val 0.9606 test 0.9635
+  [fedavg_iid] round 15/15 val 0.9604 test 0.9620
+== fedavg_iid: val 0.9604 test 0.9620 (756.2s) -> results_real.json
+== fedavg_noniid ({'kind': 'fed', 'partition': 'noniid', 'rounds': 15, 'local_epochs': 3, 'lr': 0.08, 'batch_size': 32, 'mu': 0.0}) eval_test=True ==
+  [fedavg_noniid] round 1/15 val 0.3584 test 0.3450
+  [fedavg_noniid] round 2/15 val 0.8630 test 0.8652
+  [fedavg_noniid] round 3/15 val 0.9256 test 0.9271
+  [fedavg_noniid] round 4/15 val 0.9338 test 0.9381
+  [fedavg_noniid] round 5/15 val 0.9388 test 0.9429
+  [fedavg_noniid] round 6/15 val 0.9418 test 0.9453
+  [fedavg_noniid] round 7/15 val 0.9460 test 0.9518
+  [fedavg_noniid] round 8/15 val 0.9518 test 0.9565
+  [fedavg_noniid] round 9/15 val 0.9522 test 0.9565
+  [fedavg_noniid] round 10/15 val 0.9526 test 0.9572
+  [fedavg_noniid] round 11/15 val 0.9544 test 0.9591
+  [fedavg_noniid] round 12/15 val 0.9562 test 0.9590
+  [fedavg_noniid] round 13/15 val 0.9566 test 0.9589
+  [fedavg_noniid] round 14/15 val 0.9558 test 0.9602
+  [fedavg_noniid] round 15/15 val 0.9578 test 0.9623
+== fedavg_noniid: val 0.9578 test 0.9623 (835.8s) -> results_real.json
+== fedprox_noniid ({'kind': 'fed', 'partition': 'noniid', 'rounds': 15, 'local_epochs': 3, 'lr': 0.08, 'batch_size': 32, 'mu': 0.1}) eval_test=True ==
+  [fedprox_noniid] round 1/15 val 0.5848 test 0.6075
+  [fedprox_noniid] round 2/15 val 0.7844 test 0.7998
+  [fedprox_noniid] round 3/15 val 0.7938 test 0.8082
+  [fedprox_noniid] round 4/15 val 0.8512 test 0.8550
+  [fedprox_noniid] round 5/15 val 0.8690 test 0.8726
+  [fedprox_noniid] round 6/15 val 0.8760 test 0.8792
+  [fedprox_noniid] round 7/15 val 0.8784 test 0.8851
+  [fedprox_noniid] round 8/15 val 0.8748 test 0.8883
+  [fedprox_noniid] round 9/15 val 0.8862 test 0.8917
+  [fedprox_noniid] round 10/15 val 0.8890 test 0.8908
+  [fedprox_noniid] round 11/15 val 0.8892 test 0.8970
+  [fedprox_noniid] round 12/15 val 0.9016 test 0.9087
+  [fedprox_noniid] round 13/15 val 0.9016 test 0.9099
+  [fedprox_noniid] round 14/15 val 0.9058 test 0.9143
+  [fedprox_noniid] round 15/15 val 0.9074 test 0.9150
+== fedprox_noniid: val 0.9074 test 0.9150 (808.5s) -> results_real.json
+== fedavg_dp_sigma0.7 ({'kind': 'fed', 'partition': 'noniid', 'rounds': 20, 'local_epochs': 1, 'lr': 0.4, 'batch_size': 256, 'sigma': 0.7, 'clip': 1.0}) eval_test=True ==
+  [fedavg_dp_sigma0.7] round 1/20 val 0.3922 test 0.4021
+  [fedavg_dp_sigma0.7] round 2/20 val 0.6018 test 0.6229
+  [fedavg_dp_sigma0.7] round 3/20 val 0.6420 test 0.6608
+  [fedavg_dp_sigma0.7] round 4/20 val 0.6562 test 0.6758
+  [fedavg_dp_sigma0.7] round 5/20 val 0.6790 test 0.7015
+  [fedavg_dp_sigma0.7] round 6/20 val 0.6964 test 0.7178
+  [fedavg_dp_sigma0.7] round 7/20 val 0.7142 test 0.7315
+  [fedavg_dp_sigma0.7] round 8/20 val 0.7344 test 0.7499
+  [fedavg_dp_sigma0.7] round 9/20 val 0.7436 test 0.7606
+  [fedavg_dp_sigma0.7] round 10/20 val 0.7524 test 0.7696
+  [fedavg_dp_sigma0.7] round 11/20 val 0.7636 test 0.7820
+  [fedavg_dp_sigma0.7] round 12/20 val 0.7722 test 0.7905
+  [fedavg_dp_sigma0.7] round 13/20 val 0.7816 test 0.7979
+  [fedavg_dp_sigma0.7] round 14/20 val 0.7856 test 0.8056
+  [fedavg_dp_sigma0.7] round 15/20 val 0.7962 test 0.8113
+  [fedavg_dp_sigma0.7] round 16/20 val 0.8008 test 0.8166
+  [fedavg_dp_sigma0.7] round 17/20 val 0.8084 test 0.8227
+  [fedavg_dp_sigma0.7] round 18/20 val 0.8138 test 0.8283
+  [fedavg_dp_sigma0.7] round 19/20 val 0.8172 test 0.8285
+  [fedavg_dp_sigma0.7] round 20/20 val 0.8226 test 0.8353
+== fedavg_dp_sigma0.7: val 0.8226 test 0.8353 eps_estimate~10.2 (273.8s) -> results_real.json
+== fedavg_dp_sigma1.2 ({'kind': 'fed', 'partition': 'noniid', 'rounds': 20, 'local_epochs': 1, 'lr': 0.4, 'batch_size': 256, 'sigma': 1.2, 'clip': 1.0}) eval_test=True ==
+  [fedavg_dp_sigma1.2] round 1/20 val 0.3988 test 0.4078
+  [fedavg_dp_sigma1.2] round 2/20 val 0.6014 test 0.6264
+  [fedavg_dp_sigma1.2] round 3/20 val 0.6372 test 0.6550
+  [fedavg_dp_sigma1.2] round 4/20 val 0.6536 test 0.6764
+  [fedavg_dp_sigma1.2] round 5/20 val 0.6750 test 0.7006
+  [fedavg_dp_sigma1.2] round 6/20 val 0.6966 test 0.7197
+  [fedavg_dp_sigma1.2] round 7/20 val 0.7162 test 0.7330
+  [fedavg_dp_sigma1.2] round 8/20 val 0.7356 test 0.7497
+  [fedavg_dp_sigma1.2] round 9/20 val 0.7468 test 0.7623
+  [fedavg_dp_sigma1.2] round 10/20 val 0.7544 test 0.7702
+  [fedavg_dp_sigma1.2] round 11/20 val 0.7646 test 0.7832
+  [fedavg_dp_sigma1.2] round 12/20 val 0.7768 test 0.7929
+  [fedavg_dp_sigma1.2] round 13/20 val 0.7846 test 0.7997
+  [fedavg_dp_sigma1.2] round 14/20 val 0.7872 test 0.8080
+  [fedavg_dp_sigma1.2] round 15/20 val 0.7986 test 0.8120
+  [fedavg_dp_sigma1.2] round 16/20 val 0.8030 test 0.8179
+  [fedavg_dp_sigma1.2] round 17/20 val 0.8098 test 0.8247
+  [fedavg_dp_sigma1.2] round 18/20 val 0.8166 test 0.8291
+  [fedavg_dp_sigma1.2] round 19/20 val 0.8186 test 0.8301
+  [fedavg_dp_sigma1.2] round 20/20 val 0.8238 test 0.8373
+== fedavg_dp_sigma1.2: val 0.8238 test 0.8373 eps_estimate~5.55 (267.4s) -> results_real.json
+== pb_fedavg_noniid_long ({'kind': 'fed', 'partition': 'noniid', 'rounds': 40, 'local_epochs': 2, 'lr': 0.08, 'batch_size': 32, 'mu': 0.0}) eval_test=False ==
+  [pb_fedavg_noniid_long] round 1/40 val 0.3952
+  [pb_fedavg_noniid_long] round 2/40 val 0.8686
+  [pb_fedavg_noniid_long] round 3/40 val 0.9150
+  [pb_fedavg_noniid_long] round 4/40 val 0.9192
+  [pb_fedavg_noniid_long] round 5/40 val 0.9388
+  [pb_fedavg_noniid_long] round 6/40 val 0.9444
+  [pb_fedavg_noniid_long] round 7/40 val 0.9438
+  [pb_fedavg_noniid_long] round 8/40 val 0.9458
+  [pb_fedavg_noniid_long] round 9/40 val 0.9466
+  [pb_fedavg_noniid_long] round 10/40 val 0.9490
+  [pb_fedavg_noniid_long] round 11/40 val 0.9508
+  [pb_fedavg_noniid_long] round 12/40 val 0.9518
+  [pb_fedavg_noniid_long] round 13/40 val 0.9508
+  [pb_fedavg_noniid_long] round 14/40 val 0.9524
+  [pb_fedavg_noniid_long] round 15/40 val 0.9544
+  [pb_fedavg_noniid_long] round 16/40 val 0.9558
+  [pb_fedavg_noniid_long] round 17/40 val 0.9540
+  [pb_fedavg_noniid_long] round 18/40 val 0.9578
+  [pb_fedavg_noniid_long] round 19/40 val 0.9578
+  [pb_fedavg_noniid_long] round 20/40 val 0.9590
+  [pb_fedavg_noniid_long] round 21/40 val 0.9588
+  [pb_fedavg_noniid_long] round 22/40 val 0.9594
+  [pb_fedavg_noniid_long] round 23/40 val 0.9590
+  [pb_fedavg_noniid_long] round 24/40 val 0.9576
+  [pb_fedavg_noniid_long] round 25/40 val 0.9590
+  [pb_fedavg_noniid_long] round 26/40 val 0.9626
+  [pb_fedavg_noniid_long] round 27/40 val 0.9624
+  [pb_fedavg_noniid_long] round 28/40 val 0.9626
+  [pb_fedavg_noniid_long] round 29/40 val 0.9628
+  [pb_fedavg_noniid_long] round 30/40 val 0.9608
+  [pb_fedavg_noniid_long] round 31/40 val 0.9610
+  [pb_fedavg_noniid_long] round 32/40 val 0.9634
+  [pb_fedavg_noniid_long] round 33/40 val 0.9606
+  [pb_fedavg_noniid_long] round 34/40 val 0.9600
+  [pb_fedavg_noniid_long] round 35/40 val 0.9634
+  [pb_fedavg_noniid_long] round 36/40 val 0.9584
+  [pb_fedavg_noniid_long] round 37/40 val 0.9600
+  [pb_fedavg_noniid_long] round 38/40 val 0.9610
+  [pb_fedavg_noniid_long] round 39/40 val 0.9604
+  [pb_fedavg_noniid_long] round 40/40 val 0.9622
+== pb_fedavg_noniid_long: val 0.9622 (709.9s) -> results_real.json
+== pb_fedavgm_noniid ({'kind': 'fed', 'partition': 'noniid', 'rounds': 30, 'local_epochs': 2, 'lr': 0.08, 'batch_size': 32, 'mu': 0.0, 'server': 'avgm', 'server_beta': 0.9, 'server_lr': 1.0}) eval_test=False ==
+  [pb_fedavgm_noniid] round 1/30 val 0.3952
+  [pb_fedavgm_noniid] round 2/30 val 0.8362
+  [pb_fedavgm_noniid] round 3/30 val 0.9180
+  [pb_fedavgm_noniid] round 4/30 val 0.9204
+  [pb_fedavgm_noniid] round 5/30 val 0.9134
+  [pb_fedavgm_noniid] round 6/30 val 0.8516
+  [pb_fedavgm_noniid] round 7/30 val 0.9050
+  [pb_fedavgm_noniid] round 8/30 val 0.9316
+  [pb_fedavgm_noniid] round 9/30 val 0.9384
+  [pb_fedavgm_noniid] round 10/30 val 0.9362
+  [pb_fedavgm_noniid] round 11/30 val 0.9274
+  [pb_fedavgm_noniid] round 12/30 val 0.9150
+  [pb_fedavgm_noniid] round 13/30 val 0.9174
+  [pb_fedavgm_noniid] round 14/30 val 0.9184
+  [pb_fedavgm_noniid] round 15/30 val 0.9308
+  [pb_fedavgm_noniid] round 16/30 val 0.9330
+  [pb_fedavgm_noniid] round 17/30 val 0.9254
+  [pb_fedavgm_noniid] round 18/30 val 0.9148
+  [pb_fedavgm_noniid] round 19/30 val 0.9208
+  [pb_fedavgm_noniid] round 20/30 val 0.9178
+  [pb_fedavgm_noniid] round 21/30 val 0.9254
+  [pb_fedavgm_noniid] round 22/30 val 0.9264
+  [pb_fedavgm_noniid] round 23/30 val 0.9332
+  [pb_fedavgm_noniid] round 24/30 val 0.9264
+  [pb_fedavgm_noniid] round 25/30 val 0.9240
+  [pb_fedavgm_noniid] round 26/30 val 0.9180
+  [pb_fedavgm_noniid] round 27/30 val 0.9194
+  [pb_fedavgm_noniid] round 28/30 val 0.9218
+  [pb_fedavgm_noniid] round 29/30 val 0.9172
+  [pb_fedavgm_noniid] round 30/30 val 0.9198
+== pb_fedavgm_noniid: val 0.9198 (216.0s) -> results_real.json
+== pb_fedadam_noniid ({'kind': 'fed', 'partition': 'noniid', 'rounds': 30, 'local_epochs': 2, 'lr': 0.08, 'batch_size': 32, 'mu': 0.0, 'server': 'adam', 'adam_eta': 0.1}) eval_test=False ==
+  [pb_fedadam_noniid] round 1/30 val 0.5726
+  [pb_fedadam_noniid] round 2/30 val 0.7522
+  [pb_fedadam_noniid] round 3/30 val 0.8580
+  [pb_fedadam_noniid] round 4/30 val 0.9080
+  [pb_fedadam_noniid] round 5/30 val 0.9262
+  [pb_fedadam_noniid] round 6/30 val 0.9316
+  [pb_fedadam_noniid] round 7/30 val 0.9330
+  [pb_fedadam_noniid] round 8/30 val 0.9272
+  [pb_fedadam_noniid] round 9/30 val 0.9218
+  [pb_fedadam_noniid] round 10/30 val 0.9172
+  [pb_fedadam_noniid] round 11/30 val 0.9172
+  [pb_fedadam_noniid] round 12/30 val 0.9216
+  [pb_fedadam_noniid] round 13/30 val 0.9298
+  [pb_fedadam_noniid] round 14/30 val 0.9360
+  [pb_fedadam_noniid] round 15/30 val 0.9390
+  [pb_fedadam_noniid] round 16/30 val 0.9398
+  [pb_fedadam_noniid] round 17/30 val 0.9434
+  [pb_fedadam_noniid] round 18/30 val 0.9456
+  [pb_fedadam_noniid] round 19/30 val 0.9462
+  [pb_fedadam_noniid] round 20/30 val 0.9470
+  [pb_fedadam_noniid] round 21/30 val 0.9472
+  [pb_fedadam_noniid] round 22/30 val 0.9472
+  [pb_fedadam_noniid] round 23/30 val 0.9488
+  [pb_fedadam_noniid] round 24/30 val 0.9480
+  [pb_fedadam_noniid] round 25/30 val 0.9480
+  [pb_fedadam_noniid] round 26/30 val 0.9470
+  [pb_fedadam_noniid] round 27/30 val 0.9486
+  [pb_fedadam_noniid] round 28/30 val 0.9492
+  [pb_fedadam_noniid] round 29/30 val 0.9482
+  [pb_fedadam_noniid] round 30/30 val 0.9498
+== pb_fedadam_noniid: val 0.9498 (120.2s) -> results_real.json
+== pb_fedprox_mu0.01 ({'kind': 'fed', 'partition': 'noniid', 'rounds': 15, 'local_epochs': 3, 'lr': 0.08, 'batch_size': 32, 'mu': 0.01}) eval_test=False ==
+  [pb_fedprox_mu0.01] round 1/15 val 0.7214
+  [pb_fedprox_mu0.01] round 2/15 val 0.8836
+  [pb_fedprox_mu0.01] round 3/15 val 0.8944
+  [pb_fedprox_mu0.01] round 4/15 val 0.9134
+  [pb_fedprox_mu0.01] round 5/15 val 0.9236
+  [pb_fedprox_mu0.01] round 6/15 val 0.9258
+  [pb_fedprox_mu0.01] round 7/15 val 0.9330
+  [pb_fedprox_mu0.01] round 8/15 val 0.9362
+  [pb_fedprox_mu0.01] round 9/15 val 0.9408
+  [pb_fedprox_mu0.01] round 10/15 val 0.9414
+  [pb_fedprox_mu0.01] round 11/15 val 0.9436
+  [pb_fedprox_mu0.01] round 12/15 val 0.9460
+  [pb_fedprox_mu0.01] round 13/15 val 0.9458
+  [pb_fedprox_mu0.01] round 14/15 val 0.9494
+  [pb_fedprox_mu0.01] round 15/15 val 0.9492
+== pb_fedprox_mu0.01: val 0.9492 (126.8s) -> results_real.json
+== pb_fedprox_mu1.0 ({'kind': 'fed', 'partition': 'noniid', 'rounds': 15, 'local_epochs': 3, 'lr': 0.08, 'batch_size': 32, 'mu': 1.0}) eval_test=False ==
+  [pb_fedprox_mu1.0] round 1/15 val 0.2156
+  [pb_fedprox_mu1.0] round 2/15 val 0.2018
+  [pb_fedprox_mu1.0] round 3/15 val 0.3154
+  [pb_fedprox_mu1.0] round 4/15 val 0.4268
+  [pb_fedprox_mu1.0] round 5/15 val 0.4582
+  [pb_fedprox_mu1.0] round 6/15 val 0.5528
+  [pb_fedprox_mu1.0] round 7/15 val 0.5816
+  [pb_fedprox_mu1.0] round 8/15 val 0.5658
+  [pb_fedprox_mu1.0] round 9/15 val 0.6074
+  [pb_fedprox_mu1.0] round 10/15 val 0.6532
+  [pb_fedprox_mu1.0] round 11/15 val 0.6794
+  [pb_fedprox_mu1.0] round 12/15 val 0.6578
+  [pb_fedprox_mu1.0] round 13/15 val 0.6608
+  [pb_fedprox_mu1.0] round 14/15 val 0.6490
+  [pb_fedprox_mu1.0] round 15/15 val 0.6684
+== pb_fedprox_mu1.0: val 0.6684 (125.5s) -> results_real.json
+== pb_dp_s0.7_clip0.5 ({'kind': 'fed', 'partition': 'noniid', 'rounds': 20, 'local_epochs': 1, 'lr': 0.4, 'batch_size': 256, 'sigma': 0.7, 'clip': 0.5}) eval_test=False ==
+  [pb_dp_s0.7_clip0.5] round 1/20 val 0.2208
+  [pb_dp_s0.7_clip0.5] round 2/20 val 0.3474
+  [pb_dp_s0.7_clip0.5] round 3/20 val 0.5568
+  [pb_dp_s0.7_clip0.5] round 4/20 val 0.6134
+  [pb_dp_s0.7_clip0.5] round 5/20 val 0.6230
+  [pb_dp_s0.7_clip0.5] round 6/20 val 0.6228
+  [pb_dp_s0.7_clip0.5] round 7/20 val 0.6284
+  [pb_dp_s0.7_clip0.5] round 8/20 val 0.6358
+  [pb_dp_s0.7_clip0.5] round 9/20 val 0.6440
+  [pb_dp_s0.7_clip0.5] round 10/20 val 0.6462
+  [pb_dp_s0.7_clip0.5] round 11/20 val 0.6574
+  [pb_dp_s0.7_clip0.5] round 12/20 val 0.6738
+  [pb_dp_s0.7_clip0.5] round 13/20 val 0.6812
+  [pb_dp_s0.7_clip0.5] round 14/20 val 0.6882
+  [pb_dp_s0.7_clip0.5] round 15/20 val 0.7046
+  [pb_dp_s0.7_clip0.5] round 16/20 val 0.7084
+  [pb_dp_s0.7_clip0.5] round 17/20 val 0.7190
+  [pb_dp_s0.7_clip0.5] round 18/20 val 0.7296
+  [pb_dp_s0.7_clip0.5] round 19/20 val 0.7286
+  [pb_dp_s0.7_clip0.5] round 20/20 val 0.7372
+== pb_dp_s0.7_clip0.5: val 0.7372 eps_estimate~10.2 (81.0s) -> results_real.json
+== pb_dp_s1.2_clip0.5 ({'kind': 'fed', 'partition': 'noniid', 'rounds': 20, 'local_epochs': 1, 'lr': 0.4, 'batch_size': 256, 'sigma': 1.2, 'clip': 0.5}) eval_test=False ==
+  [pb_dp_s1.2_clip0.5] round 1/20 val 0.2224
+  [pb_dp_s1.2_clip0.5] round 2/20 val 0.3506
+  [pb_dp_s1.2_clip0.5] round 3/20 val 0.5622
+  [pb_dp_s1.2_clip0.5] round 4/20 val 0.6172
+  [pb_dp_s1.2_clip0.5] round 5/20 val 0.6196
+  [pb_dp_s1.2_clip0.5] round 6/20 val 0.6204
+  [pb_dp_s1.2_clip0.5] round 7/20 val 0.6282
+  [pb_dp_s1.2_clip0.5] round 8/20 val 0.6358
+  [pb_dp_s1.2_clip0.5] round 9/20 val 0.6444
+  [pb_dp_s1.2_clip0.5] round 10/20 val 0.6472
+  [pb_dp_s1.2_clip0.5] round 11/20 val 0.6596
+  [pb_dp_s1.2_clip0.5] round 12/20 val 0.6728
+  [pb_dp_s1.2_clip0.5] round 13/20 val 0.6814
+  [pb_dp_s1.2_clip0.5] round 14/20 val 0.6906
+  [pb_dp_s1.2_clip0.5] round 15/20 val 0.7038
+  [pb_dp_s1.2_clip0.5] round 16/20 val 0.7098
+  [pb_dp_s1.2_clip0.5] round 17/20 val 0.7184
+  [pb_dp_s1.2_clip0.5] round 18/20 val 0.7282
+  [pb_dp_s1.2_clip0.5] round 19/20 val 0.7288
+  [pb_dp_s1.2_clip0.5] round 20/20 val 0.7388
+== pb_dp_s1.2_clip0.5: val 0.7388 eps_estimate~5.55 (137.5s) -> results_real.json
+== pb_dp_s0.7_lr1.0 ({'kind': 'fed', 'partition': 'noniid', 'rounds': 20, 'local_epochs': 1, 'lr': 1.0, 'batch_size': 256, 'sigma': 0.7, 'clip': 1.0}) eval_test=False ==
+  [pb_dp_s0.7_lr1.0] round 1/20 val 0.5668
+  [pb_dp_s0.7_lr1.0] round 2/20 val 0.6836
+  [pb_dp_s0.7_lr1.0] round 3/20 val 0.7314
+  [pb_dp_s0.7_lr1.0] round 4/20 val 0.7656
+  [pb_dp_s0.7_lr1.0] round 5/20 val 0.7972
+  [pb_dp_s0.7_lr1.0] round 6/20 val 0.8140
+  [pb_dp_s0.7_lr1.0] round 7/20 val 0.8198
+  [pb_dp_s0.7_lr1.0] round 8/20 val 0.8350
+  [pb_dp_s0.7_lr1.0] round 9/20 val 0.8434
+  [pb_dp_s0.7_lr1.0] round 10/20 val 0.8508
+  [pb_dp_s0.7_lr1.0] round 11/20 val 0.8594
+  [pb_dp_s0.7_lr1.0] round 12/20 val 0.8642
+  [pb_dp_s0.7_lr1.0] round 13/20 val 0.8632
+  [pb_dp_s0.7_lr1.0] round 14/20 val 0.8642
+  [pb_dp_s0.7_lr1.0] round 15/20 val 0.8720
+  [pb_dp_s0.7_lr1.0] round 16/20 val 0.8708
+  [pb_dp_s0.7_lr1.0] round 17/20 val 0.8772
+  [pb_dp_s0.7_lr1.0] round 18/20 val 0.8766
+  [pb_dp_s0.7_lr1.0] round 19/20 val 0.8764
+  [pb_dp_s0.7_lr1.0] round 20/20 val 0.8798
+== pb_dp_s0.7_lr1.0: val 0.8798 eps_estimate~10.2 (192.4s) -> results_real.json
+== pb_dp_s1.2_lr1.0 ({'kind': 'fed', 'partition': 'noniid', 'rounds': 20, 'local_epochs': 1, 'lr': 1.0, 'batch_size': 256, 'sigma': 1.2, 'clip': 1.0}) eval_test=False ==
+  [pb_dp_s1.2_lr1.0] round 1/20 val 0.5694
+  [pb_dp_s1.2_lr1.0] round 2/20 val 0.6812
+  [pb_dp_s1.2_lr1.0] round 3/20 val 0.7300
+  [pb_dp_s1.2_lr1.0] round 4/20 val 0.7658
+  [pb_dp_s1.2_lr1.0] round 5/20 val 0.7992
+  [pb_dp_s1.2_lr1.0] round 6/20 val 0.8130
+  [pb_dp_s1.2_lr1.0] round 7/20 val 0.8198
+  [pb_dp_s1.2_lr1.0] round 8/20 val 0.8348
+  [pb_dp_s1.2_lr1.0] round 9/20 val 0.8420
+  [pb_dp_s1.2_lr1.0] round 10/20 val 0.8498
+  [pb_dp_s1.2_lr1.0] round 11/20 val 0.8598
+  [pb_dp_s1.2_lr1.0] round 12/20 val 0.8626
+  [pb_dp_s1.2_lr1.0] round 13/20 val 0.8596
+  [pb_dp_s1.2_lr1.0] round 14/20 val 0.8620
+  [pb_dp_s1.2_lr1.0] round 15/20 val 0.8704
+  [pb_dp_s1.2_lr1.0] round 16/20 val 0.8694
+  [pb_dp_s1.2_lr1.0] round 17/20 val 0.8760
+  [pb_dp_s1.2_lr1.0] round 18/20 val 0.8778
+  [pb_dp_s1.2_lr1.0] round 19/20 val 0.8760
+  [pb_dp_s1.2_lr1.0] round 20/20 val 0.8780
+== pb_dp_s1.2_lr1.0: val 0.8780 eps_estimate~5.55 (193.5s) -> results_real.json
+== pb_dp_s1.2_clip0.5_lr1.0_10r ({'kind': 'fed', 'partition': 'noniid', 'rounds': 10, 'local_epochs': 1, 'lr': 1.0, 'batch_size': 256, 'sigma': 1.2, 'clip': 0.5}) eval_test=False ==
+  [pb_dp_s1.2_clip0.5_lr1.0_10r] round 1/10 val 0.4796
+  [pb_dp_s1.2_clip0.5_lr1.0_10r] round 2/10 val 0.6254
+  [pb_dp_s1.2_clip0.5_lr1.0_10r] round 3/10 val 0.6484
+  [pb_dp_s1.2_clip0.5_lr1.0_10r] round 4/10 val 0.6668
+  [pb_dp_s1.2_clip0.5_lr1.0_10r] round 5/10 val 0.6950
+  [pb_dp_s1.2_clip0.5_lr1.0_10r] round 6/10 val 0.7224
+  [pb_dp_s1.2_clip0.5_lr1.0_10r] round 7/10 val 0.7352
+  [pb_dp_s1.2_clip0.5_lr1.0_10r] round 8/10 val 0.7546
+  [pb_dp_s1.2_clip0.5_lr1.0_10r] round 9/10 val 0.7688
+  [pb_dp_s1.2_clip0.5_lr1.0_10r] round 10/10 val 0.7770
+== pb_dp_s1.2_clip0.5_lr1.0_10r: val 0.7770 eps_estimate~3.81 (77.1s) -> results_real.json
+FINAL centralised: centralised val 0.9710 test 0.9756
+FINAL fedavg_iid: fedavg_iid val 0.9604 test 0.9620
+FINAL fedavg_noniid: pb_fedavg_noniid_long val 0.9622 test 0.9653
+FINAL fedprox_noniid: pb_fedprox_mu0.01 val 0.9492 test 0.9520
+FINAL dp_sigma0.7: pb_dp_s0.7_lr1.0 val 0.8798 test 0.8876
+FINAL dp_sigma1.2: pb_dp_s1.2_lr1.0 val 0.8780 test 0.8866
+FINAL dp_sigma1.2_low_eps_frontier: pb_dp_s1.2_clip0.5_lr1.0_10r val 0.7770 test 0.7898

@@ -41,6 +41,7 @@ The measured findings are threefold. First, the sweep saturates: all four config
 12. References
 Appendix A -- Full results.json
 Appendix B -- File Listing
+Appendix C -- Real-Data Addendum (MITRE ATT&CK + NVD CVE)
 
 ---
 
@@ -752,6 +753,98 @@ python train_lora_peft.py --epochs 3 --output_dir ./sentinel-qlora-out
 | requirements.txt | -- | CPU dependencies: torch, numpy, pandas |
 | requirements_gpu.txt | -- | GPU dependencies for train_lora_peft.py |
 | README.md | -- | Project README (summary of this report) |
+
+---
+
+# Appendix C -- Real-Data Addendum (MITRE ATT&CK + NVD CVE)
+
+*Added after the main report was written. The main chapters above evaluate Sentinel-LLM on the synthetic templated dataset of Chapter 5, and they say so throughout. This addendum reports the same from-scratch LoRA implementation, the same protocol discipline and the same metrics on real public data -- MITRE ATT&CK technique descriptions and NVD CVE descriptions -- and it supersedes the synthetic results as the project's headline. Every number below is copied from `results_real.json` in the project directory (including its `round2` key and `published_context_bars`); where the older programme summary `REAL_BENCHMARKS.md` Sections 1-2 differs, `results_real.json` Round 2 wins, because that file predates Round 2.*
+
+## C.1 Why this addendum exists
+
+The main report's headline -- 100.00% test accuracy (191 of 191) with 10,672 trainable parameters, 52.9x fewer than full fine-tuning -- was measured on data produced by the project's own generator. The abstract already states the limitation plainly: the synthetic templates are strongly separable, so 100% demonstrates the correctness of the pipeline and the LoRA efficiency effect, not real-world SOC performance. The experiment that could evidence real-world performance -- the same models on independently published security text, under splits that cannot leak -- has now been run, in two rounds, and this addendum is its record, including the central negative finding: on real data the small hashed-embedding model is beaten by a plain TF-IDF model on both tasks, and LoRA loses to full fine-tuning within the neural family.
+
+## C.2 Protocol and splits
+
+**Task 1 -- ATT&CK tactic classification.** Source: the official MITRE CTI STIX bundle (`enterprise-attack.json`, pulled 2026-11-13; MITRE ATT&CK Terms of Use, free use with attribution). Revoked techniques (149) and deprecated techniques (12) were excluded, leaving 706 techniques. The task is technique description to ATT&CK tactic, single-label: the label is the technique's first `kill_chain_phase` with `kill_chain_name='mitre-attack'` (kill-chain order). 145 rows (20.5%) genuinely carry multiple tactics, so the single-label rule is a documented simplification and a known source of label noise. There are 15 tactics; the largest class is stealth (151 rows) and the smallest is initial-access (15 rows). Split: stratified 70/15/15 by tactic, seed 123 (the same rule as `train.py`).
+
+**Task 2 -- CVE severity classification.** Source: NVD API 2.0 (NIST; NVD data are public domain US Government work; CVE descriptions originate from CNAs via the CVE Program), pulled 2026-11-13. The task is CVE description to CVSS v3.x severity tier (LOW / MEDIUM / HIGH / CRITICAL; primary CVSS v3.1, else v3.0). The split is **temporal**, not random, because random splits leak via near-duplicate CVEs: eras were scanned chronologically with a per-class quota-stop. Text hygiene: CVE-ID tokens, standalone year tokens and URLs were stripped so they cannot be used as features. The score-0.0 NONE tier is effectively absent from NVD primary v3 metrics (the API's `cvssV3Severity=NONE` filter returns `totalResults=0`), so the tier set is the four tiers that occur. The optional phishing corpus was skipped -- no verifiable public corpus was pulled, and nothing was substituted for it.
+
+| Task | Train | Validation | Test | Split rule |
+|---|---|---|---|---|
+| ATT&CK tactic (n=706) | 488 | 106 | 112 | Stratified 70/15/15 by tactic, seed 123 |
+| CVE severity (n=4,400) | 2,800 (2020-2022 window; 700 per class) | 600 in 2023 (150 per class) | 1,000 in 2024 (250 per class) | Temporal by NVD published date; eras strictly ordered |
+
+One CVE dating detail matters: the train era was scanned 2020-01-01 to 2022-12-31, but the per-class quota filled in December 2021, so the train records actually span 2020-2021. The CVE classes are exactly balanced by construction in every era.
+
+**Selection discipline.** Round 1 followed the project's own `train.py` protocol per task: brief base (1 epoch, all parameters), then a full fine-tuning baseline (8 epochs) and a 4-configuration LoRA sweep (10 epochs each) selected on validation; test was evaluated once per finished model. Phase B screened improvement levers on an inner validation split carved from train (stratified 15%, seed 777; MITRE n=80, CVE n=420) under a pre-registered rule -- highest inner-val macro F1 among LoRA-recipe candidates, with the C6 component-derive TF-IDF pipeline logged as a reference method and excluded from selection before screening ran; the selected recipe was retrained on the full train split and test was evaluated exactly once more per task. Round 2 (2026-11-13) re-ran the same splits with no re-splitting, using three pre-registered families -- TF-IDF, hybrid (TF-IDF plus neural features) and neural -- each family's winner selected on validation macro F1 and evaluated on test exactly once (MITRE: 4 test touches in Round 2, one extra from the superseded first hybrid run, disclosed in `results_real.json`; CVE: 3). Accuracy and macro F1 are reported throughout. All runs were on CPU (four threads, shared VM).
+
+## C.3 Baseline results on real data (Round 1, original protocol)
+
+| Task (test) | Untrained | Majority class | Brief base | Full FT | LoRA (val-selected) | TF-IDF + LR reference |
+|---|---|---|---|---|---|---|
+| ATT&CK tactic (n=112) | 7.14% / 0.013 | 20.54% / 0.023 (stealth) | 20.54% / 0.023 | 57.14% / 0.432 | 47.32% / 0.334 (r=16, 10,480 params, 1.83%) | 72.32% / 0.651 |
+| CVE severity (n=1,000) | 23.90% / 0.133 | 25.00% / 0.100 | 43.60% / 0.427 | 54.40% / 0.541 | 47.20% / 0.466 (r=4, 2,576 params) | 55.90% / 0.547 |
+
+*Cells show accuracy / macro F1. The TF-IDF reference is TF-IDF (word 1-2 grams, sublinear) plus multinomial logistic regression, with C selected on validation (C=4.0 on ATT&CK).*
+
+The diagnosis is immediate. First, **the synthetic result does not transfer at all**: LoRA falls from 100.00% on synthetic data to 47.32% on ATT&CK and 47.20% on CVE. Second, **the TF-IDF reference beats every neural variant in the baseline family on both tasks** -- by 25.0 points of accuracy over LoRA on ATT&CK and by 8.7 points on CVE. Third, the brief base model collapses to the majority class on ATT&CK (20.54%), because one epoch barely trains the hashed-embedding representation; on separable synthetic templates that handicap was invisible.
+
+## C.4 Improvement log, including negative results
+
+Phase B screened the brief's full lever menu on the inner validation split. The consistent winner was longer training with early stopping plus label smoothing; char n-grams helped only CVE. The Phase-B finals, retrained on the full train split and evaluated on test exactly once, are the Round 1 headline and they must stay visible:
+
+| Task | Phase-B final LoRA | Full FT, same recipe |
+|---|---|---|
+| ATT&CK tactic | **49.11% / 0.364** (word features, label smoothing 0.1, up to 24 epochs, r=8, 5,240 params, 0.93%) | 56.25% / 0.422 |
+| CVE severity | **48.90% / 0.475** (word+char features, label smoothing 0.1, up to 24 epochs, r=8, 5,152 params, 0.47%) | 54.40% / 0.536 |
+
+Phase B gains were small and mostly did not transfer from inner validation to test -- recorded as a plateau. The logged negatives are kept with the same prominence as the wins. **IDF-weighted pooling hurt** on both tasks relative to its parent configuration. **The ordinal loss was dropped** on CVE. **The multi-label sigmoid head failed** on ATT&CK (inner-val micro F1 0.179, argmax macro F1 0.022) despite being the formally correct formulation for multi-tactic techniques -- at this data scale it does not learn. **One run was invalid**: the first class-weights run (C3) silently dropped its class weights through a trainer-routing bug and duplicated its parent; it is flagged `invalid_run` in `results_real.json` and superseded by the corrected run (A1), which showed a real gain on ATT&CK only. The C6 component-derive pipeline scored best on the CVE inner validation (0.634) but was excluded from Round 1 test evaluation by the pre-registered LoRA-only selection rule; Round 2 tested that claim properly and falsified it (Section C.6).
+
+Round 2 screened 111 candidates across the three families on validation. Three findings organise it. **Class-imbalance handling was the biggest ATT&CK lever after features**: word TF-IDF plus logistic regression jumps from 0.21 to 0.84 validation macro F1 with `class_weight="balanced"` (the winning SVM did not need it). **In the neural family, class weights plus label smoothing plus longer training lifted full FT from 0.422 (Round 1 final) to 0.600 test macro F1 on ATT&CK -- while every LoRA variant still trailed its full-FT counterpart.** LoRA lost to full FT within the neural family in every Round 1 and Round 2 comparison; the synthetic parity result does not survive on real data. **The first hybrid run was only weakly hybrid, and was caught**: coefficient-norm diagnostics showed the shared-L2 geometry let the standardised dense neural block swamp the sparse TF-IDF block (sparse coefficient norm 0.25 against dense 3.54); that run is preserved in `results_real.json` as a superseded run, and the corrected run used sparse-block scaling (x20). Even corrected, **hybrid variants never beat pure TF-IDF on either task** -- on top of a properly tuned TF-IDF, the small neural model's features added nothing. That is a negative result, reported as one. Wider embeddings and the ordinal loss also did not help on CVE.
+
+## C.5 Final results (Round 2 headline)
+
+The headline is now the best verified system per task -- a TF-IDF-family model on both tasks -- each selected on validation and tested exactly once as its family's winner, then chosen as the best test macro F1 among the three family winners.
+
+| Task | Family | Winning system | Val acc / F1 | Test acc / F1 |
+|---|---|---|---|---|
+| ATT&CK tactic | **TF-IDF -- headline** | TF-IDF word 1-2 grams + linear SVM (SGD hinge, alpha=1e-4, no class weighting) | 88.68% / 0.894 | **79.46% / 0.7788** |
+| ATT&CK tactic | Neural (best) | Full FT, word features, class weights, label smoothing, up to 16 epochs | 74.53% / 0.720 | 65.18% / 0.5998 |
+| ATT&CK tactic | Hybrid | TF-IDF word+char (x20 block scale) + neural hidden, logistic regression | 79.25% / 0.783 | 69.64% / 0.6598 |
+| CVE severity | **TF-IDF -- headline** | TF-IDF word 1-2 grams + linear SVM (SGD hinge, alpha=1e-5, no class weighting) | 57.33% / 0.558 | **55.70% / 0.5444** |
+| CVE severity | Neural (best) | Full FT, word+char features, label smoothing, up to 16 epochs | 52.83% / 0.514 | 54.40% / 0.528 |
+| CVE severity | Hybrid | TF-IDF word+char (x20 block scale) + neural hidden, logistic regression | 56.67% / 0.553 | 54.00% / 0.5276 |
+
+Per-class detail for the two headline systems (test F1). On ATT&CK, the SVM scores 1.000 on discovery, reconnaissance and resource-development, 0.857 on collection and privilege-escalation, 0.800 on impact and initial-access -- the class every neural variant flatlined on at 0.000 -- and 0.000 only on lateral-movement (test n=4), the residual failure. On CVE, the SVM scores CRITICAL 0.635, HIGH 0.387, LOW 0.650 and MEDIUM 0.506; HIGH is the weakest tier on every system in the programme. On CVE, Round 2 is a wash at the top: the headline SVM (55.70% / 0.544) sits essentially level with the Round 1 TF-IDF logistic-regression reference (55.90% / 0.547). With 2,800 training rows from 2020-2021, no classifier family in this codebase breaks out of the mid-50s -- itself the evidence that the remaining CVE gap is data scale, recency and pretrained representation, not model choice. Total recorded compute was about 2,436 seconds (about 40.6 minutes CPU) for Round 1 plus 1,647.1 seconds for Round 2, with about 13 minutes of rate-limited NVD data pulls on top.
+
+## C.6 Comparison against the published bars, with protocol caveats
+
+**ATT&CK.** The published context bar in `results_real.json` (`published_context_bars`) is Crossman et al. (JPMorganChase): SGD-SVM at 81.95% accuracy / 0.7795 F1 on single-label ATT&CK tactic tagging. This addendum's headline is 79.46% accuracy / 0.7788 macro F1. Stated exactly: **the headline is level with the published bar on macro F1 (0.779 against 0.780) and 2.5 points below it on accuracy** -- on a different corpus and protocol (technique descriptions from the official STIX bundle, first-tactic single-label, this project's fixed stratified split), so the comparison is a context bar, not a head-to-head ranking. The published work's roughly 94.55% multi-label hierarchical figure is a different protocol and is not compared. What the comparison does support is narrower and still meaningful: a tuned linear model over word TF-IDF is the right model class for this task at this scale, and the Round 2 SVM reaches the published F1 zone while the from-scratch neural model does not.
+
+**CVE.** The published context is Dixit et al.: LoRA Phi-3.5-mini at 69.9% accuracy and TF-IDF logistic regression at about 65-67%, trained on 2022-2023 and tested on 2024 over 36,325 CVEs; about 70% is the field's realistic ceiling zone for severity-from-text under a temporal split. This addendum's headline is 55.70% / 0.544 -- **below that band, by about 10-14 points of accuracy, and the gap is not rounded away**. Two structural reasons are documented in the project record: the published runs train on roughly 13x as many CVEs, drawn from the two years adjacent to the test year rather than 2020-2021, and the strongest published model uses pretrained representations, which the from-scratch hashed embeddings do not have. Severity-from-text also has a hard ceiling well below 90% on any protocol, because the description alone does not determine the CVSS vector.
+
+**The C6 verdict.** The Round 1 component-derive pipeline (derive each CVSS component with TF-IDF, recombine through the official CVSS v3.1 formula) was reproduced in Round 2 as a first-class TF-IDF-family candidate and scored 0.538 accuracy / 0.517 macro F1 on the true 2023 validation split -- below plain TF-IDF candidates. Its Round 1 score of 0.634 was an artefact of the same-era inner validation split carved from train. Per the pre-registered rule it was not the family winner and received no separate test evaluation.
+
+**Against the synthetic results of the main chapters:** the synthetic task was templated and strongly separable in every way that matters. Its 100% stands as a pipeline and LoRA-mechanics proof; its numbers are superseded by this addendum and should not be quoted as accuracy results. What survives honestly from the main chapters is the from-scratch LoRA implementation itself and the experimental protocol -- not the parity claim, which reverses on real data (LoRA behind full FT in every real-data neural comparison).
+
+## C.7 Limitations
+
+Five limitations bound these results. **Small ATT&CK counts**: test n=112 and Phase-B inner validation n=80, with 15 tactics and classes as small as 15 techniques in the whole corpus (initial-access) and 3-4 test rows (lateral-movement, exfiltration, initial-access); per-class F1 on those classes moves on single examples. **The single-label simplification**: 145 of 706 techniques carry multiple tactics and are labelled by the first phase only, so part of the measured error is label noise by construction. **CVE scale and recency**: 2,800 training rows from 2020-2021 against a 2024 test year is a deliberately hard temporal gap at one-thirteenth of the published runs' training scale; a full-era (non-quota) pull is the documented data-side next step and has not been run. **No pretraining**: the local model learns hashed embeddings from scratch, which Round 2 identifies as the binding constraint -- not the classifier head and not LoRA rank. **The production QLoRA path remains unrun**: the documented next step is the packaged script `train_lora_peft.py`, which QLoRA-fine-tunes Qwen2.5-0.5B-Instruct, whose pretrained representations are exactly what this programme identifies as missing. That script has **not** been run, and no number for it is claimed anywhere in this report.
+
+## C.8 Reproduce
+
+```bash
+python3 load_real.py            # MITRE STIX + NVD API 2.0 -> dataset_real_mitre.jsonl, dataset_real_cve.jsonl
+python3 eval_real.py baseline --task mitre
+python3 eval_real.py baseline --task cve
+python3 eval_real.py phaseb --task mitre   # inner-val screening (phaseb2 = round-2 screening fixes)
+python3 eval_real.py final --task mitre    # Phase-B selected recipe, one test evaluation
+python3 eval_real2.py --task mitre         # Round 2: three families, val-selected, one test eval per winner
+python3 eval_real2.py --task cve
+```
+
+Files: `load_real.py`, `eval_real.py`, `eval_real2.py`, `dataset_real_mitre.jsonl`, `dataset_real_cve.jsonl`, `results_real.json` (datasets, splits, distributions, full baseline / Phase-B / Round 2 candidate logs, per-class F1, runtimes and test-touch accounting), and provenance in `real_data/provenance.json`, all in the project directory. The synthetic study reproduces separately with `python3 train.py` (see Chapter 11); its `results.json` is reproduced in Appendix A.
 
 ---
 

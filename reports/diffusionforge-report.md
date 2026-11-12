@@ -41,6 +41,7 @@ Evaluation is designed around a validity-checked proxy metric: a small CNN class
 12. References
 Appendix A -- Full results.json
 Appendix B -- File Listing
+Appendix C -- Real-Data Addendum (MNIST)
 
 ---
 
@@ -702,3 +703,103 @@ Verbatim contents of `diffusionforge/results.json` (the single source of every n
 | `requirements.txt` | torch>=2.0, numpy>=1.24, Pillow>=9.0 |
 | `README.md` | Project overview, results summary, engineering notes |
 | `train.log` / `sample.log` / `eval.log` | Console logs of the delivered runs |
+
+---
+
+# Appendix C -- Real-Data Addendum (MNIST)
+
+*Added after the main report was written. The main chapters above evaluate DiffusionForge on the synthetic shape dataset of Chapter 5, and they say so throughout. This addendum reports the same diffusion machinery, the same samplers and the same fidelity methodology on real data -- MNIST, downscaled to 16x16 -- and it supersedes the synthetic results as the project's headline. Every number below is copied from `results_real.json` in the project directory; the full narrative version is the real-benchmark section of the project `README.md`, and the cross-project summary is `REAL_BENCHMARKS.md`.*
+
+## C.1 Why this addendum exists
+
+The main report's headline -- 98.44% DDPM class fidelity, 85.94% with DDIM-50, held-out noise-prediction MSE 0.0666 -- was measured on data produced by the author's own generator: 2,000 code-drawn 16x16 shapes in four classes. Chapter 5 defends that choice for an implementation study, and the defence stands: the synthetic run proved the pipeline, the samplers and the evaluation design. It could not, by construction, evidence performance on real data -- a generator can score highly by learning the shape family its author coded. The experiment that could -- the MNIST rung sketched in the scale-up path of Chapter 8 -- has now been run, and this addendum is its record, including the improvement attempts that failed.
+
+## C.2 Dataset and protocol
+
+**Dataset.** MNIST (LeCun, Cortes and Burges): 60,000 training and 10,000 test images of handwritten digits in 10 classes, obtained from the TensorFlow/Keras datasets mirror (`mnist.npz`, SHA-256 `731c5ac602752760c8e48fbffcf8c3b850d9dc2a2aedcf2cc48468fc17b673d1`, verified before use). Per-class counts are the standard ones (train 5,421 to 6,742 per digit; test 892 to 1,135).
+
+**The downscale adaptation, stated plainly.** The project's U-Net operates on 16x16 images, so every 28x28 MNIST image was downscaled to 16x16 -- bilinear interpolation with antialiasing -- and then scaled from [0, 1] to [-1, 1] to match the synthetic pipeline. The diffusion machinery (T = 300, cosine schedule) therefore applies unchanged. This adaptation has a direct consequence for interpretation, repeated in Section C.8: these results describe generation at 16x16 and are **not comparable to published 28x28 MNIST diffusion results**, which usually report FID, a different metric. **No FID is claimed anywhere in this addendum.**
+
+**Splits and selection discipline.** Diffusion training used a documented 20,000-image subset of the train split. A separate 2,000-image validation set was carved from the train split (seed-2024 permutation, positions 20,000-22,000) and was **never used to train any diffusion model in this run**; it drove all improvement-phase selection, through a validation noise-MSE and a DDIM-50 fidelity proxy (100 generated samples at guidance w = 1.5). The test split was evaluated exactly twice under this protocol: the baseline configuration once, and the final validation-selected configuration once. The real-data model has 180,049 parameters (against 179,281 for the four-class synthetic model; the class-embedding and output widths follow the 10 digit classes).
+
+**Evaluator gate.** Fidelity is only as meaningful as the classifier judging it, so the classifier was gated before any fidelity number was trusted. The fidelity classifier (the project's `TinyClassifier`, final layer widened from 4 to 10 classes) was trained on the full real MNIST-16 train split (60,000 images, 5 epochs) and scores **98.13% accuracy on the held-out real test split** -- **PASS** against the pre-set requirement of at least 98.0%. Fidelity below is therefore trustworthy to within about 2 points. Evaluation sampling used 70 generated samples per sampler (7 per class x 10 classes; the synthetic protocol used 64, 16 per class x 4 classes -- changed so the 10 digit classes stay balanced). One sample is worth about 1.43 points of fidelity at n = 70, and differences of a few points should be read with that granularity in mind.
+
+## C.3 Baseline: the original configuration on real data
+
+The baseline is the original project configuration with only the data changed: 20,000 training images, 12 epochs, EMA decay 0.99, cosine schedule, no augmentation, learning rate 0.002, batch 256 (1,182.2 s of training; final train loss 0.06131; validation noise-MSE, EMA weights, 0.06214).
+
+| Test metric (baseline) | Value |
+|---|---|
+| Held-out noise-prediction MSE (raw / EMA weights) | 0.0616 / 0.0617 |
+| DDPM-300 fidelity (w = 1.5) | 98.57% |
+| DDIM-50 fidelity (w = 1.5) | 77.14% |
+| Diversity, pairwise L2 (DDPM / DDIM / real data) | 9.333 / 9.453 / 8.977 |
+| Sampling time for 70 samples (DDPM / DDIM-50) | 51.9 s / 11.2 s |
+| Guidance ablation, DDIM fidelity at w = 0 / 1.5 / 3.0 | 8.57% / 77.14% / 34.29% |
+| Guidance ablation, DDIM diversity at w = 0 / 1.5 / 3.0 | 9.712 / 9.453 / 9.422 |
+
+Two readings matter. First, the expensive sampler transfers almost intact: DDPM fidelity on real digits (98.57%) sits at the synthetic headline's level, which says the machinery -- not the toy distribution -- was doing the work in the main chapters. Second, the cheap sampler does not transfer as well: DDIM-50 falls to 77.14%, a 21.4-point gap behind DDPM on the same checkpoint, wider than the 12.5-point gap of the synthetic run. The guidance ablation also sharpens on real data: w = 0 (unconditional) sits at 8.57%, at the 10% chance level for 10 classes exactly as theory predicts, and over-guidance at w = 3.0 again hurts (34.29%).
+
+## C.4 Improvement log: screened on validation only
+
+Each candidate was screened on the validation fidelity proxy at w = 1.5 (primary) with validation noise-MSE as tie-break; test fidelity was never used for selection. Guidance was re-swept on validation for each candidate checkpoint, and w = 1.5 was selected for both the baseline and the final model.
+
+| Attempt | Change vs baseline | Val proxy fidelity (w = 1.5) | Val noise-MSE (EMA) | Decision |
+|---|---|---|---|---|
+| baseline | -- (reference) | 81.0% | 0.06214 | reference |
+| B1, EMA 0.999 | EMA decay 0.99 -> 0.999 | 11.0% | 0.14755 | drop |
+| B2, longer + augment | +12 epochs with random +-2px translation augmentation | 55.0% | 0.06452 | drop |
+| B3, more data | +6 epochs on an expanded 40,000-image pool (still augmented) | 58.0% | 0.06457 | drop |
+| B4, linear schedule | linear beta schedule instead of cosine (fresh run) | 76.0% | 0.06256 | drop |
+| B6, longer clean | +12 epochs, no augmentation (24 epochs total) | 87.0% | 0.05811 | **keep -- selected as final** |
+
+The guidance sweep on the selected B6 checkpoint (validation proxy) reads: w = 0.0 -> 10.0%, w = 1.0 -> 76.0%, w = 1.5 -> 87.0%, w = 2.0 -> 67.0%, w = 3.0 -> 31.0%, selecting w = 1.5 -- the same optimum as the baseline and the synthetic run. The pattern across B2 and B3 against B6 points at the translation augmentation (wrap-around roll shifts) as the harmful ingredient at this scale, not longer training or more data per se; that attribution is a hypothesis from the ablation pattern, not an isolated measurement, and it is recorded as one.
+
+## C.5 Final test results
+
+The final model is B6: the baseline continued for 12 further epochs with no augmentation (24 epochs total, second half at learning rate 0.001), selected on validation and evaluated on test once.
+
+| Metric | Synthetic (shapes) | Real baseline | Real FINAL (val-selected) |
+|---|---|---|---|
+| DDPM-300 fidelity (w = 1.5) | 98.44% | 98.57% | **100.0%** (70/70) |
+| DDIM-50 fidelity (w = 1.5) | 85.94% | 77.14% | **84.29%** |
+| Test noise-prediction MSE (raw) | 0.0666 | 0.0616 | **0.0576** |
+| Diversity, DDPM / DDIM (real data) | 10.758 / 10.301 (11.599) | 9.333 / 9.453 (8.977) | 9.364 / 9.525 (8.977) |
+| Fidelity-classifier accuracy on real test | 99.75% (4 classes) | 98.13% (gate PASS) | 98.13% (gate PASS) |
+
+Read plainly: longer clean training recovered most of the DDIM gap (77.14% to 84.29%) and pushed DDPM to the metric's ceiling on this 70-sample evaluation, while the noise-MSE improved from 0.0616 to 0.0576. Diversity stays at or slightly above the real data's level for both samplers (9.364 and 9.525 against 8.977), so the fidelity is not bought with mode collapse. Final sampling times were 17.1 s (DDPM) and 1.9 s (DDIM) for 70 samples in the final run, against 51.9 s and 11.2 s in the baseline run -- wall-clock times on a shared CPU are contention-dependent and are reported as indicative only; fidelity and diversity are the stable numbers. The DDIM gap that remains (about 16 points below DDPM) is real; closing it would have needed test-side configurations beyond the agreed evaluation budget (baseline once, final once) and was not done.
+
+## C.6 Memorisation check
+
+A 100% fidelity figure invites the obvious question -- has the model memorised its training set? -- so it was measured rather than argued. Nearest-neighbour L2 distances from the final model's generated samples to the 20,000 training images it trained on:
+
+| Sample set | Mean NN L2 | Min NN L2 | Median NN L2 | Fraction with NN L2 below 1.0 |
+|---|---|---|---|---|
+| Generated, DDPM (final) | 3.317 | 1.092 | 3.451 | 0.0 |
+| Generated, DDIM (final) | 4.905 | 2.171 | 4.891 | 0.0 |
+| Real test images (first 500, reference) | 3.233 | 0.664 | 3.346 | 0.056 |
+
+If the generated samples were memorised copies, their nearest-neighbour distances would sit near zero and far below those of real test images. They sit at normal MNIST inter-image distances instead -- no generated sample is closer than L2 1.0 to any training image, while 5.6% of real test images are. The verdict is the one recorded in `results_real.json`: novel samples, not copies. The 100% is classifier agreement, judged by a 98.13%-accurate classifier, on a 70-sample set, on an easy task -- and it should be quoted with all three qualifiers.
+
+## C.7 Negative results, kept
+
+Three negatives from this programme deserve the same prominence as the win, because each contradicts a plausible prior. **EMA 0.999 failed badly** (validation proxy 11.0%, validation noise-MSE 0.14755): at only about 950 training steps the 0.999 shadow still lags the live weights -- the same run-length arithmetic as Bug 1 of the main chapters, now measured on real data; the copied-from-a-paper decay is wrong at this scale. **Roll augmentation hurt in both variants tried**: +12 epochs with augmentation scored 55.0% on the validation proxy, and expanding the pool to 40,000 images with augmentation scored 58.0%, both far below the 87.0% of the same extra training without augmentation. **The linear schedule lost to cosine on fidelity** (76.0% against the baseline's 81.0% validation proxy) at a near-identical noise-MSE (0.06256 against 0.06214) -- a reminder that the training loss and sample quality are different measurements, which is the methodological point of Section 2.9. A width bump was not attempted: DDPM was saturated, and extra width does not target the DDIM gap under validation selection.
+
+## C.8 Comparisons, read with their protocols
+
+**Against the synthetic results of the main chapters** (DDPM 98.44%, DDIM 85.94%): DiffusionForge is the one project in this portfolio where the real headline matches its synthetic one -- because the fidelity method, not the data, was the easy part. The synthetic chapters stand as an implementation and protocol proof; their numbers are superseded by this addendum as the headline, and the DDIM gap, wider on real data than on shapes, is the honest open problem the synthetic run understated.
+
+**Against the published literature:** no direct comparison is made, and the reason is protocol, not modesty. Published MNIST diffusion results are at 28x28 and report FID against large sample sets with pretrained-feature backbones; this addendum is at 16x16, reports classifier fidelity on 70 samples, and claims **no FID**. Placing 100.0% fidelity next to a literature FID would compare two different quantities at two different resolutions. What can be said is internal: the fidelity classifier's own 98.13% real-test accuracy bounds how much of the 100.0% can be classifier generosity (about 2 points), and the memorisation check of Section C.6 bounds the copying explanation.
+
+## C.9 Limitations
+
+Four limitations bound these results. **Resolution:** all real-data numbers are at 16x16 after the downscale of Section C.2; nothing here estimates performance at 28x28 or on natural images. **Sample count:** 70 generated samples per sampler (a documented change from the synthetic protocol's 64), so one sample is about 1.43 fidelity points and small differences are within noise. **Timing:** sampling wall-clock times vary with shared-CPU contention between runs (51.9 s vs 17.1 s for comparable DDPM evaluations); only the fidelity, diversity and MSE figures are stable measurements. **Selection budget:** the test split was spent exactly twice by design, so the remaining DDIM gap and any width or solver variants are unexplored on test -- the plateau is reported, not tuned away.
+
+## C.10 Reproduce
+
+```bash
+python3 run_all_real.py   # full real-data pipeline incl. improvement phase -> results_real.json
+python3 run_b6.py         # the B6 attempt + conditional final re-selection
+```
+
+Pieces: `data_real.py` (MNIST load, SHA-256 verification, 28x28 -> 16x16 downscale), `classifier_real.py` (the gated fidelity classifier, `classifier_real.pt`), `train_real.py`, `evaluate_real.py`. Files: `results_real.json` (dataset provenance, the gated classifier, every improvement attempt with its validation scores and decision, baseline and final test evaluations, and the memorisation check), checkpoints `checkpoint_real_baseline.pt` and `checkpoint_real_b6_longer_clean.pt`, and the sample grids `samples_real_final_ddpm.png`, `samples_real_final_ddim50.png`, `samples_real_baseline_ddpm.png` and `samples_real_baseline_ddim50.png`, all in the project directory. Total recorded wall time for the main pipeline: about 5,008 s.

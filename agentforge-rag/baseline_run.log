@@ -1,0 +1,10 @@
+[data] corpus=5183 test_queries=300 test_qrel_rows=339 grades=[1] train_dev_queries=809
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[index] built in 6.4s over 5183 chunks, vocab=35618
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[baseline:naive_tfidf_only] {'recall_at_3': 0.5727, 'recall_at_5': 0.6366, 'ndcg_at_10': 0.5769, 'mrr_at_10': 0.5394, 'mean_latency_ms': 211.72, 'median_latency_ms': 204.27, 'runtime_seconds_all_queries': 63.54, 'n_queries': 300}
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[baseline:hybrid_tfidf_bm25] {'recall_at_3': 0.6521, 'recall_at_5': 0.7043, 'ndcg_at_10': 0.6269, 'mrr_at_10': 0.5901, 'mean_latency_ms': 241.49, 'median_latency_ms': 221.6, 'runtime_seconds_all_queries': 72.46, 'n_queries': 300}
+[io] wrote /home/hatch/workspace/advanced-ai-projects/agentforge-rag/results_real.json
+[baseline:hybrid_plus_rerank] {'recall_at_3': 0.6711, 'recall_at_5': 0.7164, 'ndcg_at_10': 0.6429, 'mrr_at_10': 0.6078, 'mean_latency_ms': 268.67, 'median_latency_ms': 235.01, 'runtime_seconds_all_queries': 80.61, 'n_queries': 300}
+[baseline] done

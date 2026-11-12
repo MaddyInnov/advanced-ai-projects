@@ -1,0 +1,34 @@
+results_real.json header written
+== centralised ({'kind': 'central', 'epochs': 30, 'lr': 0.001, 'batch_size': 32}) eval_test=True ==
+  [centralised] epoch 1/30 val 0.9196 test 0.9282
+  [centralised] epoch 2/30 val 0.9374 test 0.9441
+  [centralised] epoch 3/30 val 0.9498 test 0.9561
+  [centralised] epoch 4/30 val 0.9540 test 0.9582
+  [centralised] epoch 5/30 val 0.9570 test 0.9618
+  [centralised] epoch 6/30 val 0.9596 test 0.9641
+  [centralised] epoch 7/30 val 0.9618 test 0.9672
+  [centralised] epoch 8/30 val 0.9634 test 0.9669
+  [centralised] epoch 9/30 val 0.9646 test 0.9685
+  [centralised] epoch 10/30 val 0.9634 test 0.9712
+  [centralised] epoch 11/30 val 0.9662 test 0.9712
+  [centralised] epoch 12/30 val 0.9662 test 0.9711
+  [centralised] epoch 13/30 val 0.9676 test 0.9731
+  [centralised] epoch 14/30 val 0.9686 test 0.9743
+  [centralised] epoch 15/30 val 0.9706 test 0.9743
+  [centralised] epoch 16/30 val 0.9686 test 0.9717
+  [centralised] epoch 17/30 val 0.9702 test 0.9732
+  [centralised] epoch 18/30 val 0.9696 test 0.9740
+  [centralised] epoch 19/30 val 0.9710 test 0.9754
+  [centralised] epoch 20/30 val 0.9706 test 0.9752
+  [centralised] epoch 21/30 val 0.9696 test 0.9745
+  [centralised] epoch 22/30 val 0.9720 test 0.9745
+  [centralised] epoch 23/30 val 0.9710 test 0.9756
+  [centralised] epoch 24/30 val 0.9720 test 0.9757
+  [centralised] epoch 25/30 val 0.9706 test 0.9749
+  [centralised] epoch 26/30 val 0.9708 test 0.9756
+  [centralised] epoch 27/30 val 0.9712 test 0.9754
+  [centralised] epoch 28/30 val 0.9706 test 0.9758
+  [centralised] epoch 29/30 val 0.9710 test 0.9757
+  [centralised] epoch 30/30 val 0.9710 test 0.9756
+== centralised: val 0.9710 test 0.9756 (811.1s) -> results_real.json
+== fedavg_iid ({'kind': 'fed', 'partition': 'iid', 'rounds': 15, 'local_epochs': 3, 'lr': 0.08, 'batch_size': 32, 'mu': 0.0}) eval_test=True ==

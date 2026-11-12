@@ -30,33 +30,68 @@ CONFIGS = {
     "agentforge-rag": dict(
         project_dir="agentforge-rag", title="AgentForge-RAG", accent="2B50C8",
         short="AgentForge-RAG — Project Thesis Report",
-        metrics=[("100%", "Recall@3 & Recall@5\nmain + paraphrase sets"),
-                 ("100%", "Groundedness\n28 of 28 answers verified"),
-                 ("100%", "Abstention & injection block\n5/5 + 5/5"),
-                 ("10.56 ms", "Mean query latency\nlocal CPU, per query")],
-        glance_caption="Ablation on the paraphrase split: each stage of the retrieval stack "
-                       "(hybrid TF-IDF + BM25 fusion, then reranking) earns a measured gain "
-                       "over naive TF-IDF alone. All values from results.json."),
+        # Headline = REAL SciFact/BEIR results (results_real.json, Appendix C of
+        # the report). The synthetic/internal 100% numbers are documented inside
+        # as pipeline proof only and must not appear on the cover / glance
+        # furniture. Groundedness / abstention are NOT benchmarked by SciFact
+        # and likewise stay off the cover.
+        metrics=[("0.6466", "nDCG@10 on SciFact test\nBEIR · 300 queries · real data"),
+                 ("0.7059", "Recall@5 on SciFact test\nRecall@3 0.6578 · MRR@10 0.6090"),
+                 ("0.665", "Published BEIR BM25 bar\nfinal sits below it — plateau"),
+                 ("44 attempts", "Dev-screened improvement log\nRM3 reproduced harmful, rejected")],
+        glance_caption="SciFact (BEIR) test results: the project's baseline ladder "
+                       "(naive TF-IDF 0.5769 nDCG@10, hybrid 0.6269, hybrid + rerank "
+                       "0.6429) and the dev-selected final pipeline (0.6466) against "
+                       "the published BEIR BM25 bar of 0.665 (dashed). The final "
+                       "pipeline — BM25 (k1=1.0, b=0.5) + TF-IDF title boost, RRF "
+                       "fusion, no reranker — was selected on train/dev queries only "
+                       "and evaluated on test exactly once; it plateaus below the "
+                       "bar after 44 dev attempts. All values from "
+                       "results_real.json; the main chapters' internal-eval results "
+                       "stand as pipeline proof only."),
     "resolvedesk-ai": dict(
         project_dir="resolvedesk-ai", title="ResolveDesk AI", accent="4F46E5",
         short="ResolveDesk AI — Project Thesis Report",
-        metrics=[("100%", "Intent accuracy\nmacro-F1 1.000, held-out test"),
-                 ("98.3%", "Priority accuracy\nmacro-F1 0.983"),
-                 ("13/13", "Product tests passing\nincl. tenant isolation"),
-                 ("10/10", "Live HTTP smoke steps\nfull user journey")],
-        glance_caption="Triage classifier performance on the 120-message held-out test set "
-                       "(600 generated messages, 480 train / 120 test). Synthetic-data scores "
-                       "are an upper bound — see the report's limitations chapter."),
+        # Headline = REAL Bitext results (results_real.json, Appendix D of the report).
+        # The synthetic-run numbers (incl. priority, which has no real labels and is
+        # synthetic-only) are documented inside as pipeline proof only and must not
+        # appear on the cover / glance furniture.
+        metrics=[("97.59%", "Intent accuracy — Bitext deduped\nmacro-F1 0.9748, real data"),
+                 ("99.5%", "Category accuracy — Bitext deduped\nmacro-F1 0.995, honest 2nd task"),
+                 ("89.9%", "Deduped baseline intent accuracy\nproject classifier as-is"),
+                 ("13/13", "Product tests passing\nincl. tenant isolation")],
+        glance_caption="Deduped baseline vs final on the Bitext customer-support benchmark "
+                       "(26,872 rows, 27 intents, licence CDLA-Sharing-1.0), deduplicated "
+                       "split — the headline protocol (train 19,259 / test 4,813 unique "
+                       "utterances). The naive split's 94.75% is leakage-inflated (13.79% of "
+                       "its test rows appear verbatim in train) and is shown in Appendix D "
+                       "as contrast only. Priority has no real labels and remains "
+                       "synthetic-only, so it is not charted. All values from "
+                       "results_real.json."),
     "sentinel-llm": dict(
         project_dir="sentinel-llm", title="Sentinel-LLM", accent="DC2626",
         short="Sentinel-LLM — Project Thesis Report",
-        metrics=[("100%", "LoRA test accuracy\n191/191, = full fine-tuning"),
-                 ("1.86%", "Trainable parameters\n10,672 of 574,923"),
-                 ("52.9x", "Fewer trainable params\nthan full fine-tuning"),
-                 ("83.25% > 100%", "Base > LoRA accuracy\n+16.75 points")],
-        glance_caption="Left: per-task accuracy, brief base model vs LoRA — adaptation matters "
-                       "exactly on MITRE mapping, CVE explanation and log triage. Right: "
-                       "trainable parameters, full fine-tuning vs LoRA (log scale)."),
+        # Headline = REAL results (results_real.json Round 2, Appendix C of the
+        # report). The synthetic-run numbers (100%, 191/191, 52.9x) are
+        # documented inside as pipeline proof only and must not appear on the
+        # cover / glance furniture.
+        metrics=[("79.46%", "ATT&CK tactic test accuracy\nTF-IDF SVM · macro F1 0.7788"),
+                 ("55.70%", "CVE severity test accuracy\nTF-IDF SVM · macro F1 0.5444"),
+                 ("49.11% / 0.364", "Round 1 LoRA on ATT&CK\nlost to full FT — kept visible"),
+                 ("81.95% / 0.7795", "Published ATT&CK SVM bar\ndifferent corpus / protocol")],
+        glance_caption="Real-data test results (Round 2, Appendix C). Left: ATT&CK "
+                       "tactic classification (stratified split, test n=112) — the "
+                       "TF-IDF word 1-2-gram + linear SVM headline (79.46% accuracy, "
+                       "0.7788 macro F1) is level with the published SVM bar on "
+                       "macro F1 (0.7795) and 2.5 points below it on accuracy "
+                       "(81.95%), on a different corpus/protocol; hybrid and neural "
+                       "systems and the Round 1 LoRA final (49.11% / 0.364) sit "
+                       "below it. Right: CVE severity (temporal split, test = 2024, "
+                       "n=1,000) — headline 55.70% / 0.5444, below the literature "
+                       "ceiling zone of about 70% at 36k-CVE scale. Hybrid variants "
+                       "never beat pure TF-IDF. All values from results_real.json; "
+                       "the main chapters' synthetic-data results stand as pipeline "
+                       "proof only."),
     # --- future reports: same system, fill metrics from their results.json ---
     "densehar": dict(
         project_dir="densehar", title="DenseHAR", accent="7C3AED",
@@ -80,26 +115,40 @@ CONFIGS = {
     "diffusionforge": dict(
         project_dir="diffusionforge", title="DiffusionForge", accent="DB2777",
         short="DiffusionForge — Project Thesis Report",
-        metrics=[("98.44%", "DDPM class fidelity\n63 of 64 samples, 300 steps"),
-                 ("6.5x faster", "DDIM-50 sampling\n13.4 s vs 87.4 s per 64 samples"),
-                 ("0.0666", "Held-out noise-prediction MSE\nraw weights, random t"),
-                 ("92.7%", "Diversity retained vs real data\n10.76 vs 11.60 pairwise L2")],
-        glance_caption="Left: class fidelity by sampler and guidance weight (DDIM-50 for the "
-                       "guidance sweep; DDPM at guidance 1.5). Guidance peaks at w=1.5 and "
-                       "over-guidance at w=3.0 hurts. Right: wall-clock time per 64 samples. "
-                       "All values from results.json."),
+        # Headline = REAL MNIST-16 results (results_real.json, Appendix C of the report).
+        # The synthetic-shapes numbers are documented inside as pipeline proof only and
+        # must not appear on the cover / glance furniture.
+        metrics=[("100.0%", "DDPM-300 class fidelity\nMNIST-16 real data · 70 of 70 samples"),
+                 ("84.29%", "DDIM-50 class fidelity\nMNIST-16 · guidance w=1.5"),
+                 ("0.0576", "Held-out noise-prediction MSE\nfinal model · real MNIST-16 test"),
+                 ("98.13%", "Fidelity-classifier accuracy\nheld-out real test · gate PASS")],
+        glance_caption="Real-data results on MNIST downscaled to 16x16 (Appendix C): the "
+                       "baseline configuration and the validation-selected final model "
+                       "(+12 epochs, no augmentation), each evaluated on test once at "
+                       "guidance w=1.5. Left: class fidelity by sampler -- DDPM-300 against "
+                       "DDIM-50; the dashed line is chance for 10 classes. Right: sample "
+                       "diversity (mean pairwise L2) against real data. All values from "
+                       "results_real.json; the main chapters' synthetic-shapes results "
+                       "stand as pipeline proof only."),
     "fedguard": dict(
         project_dir="fedguard", title="FedGuard", accent="059669",
         short="FedGuard — Project Thesis Report",
-        metrics=[("89.0%", "Centralised ceiling\npooled data, AdamW + cosine"),
-                 ("88.5%", "FedProx on non-IID data\nrecovers 1.0 of 1.1 pts lost"),
-                 ("~4.5 pts", "Cost of DP-SGD\nfor a formal privacy budget"),
-                 ("~5.03", "Best epsilon estimate (sigma=1.2)\nsimplified RDP, delta=1e-5")],
-        glance_caption="Left: final test accuracy for all six experiments (1,000 held-out "
-                       "examples, same seed and test set). Right: the privacy-utility "
-                       "trade-off for the two DP-SGD runs against the non-private FedAvg "
-                       "IID reference — epsilon values are simplified RDP estimates, not "
-                       "certified budgets. All values from results.json."),
+        # Headline = REAL MNIST-16 results (results_real.json, Appendix C of the report).
+        # The synthetic-run numbers are documented inside as pipeline proof only and
+        # must not appear on the cover / glance furniture. Every epsilon-hat value is
+        # the project's simplified RDP ESTIMATE, never a formal guarantee.
+        metrics=[("97.56%", "Centralised accuracy\nMNIST-16 · full 10,000-image test"),
+                 ("96.53%", "FedAvg non-IID accuracy\nDirichlet alpha=0.5 · 40 rounds"),
+                 ("90.54%", "DP-SGD accuracy (sigma=1.2)\nepsilon-hat 5.55 (estimate)"),
+                 ("92.18%", "Privacy-frontier maximum\nepsilon-hat 15.31 (estimate)")],
+        glance_caption="Real-data results on MNIST downscaled to 16x16 (Appendix C), full "
+                       "10,000-image test set for every row. Left: final test accuracy -- "
+                       "centralised, FedAvg (IID and non-IID), FedProx (a negative result: "
+                       "below FedAvg) and DP-SGD at two noise levels. Right: the "
+                       "privacy-utility frontier; epsilon-hat values are the project's "
+                       "simplified RDP estimates, not certified budgets. All values from "
+                       "results_real.json; the main chapters' synthetic-data results stand "
+                       "as pipeline proof only."),
 }
 
 # ----------------------------------------------------------------------------
@@ -135,70 +184,90 @@ def charts_for(slug, cfg):
     plt = _mpl(accent)
     out = []
     if slug == "agentforge-rag":
-        ab = d["ablation"]
-        methods = ["Naive\nTF-IDF only", "Hybrid TF-IDF+BM25\n+ query expansion",
-                   "Hybrid + rerank\n(full system)"]
-        r3 = [ab[k]["paraphrase_recall_at_3"] * 100 for k in
-              ("naive_tfidf_only", "hybrid_tfidf_bm25_expansion", "hybrid_plus_rerank")]
-        r5 = [ab[k]["paraphrase_recall_at_5"] * 100 for k in
-              ("naive_tfidf_only", "hybrid_tfidf_bm25_expansion", "hybrid_plus_rerank")]
+        # Glance chart uses the REAL SciFact/BEIR results (results_real.json) —
+        # the report's headline since Appendix C. The internal results.json
+        # ablation values are not charted.
+        rj_real = os.path.join(BASE, "..", cfg["project_dir"], "results_real.json")
+        rd = json.load(open(rj_real))
+        bt = rd["baseline_test"]; fin = rd["final_test"]["metrics"]
+        bar = rd["published_bar"]["bm25_scifact_ndcg_at_10"]
+        methods = ["Naive\nTF-IDF only", "Hybrid\nTF-IDF+BM25",
+                   "Hybrid + rerank\n(best baseline rung)", "Final pipeline\n(dev-selected)"]
+        ndcg = [bt["naive_tfidf_only"]["ndcg_at_10"], bt["hybrid_tfidf_bm25"]["ndcg_at_10"],
+                bt["hybrid_plus_rerank"]["ndcg_at_10"], fin["ndcg_at_10"]]
+        r5 = [bt["naive_tfidf_only"]["recall_at_5"], bt["hybrid_tfidf_bm25"]["recall_at_5"],
+              bt["hybrid_plus_rerank"]["recall_at_5"], fin["recall_at_5"]]
         fig, ax = plt.subplots(figsize=(7.4, 3.9))
-        x = range(3); w = 0.38
-        b1 = ax.bar([i - w / 2 for i in x], r3, w, color=accent, label="Paraphrase Recall@3")
-        b2 = ax.bar([i + w / 2 for i in x], r5, w, color="#94A3B8", label="Paraphrase Recall@5")
+        x = range(4); w = 0.38
+        b1 = ax.bar([i - w / 2 for i in x], ndcg, w, color=accent, label="nDCG@10")
+        b2 = ax.bar([i + w / 2 for i in x], r5, w, color="#94A3B8", label="Recall@5")
         for b in list(b1) + list(b2):
-            ax.annotate(f"{b.get_height():.1f}%", (b.get_x() + b.get_width() / 2, b.get_height()),
-                        ha="center", va="bottom", fontsize=9, fontweight="bold")
-        ax.set_xticks(list(x)); ax.set_xticklabels(methods, fontsize=9)
-        ax.set_ylim(0, 112); ax.set_ylabel("Recall (%)")
-        ax.set_title("Retrieval ablation — paraphrase split (the discriminating split)")
+            ax.annotate(f"{b.get_height():.3f}", (b.get_x() + b.get_width() / 2, b.get_height()),
+                        ha="center", va="bottom", fontsize=8.5, fontweight="bold")
+        ax.axhline(bar, color="#DC2626", lw=1.2, ls="--")
+        ax.annotate(f"published BEIR BM25 bar (nDCG@10 {bar})", (3.45, 0.815),
+                    ha="right", fontsize=8, color="#DC2626")
+        ax.set_xticks(list(x)); ax.set_xticklabels(methods, fontsize=8.5)
+        ax.set_ylim(0, 0.88); ax.set_ylabel("Score")
+        ax.set_title("SciFact (BEIR) test — baseline ladder vs final (real data, 300 queries)", fontsize=11)
         ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.14), ncol=2); ax.grid(axis="y", color="#E2E8F0", lw=0.7)
         ax.set_axisbelow(True)
         out.append(_save(fig, "agentforge-ablation.png"))
     elif slug == "resolvedesk-ai":
-        labels = ["Intent\naccuracy", "Intent\nmacro-F1", "Priority\naccuracy", "Priority\nmacro-F1"]
-        vals = [d["intent_accuracy"] * 100, d["intent_macro_f1"] * 100,
-                d["priority_accuracy"] * 100, d["priority_macro_f1"] * 100]
-        fig, ax = plt.subplots(figsize=(7.4, 3.7))
-        bars = ax.bar(labels, vals, 0.55, color=accent)
-        for b in bars:
-            ax.annotate(f"{b.get_height():.1f}%", (b.get_x() + b.get_width() / 2, b.get_height()),
-                        ha="center", va="bottom", fontsize=10, fontweight="bold")
+        # Glance chart uses the REAL Bitext results (results_real.json) — the report's
+        # headline since Appendix D. The synthetic results.json values (incl. priority)
+        # are not charted.
+        rj_real = os.path.join(BASE, "..", cfg["project_dir"], "results_real.json")
+        rd = json.load(open(rj_real))
+        bl = rd["baseline"]["deduped"]; fn = rd["final"]
+        labels = ["Intent\naccuracy", "Intent\nmacro-F1", "Category\naccuracy", "Category\nmacro-F1"]
+        base_vals = [bl["intent"]["accuracy"] * 100, bl["intent"]["macro_f1"] * 100,
+                     bl["category"]["accuracy"] * 100, bl["category"]["macro_f1"] * 100]
+        final_vals = [fn["intent"]["accuracy"] * 100, fn["intent"]["macro_f1"] * 100,
+                      fn["category"]["accuracy"] * 100, fn["category"]["macro_f1"] * 100]
+        fig, ax = plt.subplots(figsize=(7.4, 3.9))
+        x = range(4); w = 0.38
+        b1 = ax.bar([i - w / 2 for i in x], base_vals, w, color="#94A3B8", label="Deduped baseline")
+        b2 = ax.bar([i + w / 2 for i in x], final_vals, w, color=accent, label="Final (val-selected)")
+        for b in list(b1) + list(b2):
+            ax.annotate(f"{b.get_height():.1f}", (b.get_x() + b.get_width() / 2, b.get_height()),
+                        ha="center", va="bottom", fontsize=9, fontweight="bold")
+        ax.set_xticks(list(x)); ax.set_xticklabels(labels, fontsize=9)
         ax.set_ylim(0, 112); ax.set_ylabel("Score (%)")
-        ax.set_title("ML triage classifier — held-out test (120 messages)")
+        ax.set_title("Bitext deduped test — baseline vs final (real data, n=4,813)", fontsize=11)
+        ax.legend(frameon=False, fontsize=8.5, loc="upper center",
+                  bbox_to_anchor=(0.5, -0.13), ncol=2)
         ax.grid(axis="y", color="#E2E8F0", lw=0.7); ax.set_axisbelow(True)
         out.append(_save(fig, "resolvedesk-classifier.png"))
     elif slug == "sentinel-llm":
-        tasks = ["CVE\nexplanation", "Incident\nseverity", "IOC\nextraction",
-                 "Log\ntriage", "MITRE\nmapping", "Phishing\ndetection"]
-        keys = ["cve_explanation", "incident_severity", "ioc_extraction",
-                "log_triage", "mitre_mapping", "phishing_detection"]
-        base = [d["per_task_accuracy_base"][k] * 100 for k in keys]
-        lora = [d["per_task_accuracy_lora"][k] * 100 for k in keys]
-        fig, (a1, a2) = plt.subplots(1, 2, figsize=(7.6, 3.8),
-                                     gridspec_kw={"width_ratios": [1.9, 1]})
-        x = range(6); w = 0.38
-        a1.bar([i - w / 2 for i in x], base, w, color="#94A3B8", label="Brief base")
-        bl = a1.bar([i + w / 2 for i in x], lora, w, color=accent, label="LoRA (r=16)")
-        for b in bl:
-            a1.annotate(f"{b.get_height():.0f}", (b.get_x() + b.get_width() / 2, b.get_height()),
-                        ha="center", va="bottom", fontsize=8, fontweight="bold")
-        a1.set_xticks(list(x)); a1.set_xticklabels(tasks, fontsize=7.5)
-        a1.set_ylim(0, 115); a1.set_ylabel("Test accuracy (%)")
-        a1.set_title("Per-task: base vs LoRA", fontsize=11)
+        # Glance charts use the REAL results (results_real.json Round 2) — the
+        # report's headline since Appendix C. The synthetic results.json values
+        # are not charted.
+        rj_real = os.path.join(BASE, "..", cfg["project_dir"], "results_real.json")
+        rd = json.load(open(rj_real))
+        systems = ["TF-IDF SVM\n(headline)", "Hybrid", "Neural best\n(full FT)", "LoRA\n(Round 1 final)"]
+        fig, (a1, a2) = plt.subplots(1, 2, figsize=(7.6, 3.8))
+        for ax, task, ttl in ((a1, "mitre", "ATT&CK tactic — test (n=112)"),
+                              (a2, "cve", "CVE severity — test 2024 (n=1,000)")):
+            fam = rd["tasks"][task]["round2"]["families"]
+            head = rd["round2"]["headlines"][task]["test"]
+            lora = rd["tasks"][task]["phase_b_final"]["lora_test"]
+            acc = [head["accuracy"] * 100, fam["hybrid"]["winner_test"]["accuracy"] * 100,
+                   fam["neural"]["winner_test"]["accuracy"] * 100, lora["accuracy"] * 100]
+            f1 = [head["macro_f1"] * 100, fam["hybrid"]["winner_test"]["macro_f1"] * 100,
+                  fam["neural"]["winner_test"]["macro_f1"] * 100, lora["macro_f1"] * 100]
+            x = range(4); w = 0.38
+            b1 = ax.bar([i - w / 2 for i in x], acc, w, color=accent, label="Accuracy")
+            b2 = ax.bar([i + w / 2 for i in x], f1, w, color="#94A3B8", label="Macro F1")
+            for b in list(b1) + list(b2):
+                ax.annotate(f"{b.get_height():.1f}", (b.get_x() + b.get_width() / 2, b.get_height()),
+                            ha="center", va="bottom", fontsize=6.8, fontweight="bold")
+            ax.set_xticks(list(x)); ax.set_xticklabels(systems, fontsize=7.5)
+            ax.set_ylim(0, 100); ax.set_ylabel("Score (%)")
+            ax.set_title(ttl, fontsize=10.5)
+            ax.grid(axis="y", color="#E2E8F0", lw=0.7); ax.set_axisbelow(True)
         a1.legend(frameon=False, fontsize=8, loc="upper center",
-                  bbox_to_anchor=(0.5, -0.13), ncol=2)
-        a1.grid(axis="y", color="#E2E8F0", lw=0.7); a1.set_axisbelow(True)
-        pp = a2.bar(["Full\nfine-tuning", "LoRA\n(r=16)"],
-                    [d["full_finetuning_baseline"]["trainable_params"],
-                     d["trainable_lora_params"]],
-                    0.5, color=["#94A3B8", accent])
-        a2.set_yscale("log"); a2.set_ylim(1e3, 2e6)
-        for b, v in zip(pp, [564251, 10672]):
-            a2.annotate(f"{v:,}", (b.get_x() + b.get_width() / 2, b.get_height() * 1.25),
-                        ha="center", fontsize=9, fontweight="bold")
-        a2.set_title("Trainable params (log)", fontsize=11)
-        a2.grid(axis="y", color="#E2E8F0", lw=0.7); a2.set_axisbelow(True)
+                  bbox_to_anchor=(1.0, -0.13), ncol=2)
         fig.tight_layout()
         out.append(_save(fig, "sentinel-tasks-params.png"))
     elif slug == "densehar":
@@ -245,42 +314,54 @@ def charts_for(slug, cfg):
             ax.grid(axis="y", color="#E2E8F0", lw=0.7); ax.set_axisbelow(True)
         out.append(_save(fig, "densehar-transition-segmental.png"))
     elif slug == "diffusionforge":
-        ga = d["guidance_ablation_fidelity_pct"]
-        labels = ["DDPM\n300 steps", "DDIM w=0\n(uncond.)", "DDIM w=1.5", "DDIM w=3.0"]
-        vals = [d["ddpm"]["fidelity_pct"], ga["0.0"], ga["1.5"], ga["3.0"]]
-        cols = [accent, "#94A3B8", accent, "#94A3B8"]
+        # Glance charts use the REAL MNIST-16 results (results_real.json) — the
+        # report's headline since Appendix C. The synthetic results.json values
+        # are not charted.
+        rj_real = os.path.join(BASE, "..", cfg["project_dir"], "results_real.json")
+        rd = json.load(open(rj_real))
+        bt = rd["baseline"]["test_evaluation"]; ft = rd["final"]["test_evaluation"]
+        labels = ["Baseline\nDDPM-300", "Baseline\nDDIM-50", "Final\nDDPM-300", "Final\nDDIM-50"]
+        vals = [bt["ddpm"]["fidelity_pct"], bt["ddim50"]["fidelity_pct"],
+                ft["ddpm"]["fidelity_pct"], ft["ddim50"]["fidelity_pct"]]
+        cols = ["#94A3B8", "#94A3B8", accent, accent]
         fig, (a1, a2) = plt.subplots(1, 2, figsize=(7.6, 3.8),
                                      gridspec_kw={"width_ratios": [1.9, 1]})
         bars = a1.bar(labels, vals, 0.55, color=cols)
         for b in bars:
             a1.annotate(f"{b.get_height():.2f}%", (b.get_x() + b.get_width() / 2, b.get_height()),
                         ha="center", va="bottom", fontsize=8.5, fontweight="bold")
-        a1.axhline(25, color="#DC2626", lw=1, ls="--")
-        a1.annotate("chance (25%)", (3.45, 27), ha="right", fontsize=8, color="#DC2626")
+        a1.axhline(10, color="#DC2626", lw=1, ls="--")
+        a1.annotate("chance (10%)", (3.45, 12), ha="right", fontsize=8, color="#DC2626")
         a1.set_ylim(0, 115); a1.set_ylabel("Class fidelity (%)")
-        a1.set_title("Fidelity: sampler x guidance", fontsize=11)
+        a1.set_title("Fidelity on MNIST-16: baseline vs final", fontsize=11)
         a1.tick_params(axis="x", labelsize=8)
         a1.grid(axis="y", color="#E2E8F0", lw=0.7); a1.set_axisbelow(True)
-        tt = a2.bar(["DDPM\n300 steps", "DDIM\n50 steps"],
-                    [d["ddpm"]["seconds_for_64_samples"], d["ddim50"]["seconds_for_64_samples"]],
-                    0.5, color=["#94A3B8", accent])
-        for b in tt:
-            a2.annotate(f"{b.get_height():.1f}s", (b.get_x() + b.get_width() / 2, b.get_height()),
+        dv = a2.bar(["DDPM", "DDIM", "Real\ndata"],
+                    [ft["ddpm"]["diversity_pairwise_l2"], ft["ddim50"]["diversity_pairwise_l2"],
+                     ft["real_data_diversity_pairwise_l2"]],
+                    0.5, color=[accent, "#334155", "#94A3B8"])
+        for b in dv:
+            a2.annotate(f"{b.get_height():.2f}", (b.get_x() + b.get_width() / 2, b.get_height()),
                         ha="center", va="bottom", fontsize=9, fontweight="bold")
-        a2.set_ylim(0, 105); a2.set_ylabel("Seconds per 64 samples")
-        a2.set_title("Sampling speed", fontsize=11)
+        a2.set_ylim(0, 11.5); a2.set_ylabel("Mean pairwise L2")
+        a2.set_title("Final diversity vs real", fontsize=11)
         a2.tick_params(axis="x", labelsize=8)
         a2.grid(axis="y", color="#E2E8F0", lw=0.7); a2.set_axisbelow(True)
         fig.tight_layout()
         out.append(_save(fig, "diffusionforge-fidelity-speed.png"))
     elif slug == "fedguard":
-        ex = d["experiments"]
+        # Glance charts use the REAL MNIST-16 results (results_real.json) — the
+        # report's headline since Appendix C. The synthetic results.json values
+        # are not charted. Epsilon-hat is the project's simplified RDP ESTIMATE.
+        rj_real = os.path.join(BASE, "..", cfg["project_dir"], "results_real.json")
+        rd = json.load(open(rj_real))
+        fin = rd["final"]
         keys = ["centralised", "fedavg_iid", "fedavg_noniid", "fedprox_noniid",
-                "fedavg_dp_sigma0.7", "fedavg_dp_sigma1.2"]
+                "dp_sigma1.2", "dp_sigma0.7"]
         labels = ["Centralised\n(pooled)", "FedAvg\nIID", "FedAvg\nnon-IID",
-                  "FedProx\nnon-IID", "DP\ns=0.7", "DP\ns=1.2"]
-        vals = [ex[k]["final_accuracy"] * 100 for k in keys]
-        cols = ["#94A3B8", accent, "#94A3B8", accent, "#334155", "#334155"]
+                  "FedProx\nnon-IID", "DP\ns=1.2", "DP\ns=0.7"]
+        vals = [fin[k]["test_accuracy"] * 100 for k in keys]
+        cols = ["#94A3B8", accent, accent, "#94A3B8", "#334155", "#334155"]
         fig, (a1, a2) = plt.subplots(1, 2, figsize=(7.6, 3.9),
                                      gridspec_kw={"width_ratios": [1.85, 1]})
         bars = a1.bar(labels, vals, 0.58, color=cols)
@@ -288,26 +369,26 @@ def charts_for(slug, cfg):
             a1.annotate(f"{b.get_height():.1f}", (b.get_x() + b.get_width() / 2, b.get_height()),
                         ha="center", va="bottom", fontsize=8, fontweight="bold")
         a1.set_ylim(0, 108); a1.set_ylabel("Test accuracy (%)")
-        a1.set_title("Final accuracy — six experiments", fontsize=11)
+        a1.set_title("Final accuracy — MNIST-16 (real data)", fontsize=11)
         a1.tick_params(axis="x", labelsize=8)
         a1.grid(axis="y", color="#E2E8F0", lw=0.7); a1.set_axisbelow(True)
-        eps = [ex["fedavg_dp_sigma1.2"]["dp"]["epsilon_estimate"],
-               ex["fedavg_dp_sigma0.7"]["dp"]["epsilon_estimate"]]
-        acc = [ex["fedavg_dp_sigma1.2"]["final_accuracy"] * 100,
-               ex["fedavg_dp_sigma0.7"]["final_accuracy"] * 100]
-        a2.axhline(ex["fedavg_iid"]["final_accuracy"] * 100, color="#94A3B8",
+        fr = rd["privacy_frontier"]
+        eps = [p["epsilon_estimate"] for p in fr]
+        acc = [p["test_accuracy"] * 100 for p in fr]
+        a2.axhline(fin["fedavg_noniid"]["test_accuracy"] * 100, color="#94A3B8",
                    lw=1, ls="--")
-        a2.annotate("dashed: FedAvg IID 88.6\n(no DP)", (0.04, 0.90),
+        a2.annotate("dashed: FedAvg non-IID 96.5\n(no DP)", (0.04, 0.90),
                     xycoords="axes fraction", ha="left", va="top",
                     fontsize=7.5, color="#64748B")
         a2.scatter(eps, acc, s=70, color=accent, zorder=3)
-        for e, a, s, off in zip(eps, acc, ["s=1.2", "s=0.7"], [(0, -27), (0, 9)]):
-            a2.annotate(f"{s}\n{a:.1f}%", (e, a), textcoords="offset points",
-                        xytext=off, ha="center", fontsize=8, fontweight="bold")
-        a2.set_xlim(3.5, 10.8); a2.set_ylim(78, 95)
-        a2.set_xlabel("Epsilon estimate")
+        a2.plot(eps, acc, color=accent, lw=1, alpha=0.55, zorder=2)
+        for e, a in zip(eps, acc):
+            a2.annotate(f"{a:.1f}%", (e, a), textcoords="offset points",
+                        xytext=(0, 9), ha="center", fontsize=8, fontweight="bold")
+        a2.set_xlim(2.0, 17.5); a2.set_ylim(74, 100)
+        a2.set_xlabel("Epsilon-hat (estimate)")
         a2.set_ylabel("Test accuracy (%)")
-        a2.set_title("Privacy vs utility", fontsize=11)
+        a2.set_title("Privacy vs utility (frontier)", fontsize=11)
         a2.tick_params(axis="x", labelsize=8)
         a2.grid(color="#E2E8F0", lw=0.7); a2.set_axisbelow(True)
         fig.tight_layout()

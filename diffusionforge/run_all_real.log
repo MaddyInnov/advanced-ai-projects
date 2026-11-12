@@ -1,0 +1,76 @@
+dataset verified: train=60000 test=10000
+classifier real-test accuracy: 98.13% (gate PASS)
+[baseline] epoch 1/12 train_loss 0.2249 val_noise_mse_ema 0.25556 (59s)
+[baseline] epoch 2/12 train_loss 0.0994 val_noise_mse_ema 0.13529 (110s)
+[baseline] epoch 3/12 train_loss 0.0834 val_noise_mse_ema 0.09702 (219s)
+[baseline] epoch 4/12 train_loss 0.0756 val_noise_mse_ema 0.08099 (322s)
+[baseline] epoch 5/12 train_loss 0.0716 val_noise_mse_ema 0.07312 (413s)
+[baseline] epoch 6/12 train_loss 0.0674 val_noise_mse_ema 0.06876 (505s)
+[baseline] epoch 7/12 train_loss 0.0654 val_noise_mse_ema 0.06615 (616s)
+[baseline] epoch 8/12 train_loss 0.0636 val_noise_mse_ema 0.06450 (733s)
+[baseline] epoch 9/12 train_loss 0.0630 val_noise_mse_ema 0.06343 (858s)
+[baseline] epoch 10/12 train_loss 0.0622 val_noise_mse_ema 0.06273 (978s)
+[baseline] epoch 11/12 train_loss 0.0620 val_noise_mse_ema 0.06235 (1088s)
+[baseline] epoch 12/12 train_loss 0.0613 val_noise_mse_ema 0.06214 (1182s)
+[baseline] done in 1182s final loss 0.06131 val MSE 0.06214
+[baseline] val proxy fidelity 81.0% val MSE 0.06214
+saved samples_real_baseline_ddpm.png (70 samples)
+saved samples_real_baseline_ddim50.png (70 samples)
+baseline test: DDPM 98.57% DDIM 77.14%
+[b1_ema999] epoch 1/12 train_loss 0.2249 val_noise_mse_ema 0.98246 (95s)
+[b1_ema999] epoch 2/12 train_loss 0.0994 val_noise_mse_ema 0.73843 (192s)
+[b1_ema999] epoch 3/12 train_loss 0.0834 val_noise_mse_ema 0.56322 (278s)
+[b1_ema999] epoch 4/12 train_loss 0.0756 val_noise_mse_ema 0.44192 (377s)
+[b1_ema999] epoch 5/12 train_loss 0.0716 val_noise_mse_ema 0.35796 (485s)
+[b1_ema999] epoch 6/12 train_loss 0.0674 val_noise_mse_ema 0.29822 (600s)
+[b1_ema999] epoch 7/12 train_loss 0.0654 val_noise_mse_ema 0.25452 (715s)
+[b1_ema999] epoch 8/12 train_loss 0.0636 val_noise_mse_ema 0.22152 (821s)
+[b1_ema999] epoch 9/12 train_loss 0.0630 val_noise_mse_ema 0.19606 (924s)
+[b1_ema999] epoch 10/12 train_loss 0.0622 val_noise_mse_ema 0.17616 (1037s)
+[b1_ema999] epoch 11/12 train_loss 0.0620 val_noise_mse_ema 0.16036 (1140s)
+[b1_ema999] epoch 12/12 train_loss 0.0613 val_noise_mse_ema 0.14755 (1237s)
+[b1_ema999] done in 1237s final loss 0.06131 val MSE 0.14755
+[b1_ema999] val proxy fidelity 11.0% val MSE 0.14755
+[b2_longer_augment] continuing from checkpoint_real_baseline.pt (epochs_total=12)
+[b2_longer_augment] epoch 1/12 train_loss 0.0844 val_noise_mse_ema 0.06702 (90s)
+[b2_longer_augment] epoch 2/12 train_loss 0.0743 val_noise_mse_ema 0.06768 (187s)
+[b2_longer_augment] epoch 3/12 train_loss 0.0722 val_noise_mse_ema 0.06745 (289s)
+[b2_longer_augment] epoch 4/12 train_loss 0.0704 val_noise_mse_ema 0.06697 (400s)
+[b2_longer_augment] epoch 5/12 train_loss 0.0702 val_noise_mse_ema 0.06622 (515s)
+[b2_longer_augment] epoch 6/12 train_loss 0.0688 val_noise_mse_ema 0.06587 (629s)
+[b2_longer_augment] epoch 7/12 train_loss 0.0686 val_noise_mse_ema 0.06561 (689s)
+[b2_longer_augment] epoch 8/12 train_loss 0.0667 val_noise_mse_ema 0.06501 (747s)
+[b2_longer_augment] epoch 9/12 train_loss 0.0670 val_noise_mse_ema 0.06491 (804s)
+[b2_longer_augment] epoch 10/12 train_loss 0.0661 val_noise_mse_ema 0.06467 (856s)
+[b2_longer_augment] epoch 11/12 train_loss 0.0660 val_noise_mse_ema 0.06460 (912s)
+[b2_longer_augment] epoch 12/12 train_loss 0.0655 val_noise_mse_ema 0.06452 (969s)
+[b2_longer_augment] done in 969s final loss 0.06551 val MSE 0.06452
+[b2_longer_augment] val proxy fidelity 55.0% val MSE 0.06452
+[b3_moredata40k] continuing from checkpoint_real_baseline.pt (epochs_total=12)
+[b3_moredata40k] epoch 1/6 train_loss 0.0796 val_noise_mse_ema 0.06741 (135s)
+[b3_moredata40k] epoch 2/6 train_loss 0.0716 val_noise_mse_ema 0.06696 (267s)
+[b3_moredata40k] epoch 3/6 train_loss 0.0699 val_noise_mse_ema 0.06582 (391s)
+[b3_moredata40k] epoch 4/6 train_loss 0.0681 val_noise_mse_ema 0.06527 (517s)
+[b3_moredata40k] epoch 5/6 train_loss 0.0665 val_noise_mse_ema 0.06471 (617s)
+[b3_moredata40k] epoch 6/6 train_loss 0.0656 val_noise_mse_ema 0.06457 (716s)
+[b3_moredata40k] done in 716s final loss 0.06564 val MSE 0.06457
+[b3_moredata40k] val proxy fidelity 58.0% val MSE 0.06457
+[b4_linear_schedule] epoch 1/12 train_loss 0.2234 val_noise_mse_ema 0.25300 (53s)
+[b4_linear_schedule] epoch 2/12 train_loss 0.0996 val_noise_mse_ema 0.13467 (104s)
+[b4_linear_schedule] epoch 3/12 train_loss 0.0838 val_noise_mse_ema 0.09719 (154s)
+[b4_linear_schedule] epoch 4/12 train_loss 0.0762 val_noise_mse_ema 0.08138 (204s)
+[b4_linear_schedule] epoch 5/12 train_loss 0.0721 val_noise_mse_ema 0.07354 (255s)
+[b4_linear_schedule] epoch 6/12 train_loss 0.0678 val_noise_mse_ema 0.06917 (309s)
+[b4_linear_schedule] epoch 7/12 train_loss 0.0659 val_noise_mse_ema 0.06656 (360s)
+[b4_linear_schedule] epoch 8/12 train_loss 0.0641 val_noise_mse_ema 0.06491 (413s)
+[b4_linear_schedule] epoch 9/12 train_loss 0.0635 val_noise_mse_ema 0.06384 (460s)
+[b4_linear_schedule] epoch 10/12 train_loss 0.0627 val_noise_mse_ema 0.06315 (493s)
+[b4_linear_schedule] epoch 11/12 train_loss 0.0624 val_noise_mse_ema 0.06277 (524s)
+[b4_linear_schedule] epoch 12/12 train_loss 0.0617 val_noise_mse_ema 0.06256 (556s)
+[b4_linear_schedule] done in 556s final loss 0.0617 val MSE 0.06256
+[b4_linear_schedule] val proxy fidelity 76.0% val MSE 0.06256
+selected: baseline guidance w=1.5
+saved samples_real_final_ddpm.png (70 samples)
+saved samples_real_final_ddim50.png (70 samples)
+FINAL test: DDPM 98.57% DDIM 77.14%
+all done in 5008s

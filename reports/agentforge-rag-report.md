@@ -41,6 +41,7 @@ Around the pipeline sits a multi-agent orchestration layer (Router, Retriever, V
 12. References
 Appendix A — Full `results.json`
 Appendix B — File Listing
+Appendix C — Real-Data Addendum (SciFact / BEIR)
 
 ---
 
@@ -1155,6 +1156,90 @@ Project root: `advanced-ai-projects/agentforge-rag/`
 - `rag.py` (16643 bytes)
 - `results.json` (9377 bytes)
 - `tests.py` (4244 bytes)
+
+---
+
+# Appendix C — Real-Data Addendum (SciFact / BEIR)
+
+*Added after the main report was written. The main chapters above evaluate AgentForge-RAG on the project's own 14-document corpus and self-authored evaluation sets, and they say so throughout. This addendum reports the same retrieval stack, retuned under a dev-only discipline, on a real public benchmark — SciFact, distributed by BEIR — and it supersedes the internal results as the project's retrieval headline. Every number below is copied from `results_real.json` in the project directory; the project README's real-benchmark section reports the same run.*
+
+## C.1 Why this addendum exists
+
+The main report's headline — Recall@3 = Recall@5 = 100% on both the main set (28 questions) and the paraphrase set (14 questions), with 100% groundedness, 100% abstention correctness and 100% prompt-injection block rate — was measured on a corpus the author wrote, against questions the author wrote. Chapter 7 already states the limitation plainly: a self-authored set can prove the pipeline, the harness and the ablation ordering, but it cannot evidence retrieval quality against independently written queries over a corpus the system was not built around. The experiment that could — the official BEIR distribution of SciFact, with its full corpus and held-out test queries — has now been run, and this addendum is its record, including the part where the tuned system plateaus below the published bar.
+
+## C.2 Protocol and splits
+
+**Dataset.** SciFact (Wadden et al., EMNLP 2020), distributed by BEIR (Thakur et al., 2021) and downloaded from the UKP Lab BEIR datasets server. Corpus: 5,183 scientific abstracts. Queries in `queries.jsonl`: 1,109 in total. Test: 300 queries with 339 qrel rows, all grade 1 (binary relevance, as distributed). Train/dev: 809 queries with 919 qrel rows, used only for tuning and screening. Chunking follows the BEIR standard for this benchmark: one document-level chunk per document (title + abstract); the index holds 5,183 chunks over a vocabulary of 35,618 terms and builds in 6.44 seconds. Metrics are the standard BEIR definitions computed from the qrels: Recall@k is the mean fraction of relevant documents retrieved in the top-k, nDCG@10 uses the log2 discount, and MRR@10 is mean reciprocal rank truncated at 10.
+
+**Tuning discipline.** No tuning was done on test qrels. Every improvement lever was screened on a deterministic slice of the first 250 SciFact train/dev queries (in `qrels/train.tsv` order); adoption required an improvement of at least +0.003 nDCG@10 on the slice. The surviving candidate was confirmed against the project baseline on all 809 train/dev queries before its single final test evaluation. Test was therefore touched exactly twice overall: the baseline ladder (Section C.3) and the one final-pipeline evaluation (Section C.5). The baseline configuration is the project's own `rag.Retriever`, unmodified: fusion weight alpha 0.55 toward TF-IDF, BM25 k1=1.5 and b=0.75, with the project's query expansion (`rag.expand_query`) active in the hybrid rungs.
+
+## C.3 Baseline results on real data
+
+The project's original three rungs, at their default configuration, on the SciFact test set:
+
+| Rung (project `rag.Retriever` mode) | Recall@3 | Recall@5 | nDCG@10 | MRR@10 | Mean latency |
+|---|---|---|---|---|---|
+| Naive TF-IDF only (`tfidf`, no expansion) | 0.5727 | 0.6366 | 0.5769 | 0.5394 | 211.72 ms |
+| Hybrid TF-IDF + BM25 (`hybrid`, score fusion + expansion) | 0.6521 | 0.7043 | 0.6269 | 0.5901 | 241.49 ms |
+| Hybrid + rerank (`hybrid_rerank`, full stack) | 0.6711 | 0.7164 | 0.6429 | 0.6078 | 268.67 ms |
+
+Read against the main chapters, two things hold and one does not. **The ablation ordering survives**: hybrid beats naive TF-IDF by +0.050 nDCG@10, and reranking adds a further +0.016 -- each stage still earns its place, in the same order as on the internal paraphrase split. **The absolute numbers do not survive**: the same full stack that scores Recall@5 = 100% on the internal corpus scores Recall@5 = 0.7164 here, over a 5,183-document corpus with independently written claims. The internal number is a pipeline sanity check, not a retrieval-quality claim, and it should no longer be quoted as one. The dev-slice diagnosis explains where the headroom sits: on the 250-query dev slice, BM25 alone at project defaults scored 0.6512 nDCG@10 -- better than the default hybrid (0.6189) and better than hybrid + rerank (0.6375) -- because the default fusion weight (alpha 0.55 toward TF-IDF) dilutes BM25 on this corpus. The project's query expansion changed 0 of 250 dev queries: it is a cybersecurity-domain lexicon and is inert on SciFact claims, so the hybrid rungs above measure fusion, not expansion, on this benchmark. The BM25 implementation itself checks out; the fusion around it was the mis-configuration.
+
+## C.4 Improvement log, including negative results
+
+44 dev-screened attempts are logged in `results_real.json` (`improvement_log`), failures included. The summary below follows the project's README record of the same log; all scores are nDCG@10 on the 250-query dev slice unless stated otherwise.
+
+| Lever | Dev result | Decision |
+|---|---|---|
+| BM25 k1/b grid (16 configurations, component-only) | Best k1=1.0, b=0.5 at 0.6559 (reference BM25-only 0.6512) | Adopted as component |
+| Score-fusion alpha sweep (alpha 0 to 1) | Monotonically worse as TF-IDF weight grows (0.6559 down to 0.5750) | Dropped |
+| Reciprocal-rank fusion, TF-IDF weight 0.3 (k=60) | 0.6608 (against hybrid first-stage reference 0.6189) | Adopted |
+| RM3 pseudo-relevance feedback (alpha 0.5 / 0.3) | 0.6085 / 0.6259 against 0.6608 reference | Dropped — negative result (see below) |
+| BM25F field weighting (title x1.5 / x2 / x3) | 0.6371 / 0.6231 / 0.5999 against 0.6608 reference | Dropped (all hurt) |
+| TF-IDF title-cosine boost, beta=0.25 | 0.6638 against 0.6608 reference | Dropped (gain below the effective adoption bar in context) |
+| TF-IDF title-cosine boost, beta=0.5 | 0.6654 | Adopted |
+| Porter stemming + hyphen-compound tokenisation (v2) | 0.5148 against 0.6654 reference | Dropped — stemming destroys discriminative biomedical terms in this pipeline |
+| Reranker on the RRF first stage (pool / mix / feature variants; best ext variant) | Best 0.5987, all variants below the 0.6654 first stage | Dropped — no rerank configuration beat the first stage by the adoption epsilon |
+
+Three negatives deserve the same prominence as the adoptions, because each contradicts a plausible prior. **RM3 was reproduced as harmful and rejected**: both feedback strengths scored well below the reference they were applied to, consistent with the research brief's documented SciFact warning (query drift on short claim-style queries) -- the brief's prediction is now a measurement in this project, not a citation. **Stemming, a textbook default, was the single most harmful lever tried** (-0.151), because SciFact's discriminative terms are biomedical forms that stemming collapses. **The project's own reranker is incompatible with the adopted first stage**: its mix assumes fused scores on the project's roughly 0-1 saturating scale, while RRF scores are about 100x smaller, so the cross-score dominates and wrecks the ordering; every rerank variant scored below the first stage it was meant to improve, and the final pipeline therefore ships with no reranker. The Porter stemmer itself was verified against its standard test vectors before use (the self-check in `results_real.json` passes), so the tokenisation negative is a property of the corpus and pipeline, not of a broken stemmer.
+
+Confirmation on the full dev set compressed the slice gains, as expected: the selected candidate scored 0.668 nDCG@10 over all 809 dev queries against the project baseline's 0.6631 on the same set (Recall@3 0.6699 against 0.6524; Recall@5 0.7311 against 0.7235; MRR@10 0.6334 against 0.6312). The candidate beat the baseline on full dev, which was the pre-registered condition for its single test evaluation.
+
+## C.5 Final results
+
+The final pipeline is: BM25 with k1=1.0 and b=0.5, plus TF-IDF with a title-cosine boost (beta=0.5), fused by reciprocal-rank fusion (k=60, TF-IDF weight 0.3), with the v1 tokeniser and no reranker. It was evaluated on the test set exactly once.
+
+| System (SciFact test, 300 queries) | Recall@3 | Recall@5 | nDCG@10 | MRR@10 |
+|---|---|---|---|---|
+| Naive TF-IDF only (baseline rung) | 0.5727 | 0.6366 | 0.5769 | 0.5394 |
+| Hybrid TF-IDF + BM25 (baseline rung) | 0.6521 | 0.7043 | 0.6269 | 0.5901 |
+| Hybrid + rerank (best baseline rung) | 0.6711 | **0.7164** | 0.6429 | 0.6078 |
+| **Final pipeline (dev-selected, single test eval)** | **0.6578** | **0.7059** | **0.6466** | **0.6090** |
+| Published BEIR BM25 bar (context, Section C.6) | — | — | 0.665 | — |
+
+The final pipeline's mean latency is 588.3 ms per query (median 594.09 ms), higher than the baseline rungs because RRF ranks the full corpus twice per query. The honest summary of the table is narrow: the final pipeline beats the project's best baseline rung by only +0.0037 nDCG@10 and +0.0012 MRR@10, and it actually trails that rung on Recall@3 and Recall@5. The dev gains compressed at each stage -- slice to full dev to test -- and what survives on test is a small ranking-quality gain at the top of the list, not a recall gain. That compression is itself the finding of the improvement phase: after 44 attempts, this lexical stack has no large lever left.
+
+## C.6 Comparison against the published bar, with protocol caveats
+
+The published bar recorded in `results_real.json` is the BEIR paper's BM25 result for SciFact: **nDCG@10 0.665** (Thakur et al., 2021, via the programme's `REAL_BENCH_IMPROVEMENTS.md`), with the pure-lexical frontier estimated at 0.66-0.70. The final pipeline scores **0.6466 — below the bar by 0.018, after 44 dev attempts: a documented plateau below the bar for this purely lexical stack, not a win over it.** Closing the gap likely needs the neural swap-ins the main chapters already specify (dense embeddings, a neural cross-encoder reranker), not more lexical tuning; the improvement log is the evidence for that judgement, since every remaining lexical lever was screened and the survivors together bought +0.0037 on test.
+
+The comparison is protocol-valid in the specific sense the source file notes: an absolute comparison is valid only under the official protocol -- full corpus, test queries, title + abstract -- which this run uses (5,183 documents, all 300 test queries, document-level chunks). Within that shared protocol, the residual difference is implementation and tuning, not evaluation design: the reference BM25 is the BEIR baseline implementation, while this project's BM25 is an independent from-scratch implementation fused with TF-IDF under RRF. No stronger claim is made: the bar is a single-number context reference from the benchmark paper, not a re-run of the reference system inside this codebase.
+
+Against the internal results of the main chapters, the relationship is the same as in Section C.3: the ordering claim (hybrid above naive, each stage measured) survives on real data; the 100% absolute claims do not, and are superseded by this addendum as the retrieval headline.
+
+## C.7 Limitations
+
+Four limitations bound these results. **Groundedness, abstention and injection-guardrail numbers are NOT benchmarked by SciFact.** SciFact has no unanswerable or adversarial split and no generated answers, so those figures remain from the internal self-authored eval in `results.json` only, labelled as such; nothing in this addendum upgrades them to benchmark results. **The stack is purely lexical**: TF-IDF cannot represent semantic similarity beyond the expansion lexicon, and the lexicon is inert on this corpus (0 of 250 dev queries changed), so the benchmark measures the lexical core alone. **Dev-to-test compression was systematic** (slice 0.6654 to full-dev margin +0.005 over baseline to test +0.0037 over the best rung), so finer distinctions among the top lexical configurations should be read as provisional at 300 test queries with 339 binary qrels. **Latency is not competitive at corpus scale in this form**: 588 ms per query reflects two full-corpus rankings per query on CPU with no ANN index, which is a property of the zero-dependency teaching implementation, not of the fusion design.
+
+## C.8 Reproduce
+
+```bash
+python3 eval_scifact.py --stage all   # download SciFact (BEIR) + baseline ladder + dev screening + final test eval -> results_real.json
+python3 evaluate.py                    # internal eval (self-authored corpus) -> results.json, reproduced in Appendix A
+python3 tests.py                       # 25 assert-based tests
+```
+
+Files: `eval_scifact.py`, `rag.py` (retriever, BM25, fusion, reranker), `results_real.json` (dataset provenance, baseline ladder, full 44-attempt improvement log with decisions, final selection with full-dev confirmation, and the single final test evaluation), and the downloaded corpus under `data/scifact/` (`corpus.jsonl`, `queries.jsonl`, `qrels/`), all in the project directory.
 
 ---
 

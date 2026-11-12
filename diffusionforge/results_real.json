@@ -1,0 +1,439 @@
+{
+  "dataset": {
+    "name": "MNIST",
+    "provenance": "MNIST handwritten digits - Yann LeCun, Corinna Cortes, Christopher J.C. Burges (via the TensorFlow/Keras datasets mirror)",
+    "source_url": "https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz",
+    "source_file": "mnist.npz",
+    "source_sha256": "731c5ac602752760c8e48fbffcf8c3b850d9dc2a2aedcf2cc48468fc17b673d1",
+    "train_images_original": 60000,
+    "test_images_original": 10000,
+    "train_label_counts": [
+      5923,
+      6742,
+      5958,
+      6131,
+      5842,
+      5421,
+      5918,
+      6265,
+      5851,
+      5949
+    ],
+    "test_label_counts": [
+      980,
+      1135,
+      1032,
+      1010,
+      982,
+      892,
+      958,
+      1028,
+      974,
+      1009
+    ],
+    "original_size": "28x28 uint8 grayscale, pixel range 0-255",
+    "downscale": "28x28 -> 16x16, bilinear interpolation with antialiasing, then scaled [0,1] -> [-1,1] to match the synthetic pipeline",
+    "classes": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "diffusion_baseline_subset_n": 20000,
+    "validation_n": 2000,
+    "validation_source": "2,000 images carved from the real TRAIN split (seed-2024 permutation positions 20,000-22,000); never used to train any diffusion model in this run",
+    "phaseB_expanded_train_n": 40000,
+    "split_seed": 2024
+  },
+  "status": "complete",
+  "fidelity_classifier": {
+    "architecture": "TinyClassifier from evaluate.py, final layer 4 -> 10 classes",
+    "trained_on": "full real MNIST-16 TRAIN split (60,000 images)",
+    "epochs": 5,
+    "train_seconds": 86.6,
+    "real_test_accuracy_pct": 98.13,
+    "quality_gate": "real-test accuracy >= 98.0% required before fidelity scores are trusted (brief target)",
+    "quality_gate_result": "PASS",
+    "checkpoint": "classifier_real.pt"
+  },
+  "improvement_attempts": [
+    {
+      "tag": "baseline",
+      "config": {
+        "data_n": 20000,
+        "epochs_this_run": 12,
+        "epochs_total": 12,
+        "ema_decay": 0.99,
+        "schedule": "cosine",
+        "augment": false,
+        "lr": 0.002,
+        "batch": 256,
+        "base_channels": 16,
+        "init_ckpt": null,
+        "params": 180049
+      },
+      "train_seconds": 1182.2,
+      "final_train_loss": 0.06131,
+      "val_noise_mse_ema": 0.06214,
+      "val_ddim50_proxy_fidelity_w1.5_pct": 81.0,
+      "val_ddim50_proxy_diversity_w1.5": 9.448,
+      "checkpoint": "checkpoint_real_baseline.pt",
+      "role": "baseline (original project config; only the data changed)",
+      "decision": "drop - superseded by B6 on validation"
+    },
+    {
+      "tag": "b1_ema999",
+      "config": {
+        "data_n": 20000,
+        "epochs_this_run": 12,
+        "epochs_total": 12,
+        "ema_decay": 0.999,
+        "schedule": "cosine",
+        "augment": false,
+        "lr": 0.002,
+        "batch": 256,
+        "base_channels": 16,
+        "init_ckpt": null,
+        "params": 180049
+      },
+      "train_seconds": 1237.0,
+      "final_train_loss": 0.06131,
+      "val_noise_mse_ema": 0.14755,
+      "val_ddim50_proxy_fidelity_w1.5_pct": 11.0,
+      "val_ddim50_proxy_diversity_w1.5": 7.776,
+      "checkpoint": "checkpoint_real_b1_ema999.pt",
+      "decision": "drop as final candidate (EMA 0.999 at only ~950 steps lags); baseline stays the continuation parent",
+      "notes": "Single-lever change vs baseline: EMA decay 0.99 -> 0.999."
+    },
+    {
+      "tag": "b2_longer_augment",
+      "config": {
+        "data_n": 20000,
+        "epochs_this_run": 12,
+        "epochs_total": 24,
+        "ema_decay": 0.99,
+        "schedule": "cosine",
+        "augment": true,
+        "lr": 0.001,
+        "batch": 256,
+        "base_channels": 16,
+        "init_ckpt": "checkpoint_real_baseline.pt",
+        "params": 180049
+      },
+      "train_seconds": 968.8,
+      "final_train_loss": 0.06551,
+      "val_noise_mse_ema": 0.06452,
+      "val_ddim50_proxy_fidelity_w1.5_pct": 55.0,
+      "val_ddim50_proxy_diversity_w1.5": 10.755,
+      "checkpoint": "checkpoint_real_b2_longer_augment.pt",
+      "notes": "Continuation of baseline: +12 epochs (longer training) with random +-2px translation augmentation (brief lever 5; no flips/rotations - not label-preserving for digits). EMA decay inherited from parent so the EMA horizon keeps tracking as total steps grow.",
+      "decision": "drop - val proxy below the selected attempt"
+    },
+    {
+      "tag": "b3_moredata40k",
+      "config": {
+        "data_n": 40000,
+        "epochs_this_run": 6,
+        "epochs_total": 18,
+        "ema_decay": 0.99,
+        "schedule": "cosine",
+        "augment": true,
+        "lr": 0.001,
+        "batch": 256,
+        "base_channels": 16,
+        "init_ckpt": "checkpoint_real_baseline.pt",
+        "params": 180049
+      },
+      "train_seconds": 715.9,
+      "final_train_loss": 0.06564,
+      "val_noise_mse_ema": 0.06457,
+      "val_ddim50_proxy_fidelity_w1.5_pct": 58.0,
+      "val_ddim50_proxy_diversity_w1.5": 10.732,
+      "checkpoint": "checkpoint_real_b3_moredata40k.pt",
+      "notes": "Continuation of baseline: +6 epochs on expanded 40,000-image train pool (baseline 20k + 20k extra train-side images; the 2,000-image validation block remains excluded).",
+      "decision": "drop - val proxy below the selected attempt"
+    },
+    {
+      "tag": "b4_linear_schedule",
+      "config": {
+        "data_n": 20000,
+        "epochs_this_run": 12,
+        "epochs_total": 12,
+        "ema_decay": 0.99,
+        "schedule": "linear",
+        "augment": false,
+        "lr": 0.002,
+        "batch": 256,
+        "base_channels": 16,
+        "init_ckpt": null,
+        "params": 180049
+      },
+      "train_seconds": 556.3,
+      "final_train_loss": 0.0617,
+      "val_noise_mse_ema": 0.06256,
+      "val_ddim50_proxy_fidelity_w1.5_pct": 76.0,
+      "val_ddim50_proxy_diversity_w1.5": 9.656,
+      "checkpoint": "checkpoint_real_b4_linear_schedule.pt",
+      "notes": "Schedule comparison, single-lever vs baseline: linear beta schedule instead of cosine (brief lever 3 / execution order step 3), EMA 0.99 and all other settings as baseline.",
+      "decision": "drop - val proxy below the selected attempt"
+    },
+    {
+      "tag": "b6_longer_clean",
+      "config": {
+        "data_n": 20000,
+        "epochs_this_run": 12,
+        "epochs_total": 24,
+        "ema_decay": 0.99,
+        "schedule": "cosine",
+        "augment": false,
+        "lr": 0.001,
+        "batch": 256,
+        "base_channels": 16,
+        "init_ckpt": "checkpoint_real_baseline.pt",
+        "params": 180049
+      },
+      "train_seconds": 489.7,
+      "final_train_loss": 0.05759,
+      "val_noise_mse_ema": 0.05811,
+      "val_ddim50_proxy_fidelity_w1.5_pct": 87.0,
+      "val_ddim50_proxy_diversity_w1.5": 9.491,
+      "checkpoint": "checkpoint_real_b6_longer_clean.pt",
+      "notes": "Continuation of baseline: +12 epochs, NO augmentation - isolates the longer-training lever that B2 confounded with augmentation. Added after B1-B4 all failed to beat the baseline on validation, before declaring the plateau.",
+      "decision": "keep - selected as final"
+    },
+    {
+      "tag": "b5_guidance_retune",
+      "on_checkpoint": "baseline",
+      "method": "DDIM-50 val fidelity proxy sweep (100 generated samples per w, 10/class); pick highest val fidelity, tie-break higher diversity, then lower w",
+      "val_proxy_by_w": {
+        "0.0": {
+          "fidelity_pct": 12.0,
+          "diversity_pairwise_l2": 9.631
+        },
+        "1.0": {
+          "fidelity_pct": 63.0,
+          "diversity_pairwise_l2": 9.37
+        },
+        "1.5": {
+          "fidelity_pct": 81.0,
+          "diversity_pairwise_l2": 9.448
+        },
+        "2.0": {
+          "fidelity_pct": 71.0,
+          "diversity_pairwise_l2": 9.358
+        },
+        "3.0": {
+          "fidelity_pct": 31.0,
+          "diversity_pairwise_l2": 9.461
+        }
+      },
+      "selected_w": 1.5,
+      "decision": "keep - w=1.5 selected on validation for the final test run"
+    },
+    {
+      "tag": "b7_guidance_retune_b6",
+      "on_checkpoint": "b6_longer_clean",
+      "method": "DDIM-50 val fidelity proxy sweep (100 generated samples per w); pick highest val fidelity, tie-break higher diversity, then lower w",
+      "val_proxy_by_w": {
+        "0.0": {
+          "fidelity_pct": 10.0,
+          "diversity_pairwise_l2": 9.427
+        },
+        "1.0": {
+          "fidelity_pct": 76.0,
+          "diversity_pairwise_l2": 9.309
+        },
+        "1.5": {
+          "fidelity_pct": 87.0,
+          "diversity_pairwise_l2": 9.491
+        },
+        "2.0": {
+          "fidelity_pct": 67.0,
+          "diversity_pairwise_l2": 9.595
+        },
+        "3.0": {
+          "fidelity_pct": 31.0,
+          "diversity_pairwise_l2": 9.765
+        }
+      },
+      "selected_w": 1.5,
+      "decision": "keep - w=1.5 selected on validation for B6's test run"
+    }
+  ],
+  "baseline": {
+    "config": {
+      "data_n": 20000,
+      "epochs_this_run": 12,
+      "epochs_total": 12,
+      "ema_decay": 0.99,
+      "schedule": "cosine",
+      "augment": false,
+      "lr": 0.002,
+      "batch": 256,
+      "base_channels": 16,
+      "init_ckpt": null,
+      "params": 180049
+    },
+    "train_seconds": 1182.2,
+    "final_train_loss": 0.06131,
+    "val_noise_mse_ema": 0.06214,
+    "checkpoint_selection": "final-epoch EMA weights (mirrors the original run); val metrics logged but not used to pick a baseline checkpoint",
+    "test_evaluation": {
+      "timesteps_T": 300,
+      "noise_pred_mse_heldout_test_raw": 0.0616,
+      "noise_pred_mse_heldout_test_ema": 0.0617,
+      "n_samples_per_sampler": 70,
+      "main_guidance_w": 1.5,
+      "ddpm": {
+        "steps": 300,
+        "fidelity_pct": 98.57,
+        "seconds_for_samples": 51.9,
+        "diversity_pairwise_l2": 9.333
+      },
+      "ddim50": {
+        "steps": 50,
+        "fidelity_pct": 77.14,
+        "seconds_for_samples": 11.2,
+        "diversity_pairwise_l2": 9.453
+      },
+      "real_data_diversity_pairwise_l2": 8.977,
+      "guidance_ablation_fidelity_pct": {
+        "0.0": 8.57,
+        "1.5": 77.14,
+        "3.0": 34.29
+      },
+      "guidance_ablation_diversity": {
+        "0.0": 9.712,
+        "1.5": 9.453,
+        "3.0": 9.422
+      },
+      "sample_count_note": "70 samples (7/class x 10 classes); the original synthetic protocol used 64 (16/class x 4 classes) - changed so the 10 digit classes stay balanced"
+    }
+  },
+  "selection": {
+    "rule": "primary: val DDIM-50 fidelity proxy at w=1.5; tie-break: lower val noise-MSE (EMA). Test fidelity never used for selection.",
+    "selected_attempt": "b6_longer_clean",
+    "selected_checkpoint": "checkpoint_real_b6_longer_clean.pt",
+    "selected_val_noise_mse_ema": 0.05811,
+    "selected_val_proxy_fidelity_w1.5_pct": 87.0,
+    "guidance_selected_on_val": 1.5,
+    "guidance_val_sweep": {
+      "0.0": {
+        "fidelity_pct": 10.0,
+        "diversity_pairwise_l2": 9.427
+      },
+      "1.0": {
+        "fidelity_pct": 76.0,
+        "diversity_pairwise_l2": 9.309
+      },
+      "1.5": {
+        "fidelity_pct": 87.0,
+        "diversity_pairwise_l2": 9.491
+      },
+      "2.0": {
+        "fidelity_pct": 67.0,
+        "diversity_pairwise_l2": 9.595
+      },
+      "3.0": {
+        "fidelity_pct": 31.0,
+        "diversity_pairwise_l2": 9.765
+      }
+    },
+    "note": "Selection updated after B6 won on validation. The previous 'final' test evaluation was the baseline checkpoint under the identical protocol as the baseline test evaluation (same weights, w and seeds - identical fidelity/diversity), so the test budget remains: baseline config once + final selected config (B6) once."
+  },
+  "final": {
+    "selected_attempt": "b6_longer_clean",
+    "config": {
+      "data_n": 20000,
+      "epochs_this_run": 12,
+      "epochs_total": 24,
+      "ema_decay": 0.99,
+      "schedule": "cosine",
+      "augment": false,
+      "lr": 0.001,
+      "batch": 256,
+      "base_channels": 16,
+      "init_ckpt": "checkpoint_real_baseline.pt",
+      "params": 180049
+    },
+    "val_noise_mse_ema": 0.05811,
+    "test_evaluation": {
+      "timesteps_T": 300,
+      "noise_pred_mse_heldout_test_raw": 0.0576,
+      "noise_pred_mse_heldout_test_ema": 0.0577,
+      "n_samples_per_sampler": 70,
+      "main_guidance_w": 1.5,
+      "ddpm": {
+        "steps": 300,
+        "fidelity_pct": 100.0,
+        "seconds_for_samples": 17.1,
+        "diversity_pairwise_l2": 9.364
+      },
+      "ddim50": {
+        "steps": 50,
+        "fidelity_pct": 84.29,
+        "seconds_for_samples": 1.9,
+        "diversity_pairwise_l2": 9.525
+      },
+      "real_data_diversity_pairwise_l2": 8.977,
+      "guidance_note": "main samplers evaluated at the validation-selected w=1.5; no CFG sweep was run on test for the final config (test budget: baseline once + final once)"
+    },
+    "supersedes": "the earlier final entry (baseline checkpoint, identical numbers to the baseline test evaluation) - replaced after B6 won on validation"
+  },
+  "synthetic_reference": {
+    "timesteps_T": 300,
+    "noise_pred_mse_heldout": 0.0666,
+    "classifier_real_test_accuracy_pct": 99.75,
+    "ddpm": {
+      "steps": 300,
+      "fidelity_pct": 98.44,
+      "seconds_for_64_samples": 87.4,
+      "diversity_pairwise_l2": 10.758
+    },
+    "ddim50": {
+      "steps": 50,
+      "fidelity_pct": 85.94,
+      "seconds_for_64_samples": 13.4,
+      "diversity_pairwise_l2": 10.301
+    },
+    "real_data_diversity_pairwise_l2": 11.599,
+    "guidance_ablation_fidelity_pct": {
+      "0.0": 28.12,
+      "1.5": 85.94,
+      "3.0": 54.69
+    },
+    "model_params": 179281,
+    "train_epochs": 90,
+    "final_train_loss": 0.06127,
+    "train_seconds": 1040.8
+  },
+  "total_wall_seconds": 5007.5,
+  "memorisation_check": {
+    "reference_set": "the 20,000 training images the final B6 model trained on",
+    "generated_ddpm_final": {
+      "mean_nn_l2": 3.317,
+      "min_nn_l2": 1.092,
+      "median_nn_l2": 3.451,
+      "frac_nn_l2_below_1": 0.0
+    },
+    "generated_ddim_final": {
+      "mean_nn_l2": 4.905,
+      "min_nn_l2": 2.171,
+      "median_nn_l2": 4.891,
+      "frac_nn_l2_below_1": 0.0
+    },
+    "real_test_images_first500": {
+      "mean_nn_l2": 3.233,
+      "min_nn_l2": 0.664,
+      "median_nn_l2": 3.346,
+      "frac_nn_l2_below_1": 0.056
+    },
+    "interpretation": "If generated samples were memorised copies, their NN distances would be near 0 and far below real test images' NN distances. Comparable values indicate novel samples at normal MNIST inter-image distances."
+  }
+}

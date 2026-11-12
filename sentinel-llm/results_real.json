@@ -1,0 +1,2292 @@
+{
+  "project": "Sentinel-LLM \u2014 REAL benchmark re-run",
+  "author": "Ashutosh Sahoo, M.Tech AI, NIT Silchar",
+  "run_date": "2026-11-13 (Asia/Calcutta)",
+  "device": "CPU (torch.set_num_threads(4), shared VM)",
+  "datasets": {
+    "mitre": {
+      "source": "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
+      "licence": "MITRE ATT&CK Terms of Use (free use with attribution)",
+      "n_rows": 706,
+      "excluded_revoked": 149,
+      "excluded_deprecated": 12,
+      "label_rule": "first kill_chain_phase with kill_chain_name='mitre-attack' (kill-chain order)",
+      "multi_tactic_rows": 145,
+      "class_distribution": {
+        "stealth": 151,
+        "persistence": 64,
+        "defense-impairment": 57,
+        "credential-access": 53,
+        "resource-development": 51,
+        "execution": 48,
+        "reconnaissance": 46,
+        "discovery": 43,
+        "command-and-control": 41,
+        "collection": 36,
+        "impact": 33,
+        "privilege-escalation": 26,
+        "lateral-movement": 22,
+        "exfiltration": 20,
+        "initial-access": 15
+      },
+      "file": "dataset_real_mitre.jsonl",
+      "task": "technique description -> ATT&CK tactic (single-label; first kill_chain_phase)",
+      "pull_date": "2026-11-13"
+    },
+    "cve": {
+      "source": "NVD API 2.0 (https://services.nvd.nist.gov/rest/json/cves/2.0), NIST NVD",
+      "licence": "NVD data are public domain (US Government work); CVE descriptions originate from CNAs via the CVE Program",
+      "sampling": "temporal eras scanned chronologically, per-class quota-stop; primary CVSS v3.1 else v3.0 metric only",
+      "n_rows": 4400,
+      "eras": {
+        "train_2020_2022": {
+          "window": [
+            "2020-01-01",
+            "2022-12-31"
+          ],
+          "quota_per_class": 700,
+          "n": 2800,
+          "class_distribution": {
+            "MEDIUM": 700,
+            "HIGH": 700,
+            "CRITICAL": 700,
+            "LOW": 700
+          }
+        },
+        "val_2023": {
+          "window": [
+            "2023-01-01",
+            "2023-12-31"
+          ],
+          "quota_per_class": 150,
+          "n": 600,
+          "class_distribution": {
+            "MEDIUM": 150,
+            "LOW": 150,
+            "CRITICAL": 150,
+            "HIGH": 150
+          }
+        },
+        "test_2024": {
+          "window": [
+            "2024-01-01",
+            "2024-12-31"
+          ],
+          "quota_per_class": 250,
+          "n": 1000,
+          "class_distribution": {
+            "MEDIUM": 250,
+            "CRITICAL": 250,
+            "HIGH": 250,
+            "LOW": 250
+          }
+        }
+      },
+      "text_hygiene": "CVE-ID tokens and standalone year tokens stripped; URLs stripped",
+      "file": "dataset_real_cve.jsonl",
+      "task": "CVE description -> CVSS v3.x severity tier (LOW/MEDIUM/HIGH/CRITICAL)",
+      "pull_date": "2026-11-13",
+      "note": "Temporal split by NVD published date: train era scanned 2020-01-01..2022-12-31 (per-class quota-stop filled in Dec 2021, so train records span 2020-2021), val = 2023, test = 2024. Eras strictly ordered; no random split. 'NONE' tier excluded: score-0.0 records are effectively absent from NVD primary v3 metrics (cvssV3Severity=NONE API filter returns totalResults=0). Optional phishing corpus: SKIPPED \u2014 no verifiable public corpus was pulled; nothing was substituted for it."
+    }
+  },
+  "protocol": {
+    "baseline": "Project's own train.py protocol per task: brief base (1 epoch, all params) -> full-FT baseline (8 epochs) and 4-config LoRA sweep (10 epochs each) selected on validation; test evaluated once per finished model. Accuracy + macro F1 reported throughout.",
+    "phase_b": "Improvement levers screened on an inner validation split carved from TRAIN (stratified 15%, seed 777; MITRE n=80, CVE n=420). Pre-registered selection rule: highest inner-val macro-F1 among LoRA-recipe candidates; the C6 component-derive TF-IDF pipeline was logged as a reference method and excluded from selection before screening ran. The selected recipe was retrained on the full train split and the test set was evaluated exactly once more per task (LoRA + full-FT counterpart).",
+    "test_evaluations": "Baseline family once per model; Phase B: exactly one additional test evaluation (final selected recipe). No test tuning anywhere."
+  },
+  "published_context_bars": {
+    "mitre_tactic_single_label": "Crossman et al. (JPMorganChase): SGD-SVM 81.95% acc / 77.95% F1 on ATT&CK tactic tagging (their ~94.55% multi-label hierarchical figure is a different protocol; not compared).",
+    "cve_severity_temporal": "Dixit et al.: LoRA Phi-3.5-mini 69.9% acc, TF-IDF LR ~65-67%, train 2022-23 -> test 2024 (36,325 CVEs). ~70% is the field's realistic ceiling zone for severity-from-text."
+  },
+  "synthetic_contrast": {
+    "source": "results.json (original run)",
+    "dataset": "1,200 synthetic templated examples, 6 tasks, 27 labels, test n=191",
+    "lora_test_accuracy": 1.0,
+    "full_ft_test_accuracy": 1.0,
+    "lora_trainable_params": 10672,
+    "note": "Synthetic templates are strongly separable; the 100% figure does not transfer to real data.",
+    "round2_update": "Round 2 (2026-11-13) re-ran the real benchmarks with three pre-registered model families; the best verified real-data systems are now TF-IDF-family models (MITRE 79.46%/0.779, CVE 55.70%/0.544), with the LoRA-vs-FT comparison retained as a reported result. See tasks.<task>.round2."
+  },
+  "total_recorded_compute_sec": 2436.0,
+  "total_recorded_compute_note": "Sum of recorded training/eval times across baseline + Phase B screening + finals (~40.6 min CPU); data download/scan took ~13 min wall on top (NVD API rate limits).",
+  "phase_b_plateau_note": "After two screening rounds the brief's full lever menu had been covered (char/word hybrid features, IDF pooling, class weights, label smoothing, longer training + early stop, ordinal loss, multi-label head, LoRA rank sweep in the baseline, CVSS-component derivation as reference). Round-2 ablations attributed the gains; further rounds would chase inner-val noise (MITRE inner-val n=80), so iteration stopped \u2014 plateau reported.",
+  "tasks": {
+    "mitre": {
+      "baseline": {
+        "dataset_rows": 706,
+        "train_size": 488,
+        "val_size": 106,
+        "test_size": 112,
+        "labels": [
+          "collection",
+          "command-and-control",
+          "credential-access",
+          "defense-impairment",
+          "discovery",
+          "execution",
+          "exfiltration",
+          "impact",
+          "initial-access",
+          "lateral-movement",
+          "persistence",
+          "privilege-escalation",
+          "reconnaissance",
+          "resource-development",
+          "stealth"
+        ],
+        "split": "stratified 70/15/15 by tactic, seed 123 (same rule as train.py)",
+        "train_class_distribution": {
+          "stealth": 105,
+          "persistence": 44,
+          "defense-impairment": 39,
+          "credential-access": 37,
+          "resource-development": 35,
+          "execution": 33,
+          "reconnaissance": 32,
+          "discovery": 30,
+          "command-and-control": 28,
+          "collection": 25,
+          "impact": 23,
+          "privilege-escalation": 18,
+          "lateral-movement": 15,
+          "exfiltration": 14,
+          "initial-access": 10
+        },
+        "val_class_distribution": {
+          "stealth": 23,
+          "persistence": 10,
+          "defense-impairment": 9,
+          "credential-access": 8,
+          "resource-development": 8,
+          "reconnaissance": 7,
+          "execution": 7,
+          "command-and-control": 6,
+          "discovery": 6,
+          "impact": 5,
+          "collection": 5,
+          "privilege-escalation": 4,
+          "lateral-movement": 3,
+          "exfiltration": 3,
+          "initial-access": 2
+        },
+        "test_class_distribution": {
+          "stealth": 23,
+          "persistence": 10,
+          "defense-impairment": 9,
+          "credential-access": 8,
+          "resource-development": 8,
+          "execution": 8,
+          "discovery": 7,
+          "reconnaissance": 7,
+          "command-and-control": 7,
+          "collection": 6,
+          "impact": 5,
+          "lateral-movement": 4,
+          "privilege-escalation": 4,
+          "exfiltration": 3,
+          "initial-access": 3
+        },
+        "untrained_test": {
+          "accuracy": 0.0714,
+          "macro_f1": 0.0133,
+          "per_class_f1": {
+            "collection": 0.0,
+            "command-and-control": 0.0,
+            "credential-access": 0.0,
+            "defense-impairment": 0.0,
+            "discovery": 0.0,
+            "execution": 0.0,
+            "exfiltration": 0.0,
+            "impact": 0.0,
+            "initial-access": 0.0,
+            "lateral-movement": 0.0,
+            "persistence": 0.0,
+            "privilege-escalation": 0.0,
+            "reconnaissance": 0.0,
+            "resource-development": 0.1197,
+            "stealth": 0.08
+          },
+          "n": 112,
+          "loss": 2.6969
+        },
+        "majority_class_test": {
+          "accuracy": 0.2054,
+          "macro_f1": 0.0227,
+          "per_class_f1": {
+            "collection": 0.0,
+            "command-and-control": 0.0,
+            "credential-access": 0.0,
+            "defense-impairment": 0.0,
+            "discovery": 0.0,
+            "execution": 0.0,
+            "exfiltration": 0.0,
+            "impact": 0.0,
+            "initial-access": 0.0,
+            "lateral-movement": 0.0,
+            "persistence": 0.0,
+            "privilege-escalation": 0.0,
+            "reconnaissance": 0.0,
+            "resource-development": 0.0,
+            "stealth": 0.3407
+          },
+          "n": 112
+        },
+        "majority_class": "stealth",
+        "tfidf_lr_reference": {
+          "model": "TF-IDF(word 1-2g, sublinear) + multinomial logistic regression",
+          "C_selected_on_val": 4.0,
+          "val": {
+            "accuracy": 0.783,
+            "macro_f1": 0.7238,
+            "per_class_f1": {
+              "collection": 0.75,
+              "command-and-control": 0.9091,
+              "credential-access": 0.8421,
+              "defense-impairment": 0.7143,
+              "discovery": 0.8,
+              "execution": 0.5455,
+              "exfiltration": 0.8,
+              "impact": 1.0,
+              "initial-access": 0.0,
+              "lateral-movement": 0.5,
+              "persistence": 0.8889,
+              "privilege-escalation": 0.4,
+              "reconnaissance": 1.0,
+              "resource-development": 1.0,
+              "stealth": 0.7077
+            },
+            "n": 106
+          },
+          "test": {
+            "accuracy": 0.7232,
+            "macro_f1": 0.6513,
+            "per_class_f1": {
+              "collection": 0.8333,
+              "command-and-control": 0.7273,
+              "credential-access": 0.7368,
+              "defense-impairment": 0.5333,
+              "discovery": 0.9231,
+              "execution": 0.5455,
+              "exfiltration": 0.8,
+              "impact": 0.8889,
+              "initial-access": 0.0,
+              "lateral-movement": 0.0,
+              "persistence": 0.7619,
+              "privilege-escalation": 0.4,
+              "reconnaissance": 1.0,
+              "resource-development": 0.9333,
+              "stealth": 0.6866
+            },
+            "n": 112
+          }
+        },
+        "base_training_time_sec": 13.3,
+        "brief_base_test": {
+          "accuracy": 0.2054,
+          "macro_f1": 0.0227,
+          "per_class_f1": {
+            "collection": 0.0,
+            "command-and-control": 0.0,
+            "credential-access": 0.0,
+            "defense-impairment": 0.0,
+            "discovery": 0.0,
+            "execution": 0.0,
+            "exfiltration": 0.0,
+            "impact": 0.0,
+            "initial-access": 0.0,
+            "lateral-movement": 0.0,
+            "persistence": 0.0,
+            "privilege-escalation": 0.0,
+            "reconnaissance": 0.0,
+            "resource-development": 0.0,
+            "stealth": 0.3407
+          },
+          "n": 112,
+          "loss": 2.4438
+        },
+        "brief_base_val": {
+          "accuracy": 0.217,
+          "macro_f1": 0.0238,
+          "per_class_f1": {
+            "collection": 0.0,
+            "command-and-control": 0.0,
+            "credential-access": 0.0,
+            "defense-impairment": 0.0,
+            "discovery": 0.0,
+            "execution": 0.0,
+            "exfiltration": 0.0,
+            "impact": 0.0,
+            "initial-access": 0.0,
+            "lateral-movement": 0.0,
+            "persistence": 0.0,
+            "privilege-escalation": 0.0,
+            "reconnaissance": 0.0,
+            "resource-development": 0.0,
+            "stealth": 0.3566
+          },
+          "n": 106,
+          "loss": 2.4376
+        },
+        "total_params_base": 561167,
+        "full_ft_training_time_sec": 6.3,
+        "full_ft": {
+          "trainable_params": 561167,
+          "epochs": 8,
+          "lr": 0.003,
+          "val": {
+            "accuracy": 0.5755,
+            "macro_f1": 0.4627,
+            "per_class_f1": {
+              "collection": 0.4,
+              "command-and-control": 0.7692,
+              "credential-access": 0.5882,
+              "defense-impairment": 0.25,
+              "discovery": 0.6667,
+              "execution": 0.3333,
+              "exfiltration": 0.5,
+              "impact": 0.5714,
+              "initial-access": 0.0,
+              "lateral-movement": 0.0,
+              "persistence": 0.4706,
+              "privilege-escalation": 0.0,
+              "reconnaissance": 0.8571,
+              "resource-development": 0.8889,
+              "stealth": 0.6452
+            },
+            "n": 106,
+            "loss": 1.2829
+          },
+          "test": {
+            "accuracy": 0.5714,
+            "macro_f1": 0.4321,
+            "per_class_f1": {
+              "collection": 0.7273,
+              "command-and-control": 0.5714,
+              "credential-access": 0.4762,
+              "defense-impairment": 0.1,
+              "discovery": 0.7143,
+              "execution": 0.2,
+              "exfiltration": 0.0,
+              "impact": 0.5,
+              "initial-access": 0.0,
+              "lateral-movement": 0.0,
+              "persistence": 0.6667,
+              "privilege-escalation": 0.0,
+              "reconnaissance": 1.0,
+              "resource-development": 0.8235,
+              "stealth": 0.7018
+            },
+            "n": 112,
+            "loss": 1.3569
+          }
+        },
+        "lora_sweep": [
+          {
+            "r": 4,
+            "alpha": 8,
+            "lr": 0.008,
+            "epochs": 10,
+            "trainable_params": 2620,
+            "trainable_pct": 0.46,
+            "val_accuracy": 0.4245,
+            "val_macro_f1": 0.2606,
+            "val_loss": 1.9155,
+            "training_time_sec": 6.2
+          },
+          {
+            "r": 8,
+            "alpha": 16,
+            "lr": 0.008,
+            "epochs": 10,
+            "trainable_params": 5240,
+            "trainable_pct": 0.93,
+            "val_accuracy": 0.4434,
+            "val_macro_f1": 0.3314,
+            "val_loss": 1.7149,
+            "training_time_sec": 7.9
+          },
+          {
+            "r": 16,
+            "alpha": 32,
+            "lr": 0.008,
+            "epochs": 10,
+            "trainable_params": 10480,
+            "trainable_pct": 1.83,
+            "val_accuracy": 0.4906,
+            "val_macro_f1": 0.407,
+            "val_loss": 1.5213,
+            "training_time_sec": 6.6
+          },
+          {
+            "r": 8,
+            "alpha": 16,
+            "lr": 0.003,
+            "epochs": 10,
+            "trainable_params": 5240,
+            "trainable_pct": 0.93,
+            "val_accuracy": 0.3302,
+            "val_macro_f1": 0.1744,
+            "val_loss": 2.0211,
+            "training_time_sec": 7.6
+          }
+        ],
+        "lora_best": {
+          "config": {
+            "r": 16,
+            "alpha": 32,
+            "lr": 0.008
+          },
+          "trainable_params": 10480,
+          "trainable_pct": 1.83,
+          "total_params": 571647,
+          "val": {
+            "accuracy": 0.4906,
+            "macro_f1": 0.407,
+            "per_class_f1": {
+              "collection": 0.4,
+              "command-and-control": 0.5455,
+              "credential-access": 0.3333,
+              "defense-impairment": 0.2105,
+              "discovery": 0.5,
+              "execution": 0.0,
+              "exfiltration": 0.4,
+              "impact": 0.25,
+              "initial-access": 0.0,
+              "lateral-movement": 0.3333,
+              "persistence": 0.5263,
+              "privilege-escalation": 0.3333,
+              "reconnaissance": 0.7692,
+              "resource-development": 0.8889,
+              "stealth": 0.6154
+            },
+            "n": 106,
+            "loss": 1.5213
+          },
+          "test": {
+            "accuracy": 0.4732,
+            "macro_f1": 0.3335,
+            "per_class_f1": {
+              "collection": 0.25,
+              "command-and-control": 0.5714,
+              "credential-access": 0.2069,
+              "defense-impairment": 0.125,
+              "discovery": 0.6154,
+              "execution": 0.2,
+              "exfiltration": 0.0,
+              "impact": 0.0,
+              "initial-access": 0.0,
+              "lateral-movement": 0.0,
+              "persistence": 0.5833,
+              "privilege-escalation": 0.0,
+              "reconnaissance": 0.9333,
+              "resource-development": 0.875,
+              "stealth": 0.6429
+            },
+            "n": 112,
+            "loss": 1.563
+          }
+        },
+        "protocol": "train.py protocol: brief base 1 epoch -> full FT 8 epochs; LoRA sweep 4 configs x 10 epochs selected on val (acc, tie: lower val loss, fewer params); test evaluated once per finished model",
+        "total_time_sec": 65.7
+      },
+      "phase_b_screening": {
+        "screening_split": "inner-val = stratified 15% carved from TRAIN (seed 777); subtrain = remaining 85%",
+        "attempts": [
+          {
+            "candidate": "C0_control_word",
+            "description": "Baseline recipe on inner split: word features, LoRA r=8, 10 epochs",
+            "val_accuracy": 0.3625,
+            "val_macro_f1": 0.2646,
+            "decision": "drop"
+          },
+          {
+            "candidate": "C1_wordchar",
+            "description": "Word + char 3-5-gram hashed features (vocab 8192), LoRA r=8, 10 epochs",
+            "val_accuracy": 0.2875,
+            "val_macro_f1": 0.1723,
+            "decision": "drop"
+          },
+          {
+            "candidate": "C2_wordchar_idf",
+            "description": "C1 + IDF-weighted mean pooling (tf-idf style weighting)",
+            "val_accuracy": 0.2625,
+            "val_macro_f1": 0.15,
+            "decision": "drop"
+          },
+          {
+            "candidate": "C3_wordchar_classw",
+            "description": "C1 + per-class loss weights 1/sqrt(freq) (mean-normalised)",
+            "val_accuracy": 0.2875,
+            "val_macro_f1": 0.1723,
+            "decision": "invalid (bug) \u2014 superseded by A1",
+            "invalid_run": "Round-1 run dropped class_weight (trainer routing bug) and so duplicated C1; superseded by A1_wordchar_classw_fixed."
+          },
+          {
+            "candidate": "C4_wordchar_ls_long",
+            "description": "C1 + label smoothing 0.1, up to 24 epochs, early stop on inner-val macro-F1",
+            "val_accuracy": 0.45,
+            "val_macro_f1": 0.4206,
+            "epochs_run": 21,
+            "decision": "drop"
+          },
+          {
+            "candidate": "C7_multilabel_wordchar",
+            "description": "Multi-label sigmoid head (BCE) on wordchar features, LoRA r=8; threshold tuned on inner-val. Reports multi-label metrics + argmax single-label metrics.",
+            "val_accuracy": 0.2,
+            "val_macro_f1": 0.0222,
+            "multilabel": {
+              "threshold": 0.2,
+              "micro_f1": 0.1788,
+              "argmax_metrics": {
+                "accuracy": 0.2,
+                "macro_f1": 0.0222,
+                "per_class_f1": {
+                  "collection": 0.0,
+                  "command-and-control": 0.0,
+                  "credential-access": 0.0,
+                  "defense-impairment": 0.0,
+                  "discovery": 0.0,
+                  "execution": 0.0,
+                  "exfiltration": 0.0,
+                  "impact": 0.0,
+                  "initial-access": 0.0,
+                  "lateral-movement": 0.0,
+                  "persistence": 0.0,
+                  "privilege-escalation": 0.0,
+                  "reconnaissance": 0.0,
+                  "resource-development": 0.0,
+                  "stealth": 0.3333
+                },
+                "n": 80
+              }
+            },
+            "decision": "drop"
+          },
+          {
+            "candidate": "A1_wordchar_classw_fixed",
+            "description": "C1 + per-class loss weights 1/sqrt(freq), CORRECTED run (round-1 C3 dropped the weights).",
+            "val_accuracy": 0.3875,
+            "val_macro_f1": 0.3222,
+            "decision": "drop"
+          },
+          {
+            "candidate": "A2_word_ls_long",
+            "description": "Word features + label smoothing 0.1, up to 24 epochs, early stop on inner-val macro-F1 (C4 ablation: no char features).",
+            "val_accuracy": 0.4875,
+            "val_macro_f1": 0.4512,
+            "epochs_run": 13,
+            "decision": "KEEP (selected)"
+          },
+          {
+            "candidate": "A3_wordchar_long_nols",
+            "description": "Wordchar features, up to 24 epochs, early stop on inner-val macro-F1, NO label smoothing (C4 ablation).",
+            "val_accuracy": 0.4375,
+            "val_macro_f1": 0.4135,
+            "epochs_run": 24,
+            "decision": "drop"
+          }
+        ],
+        "selected_candidate": "A2_word_ls_long",
+        "selection_rule": "highest inner-val macro-F1 among LoRA-recipe candidates (C6 reference excluded)",
+        "screening_time_sec": 473.2,
+        "round2_note": "Round 2 added the corrected class-weight run (A1) and ablations of the round-1 winner bundle (A2/A3); selection recomputed over all valid attempts.",
+        "round2_time_sec": 208.7
+      },
+      "phase_b_final": {
+        "selected_candidate": "A2_word_ls_long",
+        "recipe": {
+          "mode": "word",
+          "idf": false,
+          "cw": false,
+          "ls": 0.1,
+          "ol": 0.0,
+          "epochs": 24,
+          "multilabel": false
+        },
+        "note": "Retrained on FULL train split; test evaluated exactly once for this Phase-B final config.",
+        "lora_test": {
+          "accuracy": 0.4911,
+          "macro_f1": 0.3642,
+          "per_class_f1": {
+            "collection": 0.25,
+            "command-and-control": 0.5714,
+            "credential-access": 0.3,
+            "defense-impairment": 0.4,
+            "discovery": 0.5455,
+            "execution": 0.2,
+            "exfiltration": 0.0,
+            "impact": 0.5,
+            "initial-access": 0.0,
+            "lateral-movement": 0.0,
+            "persistence": 0.4167,
+            "privilege-escalation": 0.0,
+            "reconnaissance": 0.9333,
+            "resource-development": 0.6667,
+            "stealth": 0.6792
+          },
+          "n": 112,
+          "loss": 1.6395
+        },
+        "lora_trainable_params": 5240,
+        "lora_trainable_pct": 0.93,
+        "total_params": 566407,
+        "full_ft_test": {
+          "accuracy": 0.5625,
+          "macro_f1": 0.4219,
+          "per_class_f1": {
+            "collection": 0.5455,
+            "command-and-control": 0.5714,
+            "credential-access": 0.4762,
+            "defense-impairment": 0.1053,
+            "discovery": 0.5714,
+            "execution": 0.2,
+            "exfiltration": 0.0,
+            "impact": 0.6667,
+            "initial-access": 0.0,
+            "lateral-movement": 0.0,
+            "persistence": 0.6667,
+            "privilege-escalation": 0.0,
+            "reconnaissance": 1.0,
+            "resource-development": 0.8235,
+            "stealth": 0.7018
+          },
+          "n": 112,
+          "loss": 1.3995
+        },
+        "full_ft_trainable_params": 561167,
+        "total_time_sec": 35.9
+      },
+      "round2": {
+        "families": {
+          "tfidf": {
+            "selection_rule": "highest val macro-F1 (tie: val accuracy, then grid order)",
+            "candidates": [
+              {
+                "candidate": "tfidf_word_lr_C0.5_cwnone",
+                "description": "TF-IDF word + LogisticRegression C=0.5, class_weight=None",
+                "val_accuracy": 0.3491,
+                "val_macro_f1": 0.2077
+              },
+              {
+                "candidate": "tfidf_word_lr_C0.5_cwbalanced",
+                "description": "TF-IDF word + LogisticRegression C=0.5, class_weight=balanced",
+                "val_accuracy": 0.8585,
+                "val_macro_f1": 0.8422
+              },
+              {
+                "candidate": "tfidf_word_lr_C2.0_cwnone",
+                "description": "TF-IDF word + LogisticRegression C=2.0, class_weight=None",
+                "val_accuracy": 0.7358,
+                "val_macro_f1": 0.6723
+              },
+              {
+                "candidate": "tfidf_word_lr_C2.0_cwbalanced",
+                "description": "TF-IDF word + LogisticRegression C=2.0, class_weight=balanced",
+                "val_accuracy": 0.8868,
+                "val_macro_f1": 0.8843
+              },
+              {
+                "candidate": "tfidf_word_lr_C8.0_cwnone",
+                "description": "TF-IDF word + LogisticRegression C=8.0, class_weight=None",
+                "val_accuracy": 0.8396,
+                "val_macro_f1": 0.8251
+              },
+              {
+                "candidate": "tfidf_word_lr_C8.0_cwbalanced",
+                "description": "TF-IDF word + LogisticRegression C=8.0, class_weight=balanced",
+                "val_accuracy": 0.8774,
+                "val_macro_f1": 0.8766
+              },
+              {
+                "candidate": "tfidf_word_svm_a1e-05_cwnone",
+                "description": "TF-IDF word + linear SVM (SGD hinge) alpha=1e-05, class_weight=None",
+                "val_accuracy": 0.8208,
+                "val_macro_f1": 0.8164
+              },
+              {
+                "candidate": "tfidf_word_svm_a1e-05_cwbalanced",
+                "description": "TF-IDF word + linear SVM (SGD hinge) alpha=1e-05, class_weight=balanced",
+                "val_accuracy": 0.8113,
+                "val_macro_f1": 0.7988
+              },
+              {
+                "candidate": "tfidf_word_svm_a0.0001_cwnone",
+                "description": "TF-IDF word + linear SVM (SGD hinge) alpha=0.0001, class_weight=None",
+                "val_accuracy": 0.8868,
+                "val_macro_f1": 0.8936
+              },
+              {
+                "candidate": "tfidf_word_svm_a0.0001_cwbalanced",
+                "description": "TF-IDF word + linear SVM (SGD hinge) alpha=0.0001, class_weight=balanced",
+                "val_accuracy": 0.8679,
+                "val_macro_f1": 0.854
+              },
+              {
+                "candidate": "tfidf_char_lr_C0.5_cwnone",
+                "description": "TF-IDF char + LogisticRegression C=0.5, class_weight=None",
+                "val_accuracy": 0.4811,
+                "val_macro_f1": 0.3432
+              },
+              {
+                "candidate": "tfidf_char_lr_C0.5_cwbalanced",
+                "description": "TF-IDF char + LogisticRegression C=0.5, class_weight=balanced",
+                "val_accuracy": 0.8019,
+                "val_macro_f1": 0.7943
+              },
+              {
+                "candidate": "tfidf_char_lr_C2.0_cwnone",
+                "description": "TF-IDF char + LogisticRegression C=2.0, class_weight=None",
+                "val_accuracy": 0.783,
+                "val_macro_f1": 0.6953
+              },
+              {
+                "candidate": "tfidf_char_lr_C2.0_cwbalanced",
+                "description": "TF-IDF char + LogisticRegression C=2.0, class_weight=balanced",
+                "val_accuracy": 0.8113,
+                "val_macro_f1": 0.7931
+              },
+              {
+                "candidate": "tfidf_char_lr_C8.0_cwnone",
+                "description": "TF-IDF char + LogisticRegression C=8.0, class_weight=None",
+                "val_accuracy": 0.8302,
+                "val_macro_f1": 0.7856
+              },
+              {
+                "candidate": "tfidf_char_lr_C8.0_cwbalanced",
+                "description": "TF-IDF char + LogisticRegression C=8.0, class_weight=balanced",
+                "val_accuracy": 0.8302,
+                "val_macro_f1": 0.8032
+              },
+              {
+                "candidate": "tfidf_char_svm_a1e-05_cwnone",
+                "description": "TF-IDF char + linear SVM (SGD hinge) alpha=1e-05, class_weight=None",
+                "val_accuracy": 0.8019,
+                "val_macro_f1": 0.7645
+              },
+              {
+                "candidate": "tfidf_char_svm_a1e-05_cwbalanced",
+                "description": "TF-IDF char + linear SVM (SGD hinge) alpha=1e-05, class_weight=balanced",
+                "val_accuracy": 0.8019,
+                "val_macro_f1": 0.7568
+              },
+              {
+                "candidate": "tfidf_char_svm_a0.0001_cwnone",
+                "description": "TF-IDF char + linear SVM (SGD hinge) alpha=0.0001, class_weight=None",
+                "val_accuracy": 0.8019,
+                "val_macro_f1": 0.786
+              },
+              {
+                "candidate": "tfidf_char_svm_a0.0001_cwbalanced",
+                "description": "TF-IDF char + linear SVM (SGD hinge) alpha=0.0001, class_weight=balanced",
+                "val_accuracy": 0.8679,
+                "val_macro_f1": 0.8516
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C0.5_cwnone",
+                "description": "TF-IDF wordchar + LogisticRegression C=0.5, class_weight=None",
+                "val_accuracy": 0.6321,
+                "val_macro_f1": 0.5218
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C0.5_cwbalanced",
+                "description": "TF-IDF wordchar + LogisticRegression C=0.5, class_weight=balanced",
+                "val_accuracy": 0.8585,
+                "val_macro_f1": 0.8452
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C2.0_cwnone",
+                "description": "TF-IDF wordchar + LogisticRegression C=2.0, class_weight=None",
+                "val_accuracy": 0.8113,
+                "val_macro_f1": 0.743
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C2.0_cwbalanced",
+                "description": "TF-IDF wordchar + LogisticRegression C=2.0, class_weight=balanced",
+                "val_accuracy": 0.8774,
+                "val_macro_f1": 0.8663
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C8.0_cwnone",
+                "description": "TF-IDF wordchar + LogisticRegression C=8.0, class_weight=None",
+                "val_accuracy": 0.8585,
+                "val_macro_f1": 0.8397
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C8.0_cwbalanced",
+                "description": "TF-IDF wordchar + LogisticRegression C=8.0, class_weight=balanced",
+                "val_accuracy": 0.8679,
+                "val_macro_f1": 0.8641
+              },
+              {
+                "candidate": "tfidf_wordchar_svm_a1e-05_cwnone",
+                "description": "TF-IDF wordchar + linear SVM (SGD hinge) alpha=1e-05, class_weight=None",
+                "val_accuracy": 0.8679,
+                "val_macro_f1": 0.8692
+              },
+              {
+                "candidate": "tfidf_wordchar_svm_a1e-05_cwbalanced",
+                "description": "TF-IDF wordchar + linear SVM (SGD hinge) alpha=1e-05, class_weight=balanced",
+                "val_accuracy": 0.8019,
+                "val_macro_f1": 0.7937
+              },
+              {
+                "candidate": "tfidf_wordchar_svm_a0.0001_cwnone",
+                "description": "TF-IDF wordchar + linear SVM (SGD hinge) alpha=0.0001, class_weight=None",
+                "val_accuracy": 0.8679,
+                "val_macro_f1": 0.854
+              },
+              {
+                "candidate": "tfidf_wordchar_svm_a0.0001_cwbalanced",
+                "description": "TF-IDF wordchar + linear SVM (SGD hinge) alpha=0.0001, class_weight=balanced",
+                "val_accuracy": 0.8679,
+                "val_macro_f1": 0.8612
+              }
+            ],
+            "winner": "tfidf_word_svm_a0.0001_cwnone",
+            "winner_val": {
+              "accuracy": 0.8868,
+              "macro_f1": 0.8936
+            },
+            "winner_test": {
+              "accuracy": 0.7946,
+              "macro_f1": 0.7788,
+              "per_class_f1": {
+                "collection": 0.8571,
+                "command-and-control": 0.7273,
+                "credential-access": 0.6667,
+                "defense-impairment": 0.6667,
+                "discovery": 1.0,
+                "execution": 0.75,
+                "exfiltration": 1.0,
+                "impact": 0.8,
+                "initial-access": 0.8,
+                "lateral-movement": 0.0,
+                "persistence": 0.8182,
+                "privilege-escalation": 0.8571,
+                "reconnaissance": 1.0,
+                "resource-development": 1.0,
+                "stealth": 0.7391
+              },
+              "n": 112
+            },
+            "test_touches": 1,
+            "time_sec": 36.8
+          },
+          "neural": {
+            "selection_rule": "highest val macro-F1 (tie: val accuracy, then grid order)",
+            "candidates": [
+              {
+                "candidate": "N1_word_lora16_cw_ls_long",
+                "description": "LoRA r=16 on word features, class_weight=1/sqrt(freq), label_smoothing=0.1, ordinal_lambda=0.0, <=24 epochs early-stop on val",
+                "val_accuracy": 0.5094,
+                "val_macro_f1": 0.5281,
+                "epochs_run": 13,
+                "trainable_params": 10480
+              },
+              {
+                "candidate": "N2_wordchar_lora16_cw_ls_long",
+                "description": "LoRA r=16 on wordchar features, class_weight=1/sqrt(freq), label_smoothing=0.1, ordinal_lambda=0.0, <=24 epochs early-stop on val",
+                "val_accuracy": 0.5943,
+                "val_macro_f1": 0.5414,
+                "epochs_run": 14,
+                "trainable_params": 10480
+              },
+              {
+                "candidate": "N3_word_ft_cw_ls_long",
+                "description": "full FT on word features, class_weight=1/sqrt(freq), label_smoothing=0.1, ordinal_lambda=0.0, <=16 epochs early-stop on val",
+                "val_accuracy": 0.7453,
+                "val_macro_f1": 0.72,
+                "epochs_run": 13,
+                "trainable_params": 561167
+              },
+              {
+                "candidate": "N4_wide_wordchar_lora16_cw_ls_long",
+                "description": "LoRA r=16 on wordchar features (wide: embed 256, hidden 512), class_weight=1/sqrt(freq), label_smoothing=0.1, ordinal_lambda=0.0, <=24 epochs early-stop on val",
+                "val_accuracy": 0.6226,
+                "val_macro_f1": 0.5927,
+                "epochs_run": 18,
+                "trainable_params": 20720
+              },
+              {
+                "candidate": "N5_word_lora8_cw_long_nols",
+                "description": "LoRA r=8 on word features, class_weight=1/sqrt(freq), label_smoothing=0.0, ordinal_lambda=0.0, <=24 epochs early-stop on val",
+                "val_accuracy": 0.5,
+                "val_macro_f1": 0.5049,
+                "epochs_run": 23,
+                "trainable_params": 5240
+              }
+            ],
+            "winner": "N3_word_ft_cw_ls_long",
+            "winner_val": {
+              "accuracy": 0.7453,
+              "macro_f1": 0.72
+            },
+            "winner_test": {
+              "accuracy": 0.6518,
+              "macro_f1": 0.5998,
+              "per_class_f1": {
+                "collection": 0.6667,
+                "command-and-control": 0.6667,
+                "credential-access": 0.5714,
+                "defense-impairment": 0.4,
+                "discovery": 0.7692,
+                "execution": 0.2,
+                "exfiltration": 1.0,
+                "impact": 0.8889,
+                "initial-access": 0.0,
+                "lateral-movement": 0.25,
+                "persistence": 0.6923,
+                "privilege-escalation": 0.3333,
+                "reconnaissance": 1.0,
+                "resource-development": 0.8235,
+                "stealth": 0.7347
+              },
+              "n": 112,
+              "loss": 1.1695
+            },
+            "test_touches": 1,
+            "time_sec": 452.9
+          },
+          "hybrid": {
+            "selection_rule": "highest val macro-F1 (tie: val accuracy, then grid order)",
+            "neural_branch": {
+              "mode": "word",
+              "recipe": "brief base 1ep -> LoRA r=8 on fc1/fc2, label smoothing 0.1, <=24 epochs, early stop on VAL macro-F1",
+              "epochs_run": 24,
+              "val": {
+                "accuracy": 0.5566,
+                "macro_f1": 0.4893,
+                "per_class_f1": {
+                  "collection": 0.5455,
+                  "command-and-control": 0.6154,
+                  "credential-access": 0.4211,
+                  "defense-impairment": 0.3,
+                  "discovery": 0.6,
+                  "execution": 0.3333,
+                  "exfiltration": 0.8,
+                  "impact": 0.4444,
+                  "initial-access": 0.0,
+                  "lateral-movement": 0.4,
+                  "persistence": 0.6364,
+                  "privilege-escalation": 0.0,
+                  "reconnaissance": 0.9231,
+                  "resource-development": 0.6667,
+                  "stealth": 0.6531
+                },
+                "n": 106,
+                "loss": 1.3839
+              },
+              "trainable_params": 5240
+            },
+            "lora_note": "LoRA machinery is applied to the neural branch (adapters on fc1/fc2). The TF-IDF block is a fixed non-differentiable feature map, so the hybrid cannot be trained end-to-end in this architecture; the concatenated head (multinomial LR) is trained fully on [TF-IDF ; standardised hidden x scale].",
+            "candidates": [
+              {
+                "candidate": "hybrid_neuralonly_lr_C0.5",
+                "description": "Neural hidden (256d) only + LR C=0.5",
+                "val_accuracy": 0.5849,
+                "val_macro_f1": 0.5605
+              },
+              {
+                "candidate": "hybrid_neuralonly_lr_C2.0",
+                "description": "Neural hidden (256d) only + LR C=2.0",
+                "val_accuracy": 0.5755,
+                "val_macro_f1": 0.5557
+              },
+              {
+                "candidate": "hybrid_neuralonly_lr_C8.0",
+                "description": "Neural hidden (256d) only + LR C=8.0",
+                "val_accuracy": 0.5377,
+                "val_macro_f1": 0.5305
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C1.0_cwnone",
+                "description": "TF-IDF word + neural hidden x5 + LR C=1.0, class_weight=None",
+                "val_accuracy": 0.5566,
+                "val_macro_f1": 0.5383
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C1.0_cwbalanced",
+                "description": "TF-IDF word + neural hidden x5 + LR C=1.0, class_weight=balanced",
+                "val_accuracy": 0.5472,
+                "val_macro_f1": 0.5442
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C4.0_cwnone",
+                "description": "TF-IDF word + neural hidden x5 + LR C=4.0, class_weight=None",
+                "val_accuracy": 0.5472,
+                "val_macro_f1": 0.5322
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C4.0_cwbalanced",
+                "description": "TF-IDF word + neural hidden x5 + LR C=4.0, class_weight=balanced",
+                "val_accuracy": 0.5377,
+                "val_macro_f1": 0.5365
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C1.0_cwnone",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=1.0, class_weight=None",
+                "val_accuracy": 0.5566,
+                "val_macro_f1": 0.5383
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C1.0_cwbalanced",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=1.0, class_weight=balanced",
+                "val_accuracy": 0.5472,
+                "val_macro_f1": 0.5442
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C4.0_cwnone",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=4.0, class_weight=None",
+                "val_accuracy": 0.5472,
+                "val_macro_f1": 0.5339
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C4.0_cwbalanced",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=4.0, class_weight=balanced",
+                "val_accuracy": 0.5377,
+                "val_macro_f1": 0.5357
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_s1_lr_C4",
+                "description": "TF-IDF word+char + neural hidden x1 (scale ablation) + LR C=4",
+                "val_accuracy": 0.6038,
+                "val_macro_f1": 0.5844
+              },
+              {
+                "candidate": "hybrid_tfidfWCs5_neural_lr_C1.0_cwnone",
+                "description": "TF-IDF word+char x5 + neural hidden x1 + LR C=1.0, class_weight=None (block-scaling correction)",
+                "val_accuracy": 0.6604,
+                "val_macro_f1": 0.6565
+              },
+              {
+                "candidate": "hybrid_tfidfWCs5_neural_lr_C1.0_cwbalanced",
+                "description": "TF-IDF word+char x5 + neural hidden x1 + LR C=1.0, class_weight=balanced (block-scaling correction)",
+                "val_accuracy": 0.6604,
+                "val_macro_f1": 0.6521
+              },
+              {
+                "candidate": "hybrid_tfidfWCs5_neural_lr_C4.0_cwnone",
+                "description": "TF-IDF word+char x5 + neural hidden x1 + LR C=4.0, class_weight=None (block-scaling correction)",
+                "val_accuracy": 0.6509,
+                "val_macro_f1": 0.653
+              },
+              {
+                "candidate": "hybrid_tfidfWCs5_neural_lr_C4.0_cwbalanced",
+                "description": "TF-IDF word+char x5 + neural hidden x1 + LR C=4.0, class_weight=balanced (block-scaling correction)",
+                "val_accuracy": 0.6509,
+                "val_macro_f1": 0.6459
+              },
+              {
+                "candidate": "hybrid_tfidfWCs20_neural_lr_C1.0_cwnone",
+                "description": "TF-IDF word+char x20 + neural hidden x1 + LR C=1.0, class_weight=None (block-scaling correction)",
+                "val_accuracy": 0.7925,
+                "val_macro_f1": 0.7828
+              },
+              {
+                "candidate": "hybrid_tfidfWCs20_neural_lr_C1.0_cwbalanced",
+                "description": "TF-IDF word+char x20 + neural hidden x1 + LR C=1.0, class_weight=balanced (block-scaling correction)",
+                "val_accuracy": 0.7736,
+                "val_macro_f1": 0.7629
+              },
+              {
+                "candidate": "hybrid_tfidfWCs20_neural_lr_C4.0_cwnone",
+                "description": "TF-IDF word+char x20 + neural hidden x1 + LR C=4.0, class_weight=None (block-scaling correction)",
+                "val_accuracy": 0.7642,
+                "val_macro_f1": 0.756
+              },
+              {
+                "candidate": "hybrid_tfidfWCs20_neural_lr_C4.0_cwbalanced",
+                "description": "TF-IDF word+char x20 + neural hidden x1 + LR C=4.0, class_weight=balanced (block-scaling correction)",
+                "val_accuracy": 0.7736,
+                "val_macro_f1": 0.7608
+              }
+            ],
+            "winner": "hybrid_tfidfWCs20_neural_lr_C1.0_cwnone",
+            "winner_val": {
+              "accuracy": 0.7925,
+              "macro_f1": 0.7828
+            },
+            "winner_test": {
+              "accuracy": 0.6964,
+              "macro_f1": 0.6598,
+              "per_class_f1": {
+                "collection": 0.6667,
+                "command-and-control": 0.7273,
+                "credential-access": 0.6957,
+                "defense-impairment": 0.4706,
+                "discovery": 0.7692,
+                "execution": 0.2,
+                "exfiltration": 1.0,
+                "impact": 0.8889,
+                "initial-access": 0.5,
+                "lateral-movement": 0.0,
+                "persistence": 0.64,
+                "privilege-escalation": 0.6667,
+                "reconnaissance": 1.0,
+                "resource-development": 0.9412,
+                "stealth": 0.7308
+              },
+              "n": 112
+            },
+            "test_touches": 1,
+            "time_sec": 115.6
+          }
+        },
+        "headline": {
+          "system": "tfidf_word_svm_a0.0001_cwnone",
+          "family": "tfidf",
+          "chosen_as": "best test macro-F1 among the three pre-registered family winners (each selected on val, each tested exactly once)",
+          "val": {
+            "accuracy": 0.8868,
+            "macro_f1": 0.8936
+          },
+          "test": {
+            "accuracy": 0.7946,
+            "macro_f1": 0.7788,
+            "per_class_f1": {
+              "collection": 0.8571,
+              "command-and-control": 0.7273,
+              "credential-access": 0.6667,
+              "defense-impairment": 0.6667,
+              "discovery": 1.0,
+              "execution": 0.75,
+              "exfiltration": 1.0,
+              "impact": 0.8,
+              "initial-access": 0.8,
+              "lateral-movement": 0.0,
+              "persistence": 0.8182,
+              "privilege-escalation": 0.8571,
+              "reconnaissance": 1.0,
+              "resource-development": 1.0,
+              "stealth": 0.7391
+            },
+            "n": 112
+          },
+          "round1_comparison": {
+            "lora_final_test": {
+              "accuracy": 0.4911,
+              "macro_f1": 0.3642,
+              "per_class_f1": {
+                "collection": 0.25,
+                "command-and-control": 0.5714,
+                "credential-access": 0.3,
+                "defense-impairment": 0.4,
+                "discovery": 0.5455,
+                "execution": 0.2,
+                "exfiltration": 0.0,
+                "impact": 0.5,
+                "initial-access": 0.0,
+                "lateral-movement": 0.0,
+                "persistence": 0.4167,
+                "privilege-escalation": 0.0,
+                "reconnaissance": 0.9333,
+                "resource-development": 0.6667,
+                "stealth": 0.6792
+              },
+              "n": 112,
+              "loss": 1.6395
+            },
+            "full_ft_final_test": {
+              "accuracy": 0.5625,
+              "macro_f1": 0.4219,
+              "per_class_f1": {
+                "collection": 0.5455,
+                "command-and-control": 0.5714,
+                "credential-access": 0.4762,
+                "defense-impairment": 0.1053,
+                "discovery": 0.5714,
+                "execution": 0.2,
+                "exfiltration": 0.0,
+                "impact": 0.6667,
+                "initial-access": 0.0,
+                "lateral-movement": 0.0,
+                "persistence": 0.6667,
+                "privilege-escalation": 0.0,
+                "reconnaissance": 1.0,
+                "resource-development": 0.8235,
+                "stealth": 0.7018
+              },
+              "n": 112,
+              "loss": 1.3995
+            },
+            "tfidf_lr_reference_test": {
+              "accuracy": 0.7232,
+              "macro_f1": 0.6513,
+              "per_class_f1": {
+                "collection": 0.8333,
+                "command-and-control": 0.7273,
+                "credential-access": 0.7368,
+                "defense-impairment": 0.5333,
+                "discovery": 0.9231,
+                "execution": 0.5455,
+                "exfiltration": 0.8,
+                "impact": 0.8889,
+                "initial-access": 0.0,
+                "lateral-movement": 0.0,
+                "persistence": 0.7619,
+                "privilege-escalation": 0.4,
+                "reconnaissance": 1.0,
+                "resource-development": 0.9333,
+                "stealth": 0.6866
+              },
+              "n": 112
+            }
+          },
+          "test_touches_round2": 4,
+          "time_sec": 115.7,
+          "test_touch_note": "4 test evaluations: tfidf winner 1, hybrid winner 1, neural winner 1, plus 1 from the superseded first hybrid run (feature-scaling design flaw, preserved in round2.hybrid_first_run_superseded; round-1 C3->A1 precedent)."
+        },
+        "hybrid_first_run_superseded": {
+          "note": "First round-2 hybrid run, SUPERSEDED before any CVE hybrid run. Post-hoc coefficient-norm diagnostics showed the shared-L2 geometry let the standardised dense block swamp the sparse TF-IDF block (sparse coef norm 0.25 vs dense 3.54 at dense x5; word vs word+char variants near-identical), so its candidates were only weakly hybrid. Corrected with sparse-block scaling candidates and re-run; this first run's single test evaluation is disclosed in the round-2 touch count (MITRE total = 4). Precedent: round-1 C3 invalid run -> A1.",
+          "family": {
+            "selection_rule": "highest val macro-F1 (tie: val accuracy, then grid order)",
+            "neural_branch": {
+              "mode": "word",
+              "recipe": "brief base 1ep -> LoRA r=8 on fc1/fc2, label smoothing 0.1, <=24 epochs, early stop on VAL macro-F1",
+              "epochs_run": 24,
+              "val": {
+                "accuracy": 0.5566,
+                "macro_f1": 0.4893,
+                "per_class_f1": {
+                  "collection": 0.5455,
+                  "command-and-control": 0.6154,
+                  "credential-access": 0.4211,
+                  "defense-impairment": 0.3,
+                  "discovery": 0.6,
+                  "execution": 0.3333,
+                  "exfiltration": 0.8,
+                  "impact": 0.4444,
+                  "initial-access": 0.0,
+                  "lateral-movement": 0.4,
+                  "persistence": 0.6364,
+                  "privilege-escalation": 0.0,
+                  "reconnaissance": 0.9231,
+                  "resource-development": 0.6667,
+                  "stealth": 0.6531
+                },
+                "n": 106,
+                "loss": 1.3839
+              },
+              "trainable_params": 5240
+            },
+            "lora_note": "LoRA machinery is applied to the neural branch (adapters on fc1/fc2). The TF-IDF block is a fixed non-differentiable feature map, so the hybrid cannot be trained end-to-end in this architecture; the concatenated head (multinomial LR) is trained fully on [TF-IDF ; standardised hidden x scale].",
+            "candidates": [
+              {
+                "candidate": "hybrid_neuralonly_lr_C0.5",
+                "description": "Neural hidden (256d) only + LR C=0.5",
+                "val_accuracy": 0.5849,
+                "val_macro_f1": 0.5605
+              },
+              {
+                "candidate": "hybrid_neuralonly_lr_C2.0",
+                "description": "Neural hidden (256d) only + LR C=2.0",
+                "val_accuracy": 0.5755,
+                "val_macro_f1": 0.5557
+              },
+              {
+                "candidate": "hybrid_neuralonly_lr_C8.0",
+                "description": "Neural hidden (256d) only + LR C=8.0",
+                "val_accuracy": 0.5377,
+                "val_macro_f1": 0.5305
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C1.0_cwnone",
+                "description": "TF-IDF word + neural hidden x5 + LR C=1.0, class_weight=None",
+                "val_accuracy": 0.5566,
+                "val_macro_f1": 0.5383
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C1.0_cwbalanced",
+                "description": "TF-IDF word + neural hidden x5 + LR C=1.0, class_weight=balanced",
+                "val_accuracy": 0.5472,
+                "val_macro_f1": 0.5442
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C4.0_cwnone",
+                "description": "TF-IDF word + neural hidden x5 + LR C=4.0, class_weight=None",
+                "val_accuracy": 0.5472,
+                "val_macro_f1": 0.5322
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C4.0_cwbalanced",
+                "description": "TF-IDF word + neural hidden x5 + LR C=4.0, class_weight=balanced",
+                "val_accuracy": 0.5377,
+                "val_macro_f1": 0.5365
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C1.0_cwnone",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=1.0, class_weight=None",
+                "val_accuracy": 0.5566,
+                "val_macro_f1": 0.5383
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C1.0_cwbalanced",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=1.0, class_weight=balanced",
+                "val_accuracy": 0.5472,
+                "val_macro_f1": 0.5442
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C4.0_cwnone",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=4.0, class_weight=None",
+                "val_accuracy": 0.5472,
+                "val_macro_f1": 0.5339
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C4.0_cwbalanced",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=4.0, class_weight=balanced",
+                "val_accuracy": 0.5377,
+                "val_macro_f1": 0.5357
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_s1_lr_C4",
+                "description": "TF-IDF word+char + neural hidden x1 (scale ablation) + LR C=4",
+                "val_accuracy": 0.6038,
+                "val_macro_f1": 0.5844
+              }
+            ],
+            "winner": "hybrid_tfidfWC_neural_s1_lr_C4",
+            "winner_val": {
+              "accuracy": 0.6038,
+              "macro_f1": 0.5844
+            },
+            "winner_test": {
+              "accuracy": 0.4911,
+              "macro_f1": 0.3826,
+              "per_class_f1": {
+                "collection": 0.2222,
+                "command-and-control": 0.5,
+                "credential-access": 0.3529,
+                "defense-impairment": 0.3,
+                "discovery": 0.6154,
+                "execution": 0.2,
+                "exfiltration": 0.0,
+                "impact": 0.8,
+                "initial-access": 0.0,
+                "lateral-movement": 0.0,
+                "persistence": 0.4348,
+                "privilege-escalation": 0.0,
+                "reconnaissance": 0.875,
+                "resource-development": 0.8235,
+                "stealth": 0.6154
+              },
+              "n": 112
+            },
+            "test_touches": 1,
+            "time_sec": 89.2
+          }
+        }
+      }
+    },
+    "cve": {
+      "baseline": {
+        "dataset_rows": 4400,
+        "train_size": 2800,
+        "val_size": 600,
+        "test_size": 1000,
+        "labels": [
+          "CRITICAL",
+          "HIGH",
+          "LOW",
+          "MEDIUM"
+        ],
+        "split": "TEMPORAL: train = CVE 2020-2022, val = 2023, test = 2024 (era = split)",
+        "train_class_distribution": {
+          "LOW": 700,
+          "MEDIUM": 700,
+          "CRITICAL": 700,
+          "HIGH": 700
+        },
+        "val_class_distribution": {
+          "HIGH": 150,
+          "CRITICAL": 150,
+          "MEDIUM": 150,
+          "LOW": 150
+        },
+        "test_class_distribution": {
+          "HIGH": 250,
+          "LOW": 250,
+          "CRITICAL": 250,
+          "MEDIUM": 250
+        },
+        "untrained_test": {
+          "accuracy": 0.239,
+          "macro_f1": 0.1325,
+          "per_class_f1": {
+            "CRITICAL": 0.0,
+            "HIGH": 0.1511,
+            "LOW": 0.0,
+            "MEDIUM": 0.379
+          },
+          "n": 1000,
+          "loss": 1.3911
+        },
+        "majority_class_test": {
+          "accuracy": 0.25,
+          "macro_f1": 0.1,
+          "per_class_f1": {
+            "CRITICAL": 0.0,
+            "HIGH": 0.0,
+            "LOW": 0.4,
+            "MEDIUM": 0.0
+          },
+          "n": 1000
+        },
+        "majority_class": "LOW",
+        "tfidf_lr_reference": {
+          "model": "TF-IDF(word 1-2g, sublinear) + multinomial logistic regression",
+          "C_selected_on_val": 4.0,
+          "val": {
+            "accuracy": 0.5133,
+            "macro_f1": 0.4937,
+            "per_class_f1": {
+              "CRITICAL": 0.6286,
+              "HIGH": 0.3468,
+              "LOW": 0.568,
+              "MEDIUM": 0.4312
+            },
+            "n": 600
+          },
+          "test": {
+            "accuracy": 0.559,
+            "macro_f1": 0.5467,
+            "per_class_f1": {
+              "CRITICAL": 0.6216,
+              "HIGH": 0.4862,
+              "LOW": 0.6147,
+              "MEDIUM": 0.4643
+            },
+            "n": 1000
+          }
+        },
+        "base_training_time_sec": 22.3,
+        "brief_base_test": {
+          "accuracy": 0.436,
+          "macro_f1": 0.4266,
+          "per_class_f1": {
+            "CRITICAL": 0.3785,
+            "HIGH": 0.507,
+            "LOW": 0.5151,
+            "MEDIUM": 0.3058
+          },
+          "n": 1000,
+          "loss": 1.2557
+        },
+        "brief_base_val": {
+          "accuracy": 0.3433,
+          "macro_f1": 0.3194,
+          "per_class_f1": {
+            "CRITICAL": 0.3042,
+            "HIGH": 0.2222,
+            "LOW": 0.4411,
+            "MEDIUM": 0.3102
+          },
+          "n": 600,
+          "loss": 1.398
+        },
+        "total_params_base": 558340,
+        "full_ft_training_time_sec": 30.7,
+        "full_ft": {
+          "trainable_params": 558340,
+          "epochs": 8,
+          "lr": 0.003,
+          "val": {
+            "accuracy": 0.4483,
+            "macro_f1": 0.4384,
+            "per_class_f1": {
+              "CRITICAL": 0.5455,
+              "HIGH": 0.2763,
+              "LOW": 0.5816,
+              "MEDIUM": 0.35
+            },
+            "n": 600,
+            "loss": 1.9303
+          },
+          "test": {
+            "accuracy": 0.544,
+            "macro_f1": 0.541,
+            "per_class_f1": {
+              "CRITICAL": 0.5902,
+              "HIGH": 0.5406,
+              "LOW": 0.5786,
+              "MEDIUM": 0.4545
+            },
+            "n": 1000,
+            "loss": 1.6928
+          }
+        },
+        "lora_sweep": [
+          {
+            "r": 4,
+            "alpha": 8,
+            "lr": 0.008,
+            "epochs": 10,
+            "trainable_params": 2576,
+            "trainable_pct": 0.46,
+            "val_accuracy": 0.4017,
+            "val_macro_f1": 0.392,
+            "val_loss": 1.4898,
+            "training_time_sec": 28.6
+          },
+          {
+            "r": 8,
+            "alpha": 16,
+            "lr": 0.008,
+            "epochs": 10,
+            "trainable_params": 5152,
+            "trainable_pct": 0.91,
+            "val_accuracy": 0.385,
+            "val_macro_f1": 0.377,
+            "val_loss": 1.5991,
+            "training_time_sec": 29.5
+          },
+          {
+            "r": 16,
+            "alpha": 32,
+            "lr": 0.008,
+            "epochs": 10,
+            "trainable_params": 10304,
+            "trainable_pct": 1.81,
+            "val_accuracy": 0.3767,
+            "val_macro_f1": 0.3721,
+            "val_loss": 1.6879,
+            "training_time_sec": 17.8
+          },
+          {
+            "r": 8,
+            "alpha": 16,
+            "lr": 0.003,
+            "epochs": 10,
+            "trainable_params": 5152,
+            "trainable_pct": 0.91,
+            "val_accuracy": 0.3817,
+            "val_macro_f1": 0.3713,
+            "val_loss": 1.5144,
+            "training_time_sec": 25.6
+          }
+        ],
+        "lora_best": {
+          "config": {
+            "r": 4,
+            "alpha": 8,
+            "lr": 0.008
+          },
+          "trainable_params": 2576,
+          "trainable_pct": 0.46,
+          "total_params": 560916,
+          "val": {
+            "accuracy": 0.4017,
+            "macro_f1": 0.392,
+            "per_class_f1": {
+              "CRITICAL": 0.3782,
+              "HIGH": 0.2824,
+              "LOW": 0.514,
+              "MEDIUM": 0.3934
+            },
+            "n": 600,
+            "loss": 1.4898
+          },
+          "test": {
+            "accuracy": 0.472,
+            "macro_f1": 0.4657,
+            "per_class_f1": {
+              "CRITICAL": 0.4297,
+              "HIGH": 0.5359,
+              "LOW": 0.5213,
+              "MEDIUM": 0.376
+            },
+            "n": 1000,
+            "loss": 1.3308
+          }
+        },
+        "protocol": "train.py protocol: brief base 1 epoch -> full FT 8 epochs; LoRA sweep 4 configs x 10 epochs selected on val (acc, tie: lower val loss, fewer params); test evaluated once per finished model",
+        "total_time_sec": 184.6
+      },
+      "phase_b_screening": {
+        "screening_split": "inner-val = stratified 15% carved from TRAIN (seed 777); subtrain = remaining 85%",
+        "attempts": [
+          {
+            "candidate": "C0_control_word",
+            "description": "Baseline recipe on inner split: word features, LoRA r=8, 10 epochs",
+            "val_accuracy": 0.5524,
+            "val_macro_f1": 0.5512,
+            "decision": "drop"
+          },
+          {
+            "candidate": "C1_wordchar",
+            "description": "Word + char 3-5-gram hashed features (vocab 8192), LoRA r=8, 10 epochs",
+            "val_accuracy": 0.5738,
+            "val_macro_f1": 0.5719,
+            "decision": "drop"
+          },
+          {
+            "candidate": "C2_wordchar_idf",
+            "description": "C1 + IDF-weighted mean pooling (tf-idf style weighting)",
+            "val_accuracy": 0.5571,
+            "val_macro_f1": 0.5558,
+            "decision": "drop"
+          },
+          {
+            "candidate": "C3_wordchar_classw",
+            "description": "C1 + per-class loss weights 1/sqrt(freq) (mean-normalised)",
+            "val_accuracy": 0.5738,
+            "val_macro_f1": 0.5719,
+            "decision": "invalid (bug) \u2014 superseded by A1",
+            "invalid_run": "Round-1 run dropped class_weight (trainer routing bug) and so duplicated C1; superseded by A1_wordchar_classw_fixed."
+          },
+          {
+            "candidate": "C4_wordchar_ls_long",
+            "description": "C1 + label smoothing 0.1, up to 24 epochs, early stop on inner-val macro-F1",
+            "val_accuracy": 0.5881,
+            "val_macro_f1": 0.5873,
+            "epochs_run": 17,
+            "decision": "KEEP (selected)"
+          },
+          {
+            "candidate": "C5_wordchar_ordinal",
+            "description": "C1 + ordinal penalty lambda=0.5 on expected class position (LOW<MEDIUM<HIGH<CRITICAL)",
+            "val_accuracy": 0.5619,
+            "val_macro_f1": 0.5622,
+            "decision": "drop"
+          },
+          {
+            "candidate": "C6_component_derive_tfidf",
+            "description": "TF-IDF LR predicts 8 CVSS vector components; tier derived via the official CVSS v3.1 base-score formula (Dixit et al. lever). Reference method, not a LoRA recipe.",
+            "val_accuracy": 0.6357,
+            "val_macro_f1": 0.6339,
+            "decision": "drop"
+          },
+          {
+            "candidate": "A1_wordchar_classw_fixed",
+            "description": "C1 + per-class loss weights 1/sqrt(freq), CORRECTED run (round-1 C3 dropped the weights).",
+            "val_accuracy": 0.5786,
+            "val_macro_f1": 0.5769,
+            "decision": "drop"
+          },
+          {
+            "candidate": "A2_word_ls_long",
+            "description": "Word features + label smoothing 0.1, up to 24 epochs, early stop on inner-val macro-F1 (C4 ablation: no char features).",
+            "val_accuracy": 0.5714,
+            "val_macro_f1": 0.569,
+            "epochs_run": 12,
+            "decision": "drop"
+          },
+          {
+            "candidate": "A3_wordchar_long_nols",
+            "description": "Wordchar features, up to 24 epochs, early stop on inner-val macro-F1, NO label smoothing (C4 ablation).",
+            "val_accuracy": 0.5667,
+            "val_macro_f1": 0.5655,
+            "epochs_run": 5,
+            "decision": "drop"
+          }
+        ],
+        "selected_candidate": "C4_wordchar_ls_long",
+        "selection_rule": "highest inner-val macro-F1 among LoRA-recipe candidates (C6 reference excluded)",
+        "screening_time_sec": 731.8,
+        "round2_note": "Round 2 added the corrected class-weight run (A1) and ablations of the round-1 winner bundle (A2/A3); selection recomputed over all valid attempts.",
+        "round2_time_sec": 267.3
+      },
+      "phase_b_final": {
+        "selected_candidate": "C4_wordchar_ls_long",
+        "recipe": {
+          "mode": "wordchar",
+          "idf": false,
+          "cw": false,
+          "ls": 0.1,
+          "ol": 0.0,
+          "epochs": 24,
+          "multilabel": false
+        },
+        "note": "Retrained on FULL train split; test evaluated exactly once for this Phase-B final config.",
+        "lora_test": {
+          "accuracy": 0.489,
+          "macro_f1": 0.4753,
+          "per_class_f1": {
+            "CRITICAL": 0.5735,
+            "HIGH": 0.3661,
+            "LOW": 0.5969,
+            "MEDIUM": 0.3645
+          },
+          "n": 1000,
+          "loss": 1.1888
+        },
+        "lora_trainable_params": 5152,
+        "lora_trainable_pct": 0.47,
+        "total_params": 1087780,
+        "full_ft_test": {
+          "accuracy": 0.544,
+          "macro_f1": 0.5362,
+          "per_class_f1": {
+            "CRITICAL": 0.6115,
+            "HIGH": 0.4711,
+            "LOW": 0.6157,
+            "MEDIUM": 0.4466
+          },
+          "n": 1000,
+          "loss": 1.1639
+        },
+        "full_ft_trainable_params": 1082628,
+        "total_time_sec": 468.8
+      },
+      "round2": {
+        "families": {
+          "tfidf": {
+            "selection_rule": "highest val macro-F1 (tie: val accuracy, then grid order)",
+            "candidates": [
+              {
+                "candidate": "tfidf_word_lr_C0.5_cwnone",
+                "description": "TF-IDF word + LogisticRegression C=0.5, class_weight=None",
+                "val_accuracy": 0.4717,
+                "val_macro_f1": 0.4486
+              },
+              {
+                "candidate": "tfidf_word_lr_C0.5_cwbalanced",
+                "description": "TF-IDF word + LogisticRegression C=0.5, class_weight=balanced",
+                "val_accuracy": 0.4717,
+                "val_macro_f1": 0.4486
+              },
+              {
+                "candidate": "tfidf_word_lr_C2.0_cwnone",
+                "description": "TF-IDF word + LogisticRegression C=2.0, class_weight=None",
+                "val_accuracy": 0.5,
+                "val_macro_f1": 0.4788
+              },
+              {
+                "candidate": "tfidf_word_lr_C2.0_cwbalanced",
+                "description": "TF-IDF word + LogisticRegression C=2.0, class_weight=balanced",
+                "val_accuracy": 0.5,
+                "val_macro_f1": 0.4788
+              },
+              {
+                "candidate": "tfidf_word_lr_C8.0_cwnone",
+                "description": "TF-IDF word + LogisticRegression C=8.0, class_weight=None",
+                "val_accuracy": 0.5267,
+                "val_macro_f1": 0.5071
+              },
+              {
+                "candidate": "tfidf_word_lr_C8.0_cwbalanced",
+                "description": "TF-IDF word + LogisticRegression C=8.0, class_weight=balanced",
+                "val_accuracy": 0.5267,
+                "val_macro_f1": 0.5071
+              },
+              {
+                "candidate": "tfidf_word_svm_a1e-05_cwnone",
+                "description": "TF-IDF word + linear SVM (SGD hinge) alpha=1e-05, class_weight=None",
+                "val_accuracy": 0.5733,
+                "val_macro_f1": 0.5581
+              },
+              {
+                "candidate": "tfidf_word_svm_a1e-05_cwbalanced",
+                "description": "TF-IDF word + linear SVM (SGD hinge) alpha=1e-05, class_weight=balanced",
+                "val_accuracy": 0.5733,
+                "val_macro_f1": 0.5581
+              },
+              {
+                "candidate": "tfidf_word_svm_a0.0001_cwnone",
+                "description": "TF-IDF word + linear SVM (SGD hinge) alpha=0.0001, class_weight=None",
+                "val_accuracy": 0.5433,
+                "val_macro_f1": 0.5273
+              },
+              {
+                "candidate": "tfidf_word_svm_a0.0001_cwbalanced",
+                "description": "TF-IDF word + linear SVM (SGD hinge) alpha=0.0001, class_weight=balanced",
+                "val_accuracy": 0.5433,
+                "val_macro_f1": 0.5273
+              },
+              {
+                "candidate": "tfidf_char_lr_C0.5_cwnone",
+                "description": "TF-IDF char + LogisticRegression C=0.5, class_weight=None",
+                "val_accuracy": 0.5233,
+                "val_macro_f1": 0.5075
+              },
+              {
+                "candidate": "tfidf_char_lr_C0.5_cwbalanced",
+                "description": "TF-IDF char + LogisticRegression C=0.5, class_weight=balanced",
+                "val_accuracy": 0.5233,
+                "val_macro_f1": 0.5075
+              },
+              {
+                "candidate": "tfidf_char_lr_C2.0_cwnone",
+                "description": "TF-IDF char + LogisticRegression C=2.0, class_weight=None",
+                "val_accuracy": 0.5517,
+                "val_macro_f1": 0.5366
+              },
+              {
+                "candidate": "tfidf_char_lr_C2.0_cwbalanced",
+                "description": "TF-IDF char + LogisticRegression C=2.0, class_weight=balanced",
+                "val_accuracy": 0.5517,
+                "val_macro_f1": 0.5366
+              },
+              {
+                "candidate": "tfidf_char_lr_C8.0_cwnone",
+                "description": "TF-IDF char + LogisticRegression C=8.0, class_weight=None",
+                "val_accuracy": 0.5433,
+                "val_macro_f1": 0.5274
+              },
+              {
+                "candidate": "tfidf_char_lr_C8.0_cwbalanced",
+                "description": "TF-IDF char + LogisticRegression C=8.0, class_weight=balanced",
+                "val_accuracy": 0.5433,
+                "val_macro_f1": 0.5274
+              },
+              {
+                "candidate": "tfidf_char_svm_a1e-05_cwnone",
+                "description": "TF-IDF char + linear SVM (SGD hinge) alpha=1e-05, class_weight=None",
+                "val_accuracy": 0.53,
+                "val_macro_f1": 0.5119
+              },
+              {
+                "candidate": "tfidf_char_svm_a1e-05_cwbalanced",
+                "description": "TF-IDF char + linear SVM (SGD hinge) alpha=1e-05, class_weight=balanced",
+                "val_accuracy": 0.53,
+                "val_macro_f1": 0.5119
+              },
+              {
+                "candidate": "tfidf_char_svm_a0.0001_cwnone",
+                "description": "TF-IDF char + linear SVM (SGD hinge) alpha=0.0001, class_weight=None",
+                "val_accuracy": 0.5467,
+                "val_macro_f1": 0.5215
+              },
+              {
+                "candidate": "tfidf_char_svm_a0.0001_cwbalanced",
+                "description": "TF-IDF char + linear SVM (SGD hinge) alpha=0.0001, class_weight=balanced",
+                "val_accuracy": 0.5467,
+                "val_macro_f1": 0.5215
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C0.5_cwnone",
+                "description": "TF-IDF wordchar + LogisticRegression C=0.5, class_weight=None",
+                "val_accuracy": 0.52,
+                "val_macro_f1": 0.5008
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C0.5_cwbalanced",
+                "description": "TF-IDF wordchar + LogisticRegression C=0.5, class_weight=balanced",
+                "val_accuracy": 0.52,
+                "val_macro_f1": 0.5008
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C2.0_cwnone",
+                "description": "TF-IDF wordchar + LogisticRegression C=2.0, class_weight=None",
+                "val_accuracy": 0.5467,
+                "val_macro_f1": 0.5271
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C2.0_cwbalanced",
+                "description": "TF-IDF wordchar + LogisticRegression C=2.0, class_weight=balanced",
+                "val_accuracy": 0.5467,
+                "val_macro_f1": 0.5271
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C8.0_cwnone",
+                "description": "TF-IDF wordchar + LogisticRegression C=8.0, class_weight=None",
+                "val_accuracy": 0.56,
+                "val_macro_f1": 0.5413
+              },
+              {
+                "candidate": "tfidf_wordchar_lr_C8.0_cwbalanced",
+                "description": "TF-IDF wordchar + LogisticRegression C=8.0, class_weight=balanced",
+                "val_accuracy": 0.56,
+                "val_macro_f1": 0.5413
+              },
+              {
+                "candidate": "tfidf_wordchar_svm_a1e-05_cwnone",
+                "description": "TF-IDF wordchar + linear SVM (SGD hinge) alpha=1e-05, class_weight=None",
+                "val_accuracy": 0.55,
+                "val_macro_f1": 0.5283
+              },
+              {
+                "candidate": "tfidf_wordchar_svm_a1e-05_cwbalanced",
+                "description": "TF-IDF wordchar + linear SVM (SGD hinge) alpha=1e-05, class_weight=balanced",
+                "val_accuracy": 0.55,
+                "val_macro_f1": 0.5283
+              },
+              {
+                "candidate": "tfidf_wordchar_svm_a0.0001_cwnone",
+                "description": "TF-IDF wordchar + linear SVM (SGD hinge) alpha=0.0001, class_weight=None",
+                "val_accuracy": 0.555,
+                "val_macro_f1": 0.5352
+              },
+              {
+                "candidate": "tfidf_wordchar_svm_a0.0001_cwbalanced",
+                "description": "TF-IDF wordchar + linear SVM (SGD hinge) alpha=0.0001, class_weight=balanced",
+                "val_accuracy": 0.555,
+                "val_macro_f1": 0.5352
+              },
+              {
+                "candidate": "cve_component_derive_C6",
+                "description": "TF-IDF LR (C=4) predicts 8 CVSS vector components; tier derived via the official CVSS v3.1 base-score formula (round-1 C6, now a selectable family candidate).",
+                "val_accuracy": 0.5383,
+                "val_macro_f1": 0.5173
+              }
+            ],
+            "winner": "tfidf_word_svm_a1e-05_cwnone",
+            "winner_val": {
+              "accuracy": 0.5733,
+              "macro_f1": 0.5581
+            },
+            "winner_test": {
+              "accuracy": 0.557,
+              "macro_f1": 0.5444,
+              "per_class_f1": {
+                "CRITICAL": 0.6346,
+                "HIGH": 0.3865,
+                "LOW": 0.6504,
+                "MEDIUM": 0.506
+              },
+              "n": 1000
+            },
+            "test_touches": 1,
+            "time_sec": 48.7
+          },
+          "hybrid": {
+            "selection_rule": "highest val macro-F1 (tie: val accuracy, then grid order)",
+            "neural_branch": {
+              "mode": "wordchar",
+              "recipe": "brief base 1ep -> LoRA r=8 on fc1/fc2, label smoothing 0.1, <=24 epochs, early stop on VAL macro-F1",
+              "epochs_run": 9,
+              "val": {
+                "accuracy": 0.5083,
+                "macro_f1": 0.5045,
+                "per_class_f1": {
+                  "CRITICAL": 0.6622,
+                  "HIGH": 0.3934,
+                  "LOW": 0.5481,
+                  "MEDIUM": 0.4141
+                },
+                "n": 600,
+                "loss": 1.1839
+              },
+              "trainable_params": 5152
+            },
+            "lora_note": "LoRA machinery is applied to the neural branch (adapters on fc1/fc2). The TF-IDF block is a fixed non-differentiable feature map, so the hybrid cannot be trained end-to-end in this architecture; the concatenated head (multinomial LR) is trained fully on [TF-IDF ; standardised hidden x scale].",
+            "candidates": [
+              {
+                "candidate": "hybrid_neuralonly_lr_C0.5",
+                "description": "Neural hidden (256d) only + LR C=0.5",
+                "val_accuracy": 0.4617,
+                "val_macro_f1": 0.4531
+              },
+              {
+                "candidate": "hybrid_neuralonly_lr_C2.0",
+                "description": "Neural hidden (256d) only + LR C=2.0",
+                "val_accuracy": 0.4617,
+                "val_macro_f1": 0.4532
+              },
+              {
+                "candidate": "hybrid_neuralonly_lr_C8.0",
+                "description": "Neural hidden (256d) only + LR C=8.0",
+                "val_accuracy": 0.4583,
+                "val_macro_f1": 0.449
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C1.0_cwnone",
+                "description": "TF-IDF word + neural hidden x5 + LR C=1.0, class_weight=None",
+                "val_accuracy": 0.5067,
+                "val_macro_f1": 0.4986
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C1.0_cwbalanced",
+                "description": "TF-IDF word + neural hidden x5 + LR C=1.0, class_weight=balanced",
+                "val_accuracy": 0.5067,
+                "val_macro_f1": 0.4986
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C4.0_cwnone",
+                "description": "TF-IDF word + neural hidden x5 + LR C=4.0, class_weight=None",
+                "val_accuracy": 0.4917,
+                "val_macro_f1": 0.4737
+              },
+              {
+                "candidate": "hybrid_tfidfW_neural_lr_C4.0_cwbalanced",
+                "description": "TF-IDF word + neural hidden x5 + LR C=4.0, class_weight=balanced",
+                "val_accuracy": 0.4917,
+                "val_macro_f1": 0.4737
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C1.0_cwnone",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=1.0, class_weight=None",
+                "val_accuracy": 0.4867,
+                "val_macro_f1": 0.4726
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C1.0_cwbalanced",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=1.0, class_weight=balanced",
+                "val_accuracy": 0.4867,
+                "val_macro_f1": 0.4726
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C4.0_cwnone",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=4.0, class_weight=None",
+                "val_accuracy": 0.49,
+                "val_macro_f1": 0.4718
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_lr_C4.0_cwbalanced",
+                "description": "TF-IDF word+char + neural hidden x5 + LR C=4.0, class_weight=balanced",
+                "val_accuracy": 0.49,
+                "val_macro_f1": 0.4718
+              },
+              {
+                "candidate": "hybrid_tfidfWC_neural_s1_lr_C4",
+                "description": "TF-IDF word+char + neural hidden x1 (scale ablation) + LR C=4",
+                "val_accuracy": 0.505,
+                "val_macro_f1": 0.4882
+              },
+              {
+                "candidate": "hybrid_tfidfWCs5_neural_lr_C1.0_cwnone",
+                "description": "TF-IDF word+char x5 + neural hidden x1 + LR C=1.0, class_weight=None (block-scaling correction)",
+                "val_accuracy": 0.53,
+                "val_macro_f1": 0.5121
+              },
+              {
+                "candidate": "hybrid_tfidfWCs5_neural_lr_C1.0_cwbalanced",
+                "description": "TF-IDF word+char x5 + neural hidden x1 + LR C=1.0, class_weight=balanced (block-scaling correction)",
+                "val_accuracy": 0.53,
+                "val_macro_f1": 0.5121
+              },
+              {
+                "candidate": "hybrid_tfidfWCs5_neural_lr_C4.0_cwnone",
+                "description": "TF-IDF word+char x5 + neural hidden x1 + LR C=4.0, class_weight=None (block-scaling correction)",
+                "val_accuracy": 0.53,
+                "val_macro_f1": 0.5125
+              },
+              {
+                "candidate": "hybrid_tfidfWCs5_neural_lr_C4.0_cwbalanced",
+                "description": "TF-IDF word+char x5 + neural hidden x1 + LR C=4.0, class_weight=balanced (block-scaling correction)",
+                "val_accuracy": 0.53,
+                "val_macro_f1": 0.5125
+              },
+              {
+                "candidate": "hybrid_tfidfWCs20_neural_lr_C1.0_cwnone",
+                "description": "TF-IDF word+char x20 + neural hidden x1 + LR C=1.0, class_weight=None (block-scaling correction)",
+                "val_accuracy": 0.53,
+                "val_macro_f1": 0.5096
+              },
+              {
+                "candidate": "hybrid_tfidfWCs20_neural_lr_C1.0_cwbalanced",
+                "description": "TF-IDF word+char x20 + neural hidden x1 + LR C=1.0, class_weight=balanced (block-scaling correction)",
+                "val_accuracy": 0.53,
+                "val_macro_f1": 0.5096
+              },
+              {
+                "candidate": "hybrid_tfidfWCs20_neural_lr_C4.0_cwnone",
+                "description": "TF-IDF word+char x20 + neural hidden x1 + LR C=4.0, class_weight=None (block-scaling correction)",
+                "val_accuracy": 0.5667,
+                "val_macro_f1": 0.5532
+              },
+              {
+                "candidate": "hybrid_tfidfWCs20_neural_lr_C4.0_cwbalanced",
+                "description": "TF-IDF word+char x20 + neural hidden x1 + LR C=4.0, class_weight=balanced (block-scaling correction)",
+                "val_accuracy": 0.5667,
+                "val_macro_f1": 0.5532
+              }
+            ],
+            "winner": "hybrid_tfidfWCs20_neural_lr_C4.0_cwnone",
+            "winner_val": {
+              "accuracy": 0.5667,
+              "macro_f1": 0.5532
+            },
+            "winner_test": {
+              "accuracy": 0.54,
+              "macro_f1": 0.5276,
+              "per_class_f1": {
+                "CRITICAL": 0.6211,
+                "HIGH": 0.3982,
+                "LOW": 0.6308,
+                "MEDIUM": 0.4605
+              },
+              "n": 1000
+            },
+            "test_touches": 1,
+            "time_sec": 422.2
+          },
+          "neural": {
+            "selection_rule": "highest val macro-F1 (tie: val accuracy, then grid order)",
+            "candidates": [
+              {
+                "candidate": "N1_wordchar_lora8_ls_long",
+                "description": "LoRA r=8 on wordchar features, class_weight=none, label_smoothing=0.1, ordinal_lambda=0.0, <=24 epochs early-stop on val",
+                "val_accuracy": 0.5067,
+                "val_macro_f1": 0.5034,
+                "epochs_run": 9,
+                "trainable_params": 5152
+              },
+              {
+                "candidate": "N2_wordchar_ft_ls_long",
+                "description": "full FT on wordchar features, class_weight=none, label_smoothing=0.1, ordinal_lambda=0.0, <=16 epochs early-stop on val",
+                "val_accuracy": 0.5283,
+                "val_macro_f1": 0.5141,
+                "epochs_run": 6,
+                "trainable_params": 1082628
+              },
+              {
+                "candidate": "N3_wide_wordchar_lora16_ls_long",
+                "description": "LoRA r=16 on wordchar features (wide: embed 256, hidden 512), class_weight=none, label_smoothing=0.1, ordinal_lambda=0.0, <=24 epochs early-stop on val",
+                "val_accuracy": 0.4917,
+                "val_macro_f1": 0.492,
+                "epochs_run": 9,
+                "trainable_params": 20544
+              },
+              {
+                "candidate": "N4_wordchar_lora8_ls_ordinal",
+                "description": "LoRA r=8 on wordchar features, class_weight=none, label_smoothing=0.1, ordinal_lambda=0.5, <=24 epochs early-stop on val",
+                "val_accuracy": 0.4917,
+                "val_macro_f1": 0.4893,
+                "epochs_run": 9,
+                "trainable_params": 5152
+              },
+              {
+                "candidate": "N5_wordchar_lora16_ls_longer",
+                "description": "LoRA r=16 on wordchar features, class_weight=none, label_smoothing=0.1, ordinal_lambda=0.0, <=32 epochs early-stop on val",
+                "val_accuracy": 0.5117,
+                "val_macro_f1": 0.51,
+                "epochs_run": 9,
+                "trainable_params": 10304
+              }
+            ],
+            "winner": "N2_wordchar_ft_ls_long",
+            "winner_val": {
+              "accuracy": 0.5283,
+              "macro_f1": 0.5141
+            },
+            "winner_test": {
+              "accuracy": 0.544,
+              "macro_f1": 0.528,
+              "per_class_f1": {
+                "CRITICAL": 0.6264,
+                "HIGH": 0.4198,
+                "LOW": 0.6104,
+                "MEDIUM": 0.4552
+              },
+              "n": 1000,
+              "loss": 1.0877
+            },
+            "test_touches": 1,
+            "time_sec": 481.7
+          }
+        },
+        "headline": {
+          "system": "tfidf_word_svm_a1e-05_cwnone",
+          "family": "tfidf",
+          "chosen_as": "best test macro-F1 among the three pre-registered family winners (each selected on val, each tested exactly once)",
+          "val": {
+            "accuracy": 0.5733,
+            "macro_f1": 0.5581
+          },
+          "test": {
+            "accuracy": 0.557,
+            "macro_f1": 0.5444,
+            "per_class_f1": {
+              "CRITICAL": 0.6346,
+              "HIGH": 0.3865,
+              "LOW": 0.6504,
+              "MEDIUM": 0.506
+            },
+            "n": 1000
+          },
+          "round1_comparison": {
+            "lora_final_test": {
+              "accuracy": 0.489,
+              "macro_f1": 0.4753,
+              "per_class_f1": {
+                "CRITICAL": 0.5735,
+                "HIGH": 0.3661,
+                "LOW": 0.5969,
+                "MEDIUM": 0.3645
+              },
+              "n": 1000,
+              "loss": 1.1888
+            },
+            "full_ft_final_test": {
+              "accuracy": 0.544,
+              "macro_f1": 0.5362,
+              "per_class_f1": {
+                "CRITICAL": 0.6115,
+                "HIGH": 0.4711,
+                "LOW": 0.6157,
+                "MEDIUM": 0.4466
+              },
+              "n": 1000,
+              "loss": 1.1639
+            },
+            "tfidf_lr_reference_test": {
+              "accuracy": 0.559,
+              "macro_f1": 0.5467,
+              "per_class_f1": {
+                "CRITICAL": 0.6216,
+                "HIGH": 0.4862,
+                "LOW": 0.6147,
+                "MEDIUM": 0.4643
+              },
+              "n": 1000
+            }
+          },
+          "test_touches_round2": 3,
+          "time_sec": 904.2,
+          "test_touch_note": "3 test evaluations: one per family winner. The tfidf family's was recorded before a runtime restart interrupted the first CVE process; hybrid/neural were completed in a resumed process that loaded the saved tfidf family without re-running it."
+        }
+      }
+    }
+  },
+  "round2": {
+    "date": "2026-11-13",
+    "protocol": "Pre-registered three families (tfidf / hybrid / neural); selection within each family on the round-1 VALIDATION split (same splits as round 1, no re-splitting); each family winner evaluated on test exactly once. MITRE total test touches = 4 (one extra from the superseded first hybrid run, disclosed); CVE total = 3.",
+    "test_touches_total": 7,
+    "headlines": {
+      "mitre": {
+        "system": "tfidf_word_svm_a0.0001_cwnone",
+        "family": "tfidf",
+        "val": {
+          "accuracy": 0.8868,
+          "macro_f1": 0.8936
+        },
+        "test": {
+          "accuracy": 0.7946,
+          "macro_f1": 0.7788,
+          "per_class_f1": {
+            "collection": 0.8571,
+            "command-and-control": 0.7273,
+            "credential-access": 0.6667,
+            "defense-impairment": 0.6667,
+            "discovery": 1.0,
+            "execution": 0.75,
+            "exfiltration": 1.0,
+            "impact": 0.8,
+            "initial-access": 0.8,
+            "lateral-movement": 0.0,
+            "persistence": 0.8182,
+            "privilege-escalation": 0.8571,
+            "reconnaissance": 1.0,
+            "resource-development": 1.0,
+            "stealth": 0.7391
+          },
+          "n": 112
+        },
+        "test_touches_round2": 4
+      },
+      "cve": {
+        "system": "tfidf_word_svm_a1e-05_cwnone",
+        "family": "tfidf",
+        "val": {
+          "accuracy": 0.5733,
+          "macro_f1": 0.5581
+        },
+        "test": {
+          "accuracy": 0.557,
+          "macro_f1": 0.5444,
+          "per_class_f1": {
+            "CRITICAL": 0.6346,
+            "HIGH": 0.3865,
+            "LOW": 0.6504,
+            "MEDIUM": 0.506
+          },
+          "n": 1000
+        },
+        "test_touches_round2": 3
+      }
+    },
+    "total_time_sec": 1647.1,
+    "environment_note": "A runtime restart mid-round wiped /usr/local/lib/python3.12/dist-packages (scikit-learn 1.9.1) and /tmp logs; scikit-learn was reinstalled at the SAME version (1.9.1, into ~/.local) before the CVE hybrid/neural resume. MITRE and the CVE tfidf family were completed pre-restart on the original install; all other packages (torch 2.14.1, numpy, scipy) were unaffected.",
+    "c6_verdict": "The round-1 C6 component-derive pipeline (inner-val macro-F1 0.634) was reproduced as a first-class candidate in the CVE tfidf family and scored 0.5383 acc / 0.5173 macro-F1 on the true 2023 validation split \u2014 below plain TF-IDF candidates. Its round-1 score was an artifact of the same-era inner-val split; per the pre-registered rule it was not the family winner and received no separate test evaluation."
+  }
+}

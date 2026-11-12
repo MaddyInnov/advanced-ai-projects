@@ -43,6 +43,7 @@ The product is implemented with deliberately minimal infrastructure — Python's
 Appendix A. Full `results.json`
 Appendix B. File Listing
 Appendix C. Complete API Reference
+Appendix D. Real-Data Addendum (Bitext)
 
 ---
 
@@ -726,6 +727,99 @@ resolvedesk-ai/
 | POST `/api/tickets/<id>/status` | Bearer | Set status: open / in-progress / resolved (owner only) |
 | GET `/api/analytics` | Bearer | Conversations, deflection rate, tickets, avg confidence, intent breakdown |
 | GET `/api/demo-tenants` | — | Seeded tenants + widget keys (demo builds only) |
+
+---
+
+# Appendix D -- Real-Data Addendum (Bitext)
+
+*Added after the main report was written. The main chapters above evaluate the triage classifier on the project's own synthetic, template-generated corpus of Chapter 5, and they say so throughout. This addendum reports the same classifier family on real, public data -- the Bitext customer-support dataset -- under a deduplicated split that is the headline protocol, and it supersedes the synthetic results as the project's headline for intent classification. Every number below is copied from `results_real.json` in the project directory; the narrative version is the real-benchmark section of the project `README.md` and Section 5 of `REAL_BENCHMARKS.md`.*
+
+## D.1 Why this addendum exists
+
+The main report's headline -- 100% intent accuracy / 1.000 macro-F1 and 98.3% priority accuracy / 0.983 macro-F1 on a 120-message held-out test set -- was measured on data produced by the author's own generator. Sections 5.1 and 9.2 already state the limitation plainly: template-generated text is far more regular than real customer language, so a model can score highly by learning the generator rather than the phenomenon. The synthetic run proved the pipeline, the two classification heads and the metrics. It could not, by construction, evidence accuracy on data the author did not write. The experiment that could has now been run, and this addendum is its record, including the leakage trap found in the benchmark itself and the part where the project's classifier, taken as-is, collapses completely on one intent.
+
+One scope line governs everything that follows. **Priority prediction has no real-data evaluation anywhere in this project.** Bitext carries no priority labels, so the priority numbers of the main chapters remain **synthetic-only** and must not be quoted as real-data results; they are deliberately absent from this addendum's results tables and from the report's cover and glance furniture.
+
+## D.2 Dataset, licence and the deduplication protocol
+
+**Dataset.** The Bitext customer-support LLM chatbot training dataset, HuggingFace id `bitext/Bitext-customer-support-llm-chatbot-training-dataset`: 26,872 rows, 27 intents, and 11 categories in a rigid mapping (each intent maps to exactly one category, verified in `results_real.json`, which is why category prediction is reported below as an honestly-labelled second task rather than as independent evidence). The text field used is `instruction`; the label field used is `intent`.
+
+**Licence.** CDLA-Sharing-1.0 (Community Data License Agreement -- Sharing, Version 1.0), taken from the live HuggingFace dataset API metadata (`cardData.license = 'cdla-sharing-1.0'`, also the tag `license:cdla-sharing-1.0`).
+
+**Provenance.** Published by Bitext on HuggingFace (last modified 2024-07-18). The dataset card describes it as a "hybrid synthetic dataset" generated with Bitext's NLP/NLG technology for fine-tuning LLM customer-support assistants. It is therefore a public third-party benchmark corpus, independent of this project's own synthetic templates -- the property this addendum exists to gain -- while Section D.7 records honestly that vendor-generated hybrid data is not organic ticket text.
+
+**Deduplication protocol (the headline protocol).** Bitext contains many duplicate utterances. After normalisation (lowercase, punctuation to space, collapse whitespace, strip), the 26,872 rows contain only 24,072 unique utterances (24,635 unique raw instructions), in 1,318 duplicate groups covering 4,118 rows, with at most 24 copies of one text and zero normalised texts carrying conflicting intents. Splitting rows at random would therefore leak identical utterances across train and test, so the headline split deduplicates on normalised text *before* splitting: a stratified 80/20 split over unique utterances, seed 42.
+
+| Split | Train | Test | Notes |
+|---|---|---|---|
+| Deduped (headline) | 19,259 | 4,813 | 24,072 unique utterances; validation 2,409 carved from a 16,850 train core for screening |
+| Naive (contrast only) | 21,497 | 5,375 | Random row split, duplicates left in; see Section D.4 |
+
+Deduplication has a second, subtler effect that drives Section D.5: the raw rows are near-balanced across intents, but the *unique* utterances are not -- they range from 421 (`cancel_order`) to 997 (`complaint`) per intent. The selection discipline matches the rest of this portfolio's real-data programme: improvement candidates were screened on the validation split carved from the deduped train portion only, and the deduped test split was touched exactly twice -- once for the baseline, once for the final selected configuration.
+
+## D.3 Baseline on the deduped split
+
+The baseline is the project classifier as-is: word-unigram TF-IDF (`ml.Tfidf`, max vocabulary 3,000) plus softmax logistic regression trained with `ml.SoftmaxLR`'s exact full-batch gradient descent (300 epochs, lr 0.5, l2 1e-4, seed 1). Execution ran on the sparse TF-IDF matrix after an equivalence check on the project's synthetic split reproduced the dense model exactly (prediction agreement 1.0, maximum absolute weight difference 0.0); the dense matrix is about 99.7% zeros and the evaluation machine is CPU-shared.
+
+| Deduped test (n = 4,813) | Accuracy | Macro-F1 |
+|---|---|---|
+| Intent (27 classes), baseline | 89.9% (95% CI 89.0-90.7) | 0.8608 |
+| Category (11 classes), baseline | 86.68% (95% CI 85.7-87.6) | 0.8238 |
+
+The baseline's failure is concentrated and instructive. `cancel_order` scores **F1 0.0** -- precision 0.0, recall 0.0 on 84 test utterances: its unique phrasings are absorbed by neighbouring intents (80 test rows predicted as `change_order` alone). The next-weakest intents are `delivery_options` (F1 0.4198) and `change_order` (F1 0.7000). On the category task the same absorption appears one level up, with CANCEL rows predicted as ACCOUNT. This is the honest starting point the improvement phase had to beat: not 100%, and not the leaky naive figure of the next section, but 89.9% / 0.8608 with one intent entirely missed.
+
+## D.4 The naive-split leakage contrast
+
+The naive split is reported here only as a contrast, to quantify what split hygiene is worth on this dataset. On the naive random row split, **13.79% of naive test rows appear verbatim in naive train**, and the same baseline classifier reads **94.75% intent accuracy / 0.9473 macro-F1** (naive category: 85.23% / 0.7841). About 4.9 points of that intent figure is duplicate leakage, not skill. This is why 94.75% appears nowhere as a headline in this report: the deduped 89.9% baseline and the deduped final results of Section D.6 are the only real-data intent numbers this project claims.
+
+## D.5 Improvement log, screened on validation only
+
+Fifteen attempts were logged in `results_real.json`, all screened on the validation split (n = 2,409, carved from deduped train only); the test split was not used for selection. The table keeps the drops alongside the wins, in the order run.
+
+| Attempt | Lever | Val accuracy | Val macro-F1 | Decision |
+|---|---|---|---|---|
+| v0_word_unigram_replica | Sparse replica of the baseline representation (sanity anchor) | 0.8929 | 0.8480 | Not selected |
+| v1_word_bigrams | Word uni+bigrams, 20k word vocabulary | 0.8663 | 0.8092 | Not selected |
+| v2_word_char | + word-boundary char 3-5 grams | 0.8888 | 0.8432 | Not selected |
+| sweep_l2_1e-05 | L2 sweep (1e-05) on the unigram features | 0.8929 | 0.8480 | Not selected |
+| sweep_l2_0.001 | L2 sweep (1e-03) on the unigram features | 0.8908 | 0.8436 | Not selected |
+| sweep_l2_0.01 | L2 sweep (1e-02) on the unigram features | 0.8568 | 0.7913 | Not selected |
+| classweight_inverse | Inverse class weighting | 0.9564 | 0.9547 | Not selected |
+| classweight_sqrt_inverse | Square-root inverse class weighting | 0.9269 | 0.9002 | Not selected |
+| cw_inverse_plus_bigrams | Inverse weighting + word uni+bigrams | 0.9539 | 0.9526 | Not selected |
+| cw_inverse_plus_word_char | Inverse weighting + bigrams + char 3-5 grams | 0.9743 | 0.9734 | Not selected |
+| best_plus_label_smoothing_0.1 | Label smoothing 0.1 on the best config so far | 0.9730 | 0.9721 | Not selected |
+| best_plus_epochs_600 | Longer training (600 vs 250 epochs) | 0.9788 | 0.9780 | Not selected |
+| best_plus_l2_1e-3 | L2 = 1e-3 on the best config so far | 0.9788 | 0.9784 | KEEP (selected for final) |
+| trainsize_25pct | Train-size curve point (25% of train core) | 0.9680 | 0.9659 | Curve point |
+| trainsize_50pct | Train-size curve point (50% of train core) | 0.9747 | 0.9736 | Curve point |
+
+The story of the log is the interaction between Sections D.2 and D.3. Feature levers alone *hurt* without class weighting (bigrams 0.8092, word+char 0.8432, both below the 0.8480 replica anchor), because deduplication itself had unbalanced the classes. **Inverse class weighting was the single biggest lever** (validation macro-F1 0.848 to 0.9547) -- against the prior expectation of a wash on the raw-balanced rows. On top of it, word bigrams brought 0.9526, adding char 3-5 grams brought 0.9734, extending training to 600 epochs brought 0.9780, and l2 = 1e-3 brought the selected 0.9784. The last three configurations sit within 0.0004 of one another -- a plateau, and the screening stopped there. The train-size curve (25% of train core: 0.9659; 50%: 0.9736) shows the result is close to data-saturated. Total recorded compute: baseline stage 63.08 s, screening attempts 750.7 s summed, final stage 288.02 s (final intent training 188.91 s), all wall-clock on a CPU-shared VM and therefore indicative only.
+
+## D.6 Final results
+
+The selected configuration (`best_plus_l2_1e-3`: word uni+bigrams with a 20,000 word vocabulary, plus word-boundary char 3-5 grams with a 30,000 cap, inverse class weighting, 600 epochs, l2 = 1e-3; 19,664 fitted features), retrained on the full deduped train portion (train core + validation), evaluated once on the deduped test split:
+
+| Deduped test (n = 4,813) | Baseline accuracy | Baseline macro-F1 | Final accuracy | Final macro-F1 |
+|---|---|---|---|---|
+| Intent (27 classes) | 89.9% | 0.8608 | **97.59%** | **0.9748** |
+| Category (11 classes) | 86.68% | 0.8238 | **99.5%** | **0.995** |
+
+Final accuracy intervals (Wilson 95%): intent 97.1-98.0, category 99.26-99.66. The headline gain is +7.7 accuracy points and +0.114 macro-F1 on intent over the identically-evaluated deduped baseline, and it is earned against the leak-free protocol, not against the leaky one. The baseline's total collapse is repaired: `cancel_order` recovers from F1 0.0 to **0.9586**, and every intent reaches at least 0.9261 (weakest: `change_order` 0.9261, then `get_invoice` 0.9310 and `check_invoice` 0.9373). The largest remaining confusions are the genuinely near-synonymous pairs -- `get_invoice` / `check_invoice` (13 and 10 test rows in the two directions) and `place_order` predicted as `change_order` (13 rows). Read against the main chapters, the honest final (97.59%) is *close to* but does not claim the synthetic 100%, and the difference between the two numbers is exactly the difference between the author's templates and an independent corpus.
+
+## D.7 Limitations
+
+Four limitations bound these results. **Bitext is vendor-generated hybrid data.** It is public and independent of this project -- the property that makes it a real benchmark for this purpose -- but it was produced with Bitext's NLP/NLG technology, not collected from organic customer tickets, so 97.59% evidences performance on an independent generated corpus, not on live support traffic with its misspellings, code-switching and mixed intents. **Priority prediction is synthetic-only.** Bitext has no priority labels; the 98.3% priority figure of the main chapters rests solely on the project's own 600 template-generated messages and is not a real-data result. **The shipped product model was not retrained.** Bitext's 27-intent schema differs from the product's 6 intents, so the real-data models were evaluated in `eval_bitext.py` only; `triage_model.npz` and `app.py` are unchanged, and the product test suite still passes **13/13**. **Category is a derived task.** Because each Bitext intent maps to exactly one category, the 99.5% category result is a coarser restatement of the intent task, reported for completeness and labelled as such -- it is not a second, independent benchmark.
+
+## D.8 Reproduce
+
+```bash
+cd resolvedesk-ai
+python3 eval_bitext.py   # Bitext baseline + screening + final -> results_real.json
+python3 tests.py         # product suite, unchanged by the real-data eval: 13/13
+```
+
+Files: `eval_bitext.py` and `results_real.json` (dataset record with licence and duplicate analysis, baseline on both splits, all 15 logged improvement attempts with keep/drop decisions, the selected configuration and the final intent + category results) in the project directory, alongside the unchanged `results.json` (synthetic run) and `triage_model.npz` (shipped product model).
 
 ---
 

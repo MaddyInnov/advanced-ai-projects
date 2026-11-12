@@ -1,0 +1,36 @@
+{
+  "tag": "b3_moredata40k",
+  "params": 180049,
+  "T": 300,
+  "epochs_this_run": 6,
+  "epochs_total": 18,
+  "data_n": 40000,
+  "ema_decay": 0.99,
+  "schedule": "cosine",
+  "augment": true,
+  "lr": 0.001,
+  "batch": 256,
+  "base": 16,
+  "init_ckpt": "checkpoint_real_baseline.pt",
+  "loss_history": [
+    0.07957,
+    0.07157,
+    0.06985,
+    0.06814,
+    0.06648,
+    0.06564
+  ],
+  "val_noise_mse_ema_history": [
+    0.06741,
+    0.06696,
+    0.06582,
+    0.06527,
+    0.06471,
+    0.06457
+  ],
+  "final_train_loss": 0.06564,
+  "final_val_noise_mse_ema": 0.06457,
+  "best_val_noise_mse_ema": 0.06457,
+  "train_seconds": 715.9,
+  "checkpoint": "checkpoint_real_b3_moredata40k.pt"
+}

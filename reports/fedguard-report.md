@@ -41,6 +41,7 @@ Six experiments share one test set and one initialisation seed. Centralised trai
 12. References
 Appendix A -- Full results.json
 Appendix B -- File Listing
+Appendix C -- Real-Data Addendum (MNIST)
 
 ---
 
@@ -1192,5 +1193,109 @@ fedguard/
 |                     fedavg_dp_sigma0.7.pt, fedavg_dp_sigma1.2.pt
 `-- README.md         project README
 ```
+
+---
+
+# Appendix C -- Real-Data Addendum (MNIST)
+
+*Added after the main report was written. The main chapters above evaluate FedGuard on the calibrated synthetic problem of Chapter 5, and they say so throughout. This addendum reports the same methods -- FedAvg, FedProx and DP-SGD with true per-sample clipping, implemented by the same project code -- on real data: MNIST, downscaled to 16x16, on the full 10,000-image test set. It supersedes the synthetic results as the project's headline. Every number below is copied from `results_real.json` in the project directory; the full narrative version is the real-benchmark section of the project `README.md`, and the cross-project summary is `REAL_BENCHMARKS.md`. Every epsilon-hat value in this addendum is the project's simplified RDP **estimate** (Section 2.7), for comparing noise levels inside this project only -- never a formal or certified privacy guarantee.*
+
+## C.1 Why this addendum exists
+
+The main report's headline -- a centralised ceiling of 89.0%, FedAvg IID at 88.6%, non-IID skew costing 1.1 points with FedProx recovering 1.0 of them, and DP-SGD costing roughly 4.5 points -- was measured on a Gaussian-mixture problem produced by the author's own generator. Chapter 5.1 states the design honestly: the synthetic problem lets exactly one factor change at a time, and its difficulty was calibrated until the effects of interest were visible. What it cannot evidence is how the same stack behaves on real data, where the task difficulty is set by the data rather than by a calibration sweep. That experiment has now been run, and this addendum is its record -- including the part where FedProx, the main chapters' recovery story, does not recover anything on real data.
+
+## C.2 Dataset and protocol
+
+**Dataset.** MNIST (LeCun et al.): 60,000 training and 10,000 test images, obtained as `mnist.npz` from the TensorFlow/Keras datasets mirror (SHA-256 `731c5ac602752760c8e48fbffcf8c3b850d9dc2a2aedcf2cc48468fc17b673d1`; counts verified on load: 60,000 train / 10,000 test, 28x28 uint8).
+
+**The downscale adaptation, stated plainly.** Each image is scaled to [0, 1], bilinearly downscaled from 28x28 to **16x16 and flattened to a 256-dimensional input**, so the project's shared MLP becomes 256->64->64->10 with dropout 0.3 (**21,258 parameters**, against 6,154 for the synthetic 20-dimensional problem). All methods are the project's own, unchanged: FedAvg aggregation, the FedProx proximal term, DP-SGD with true per-sample clipping via `torch.func`, and the simplified RDP epsilon-hat estimate. The adaptation's consequence for interpretation is stated in Section C.8: 16x16 inputs put absolute accuracies **below 28x28 literature targets**, and no direct ranking against them is claimed.
+
+**Splits and selection discipline.** A stratified 5,000-image validation split (500 per class, seed 777) was carved from the training images and used **only** for improvement-phase config selection; the federated training pool is the remaining 55,000. The test set is the **full 10,000-image MNIST test set, identical for every row** of every table in this addendum. Baseline configurations were evaluated on test once; each improvement family was screened on validation only, and its validation-selected winner was evaluated on test once. Clients: 10. IID is a random shuffle split (seed 43, 5,500 per client); non-IID is the project's own Dirichlet alpha = 0.5 label-skew partition (seed 44), with realised client sizes of 1,949 to 9,126.
+
+**Documented protocol changes against the synthetic run** (full list in `results_real.json`): the training pool is 55,000, not 60,000, because of the validation carve-out; centralised epochs are 30, not 80, because the MNIST-16 validation curve plateaus far earlier; the DP rows here run on the **non-IID** partition as specified for this real run, whereas the synthetic DP rows used IID, so synthetic-vs-real DP rows are not partition-matched; and the DP lot size was raised from 32 to 256 with baseline DP learning rate 0.15 -> 0.4, on a measured cost basis (per-sample step cost about 195 ms at lot 32 against about 34 ms at lot 256), with epsilon-hat estimates recomputed for the actual sigma, sampling rate and step counts.
+
+**Epsilon-hat caveat.** Every epsilon-hat below comes from `federated.estimate_epsilon`, the project's simplified RDP **estimate** at delta = 1e-5, with sampling rate q = 0.046545 and worst-client step counts. It is an **estimate** for comparing noise levels inside this project. It is **not** a formal or certified (epsilon, delta) guarantee, and it must never be placed on the same axis as an Opacus / TF-Privacy accountant epsilon without this caveat.
+
+## C.3 Baseline results on real data
+
+The baseline keeps the synthetic run's protocol shape (centralised AdamW; federated 15 rounds x 3 local epochs, local SGD lr 0.08, batch 32; FedProx mu = 0.1; DP 20 rounds x 1 local epoch) with the documented changes of Section C.2.
+
+| Configuration (MNIST-16) | Val accuracy | Test accuracy | Test macro F1 | Epsilon-hat |
+|---|---|---|---|---|
+| Centralised (30 epochs) | 0.9710 | 0.9756 | 0.9753 | -- |
+| FedAvg -- IID (15 rounds) | 0.9604 | 0.9620 | 0.9617 | -- |
+| FedAvg -- non-IID, alpha = 0.5 (15 rounds) | 0.9578 | 0.9623 | 0.9620 | -- |
+| FedProx -- non-IID, mu = 0.1 (15 rounds) | 0.9074 | 0.9150 | 0.9137 | -- |
+| FedAvg + DP-SGD -- sigma = 0.7 (non-IID) | 0.8226 | 0.8353 | 0.8325 | approx. 10.2 (estimate) |
+| FedAvg + DP-SGD -- sigma = 1.2 (non-IID) | 0.8238 | 0.8373 | 0.8345 | approx. 5.55 (estimate) |
+
+Three readings organise everything that follows. First, **the real task is easier than the calibrated synthetic one**: the centralised model reaches 0.9756 where the synthetic ceiling was 0.890, so every absolute number moves -- the lesson of Section C.8. Second, **federation and skew are nearly free at baseline on this task**: FedAvg IID gives up 1.4 points against pooling (0.9620 against 0.9756), and the 15-round non-IID run (0.9623) matches IID rather than falling behind it, because at 15 rounds the skew penalty has largely been trained through. Third, **FedProx at the synthetic run's mu = 0.1 already trails badly** (0.9150): the proximal anchor that recovered the synthetic gap mostly slows learning here -- the first sign of the negative result Section C.7 records in full. DP-SGD at baseline costs about 13 points against the non-private federated runs, far more than the synthetic run's roughly 4.5 -- but the baseline DP configuration (learning rate 0.4, lot 256) turns out to be badly undertrained for this regime, which is what the improvement phase then separates from the cost of privacy itself.
+
+## C.4 Improvement log: screened on validation only
+
+Nineteen configurations are logged with validation scores and keep/drop decisions in `results_real.json`. The levers screened were more rounds, local-epoch tuning, a FedProx mu sweep, server momentum (FedAvgM), FedAdam, and DP clip / learning-rate tuning. Headlines:
+
+| Lever | Validation result | Decision |
+|---|---|---|
+| FedAvg non-IID, more rounds (40 rounds x 2 local epochs) | 0.9578 -> 0.9622 | **keep** -- family winner; final test 0.9653 |
+| FedAvgM (server momentum, beta = 0.9) | 0.9198 | drop -- below plain FedAvg |
+| FedAdam (server eta = 0.1) | 0.9498 | drop -- below the rounds-only winner |
+| FedProx mu = 0.01 | 0.9492 | **keep** -- family winner; final test 0.9520 |
+| FedProx mu = 0.1 / mu = 1.0 | 0.9074 / 0.6684 | drop -- validation is monotone decreasing in mu |
+| DP clip C = 0.5 at lr 0.4 (both sigma levels) | about 0.737 | drop -- smaller steps, same noise scale, undertrained |
+| DP learning rate 0.4 -> 1.0 -> 2.0 (clip 1.0) | sigma 0.7: 0.8226 -> 0.8798 -> 0.8992; sigma 1.2: 0.8238 -> 0.8780 -> 0.8964 | **keep** at lr 2.0 -- final tests 0.9083 / 0.9054 at unchanged epsilon-hat (estimate) levels |
+| DP sigma = 0.7, lr 2.0, extended to 40 rounds | 0.9130 | **keep** -- frontier point; final test 0.9218 at epsilon-hat approx. 15.31 (estimate) |
+
+Rounds were the main non-private lever, as the literature predicted: the late-round validation curve oscillates in a 0.960-0.963 band, a plateau at this client learning rate, reported as such. DP gains came from learning-rate tuning, not from clipping changes. Three configurations (a FedProx 40-round run, an IID 40-round run and a 60-epoch centralised run) were dropped for CPU budget with **no numbers claimed** -- the rounds lever is demonstrated on the non-IID family and the centralised validation curve shows its own plateau (0.9634 at epoch 10, 0.9710 at epochs 29-30). Total recorded compute for the real-data programme: about 6,071 s across 19 configurations.
+
+## C.5 Final test results
+
+Each row is the validation-selected winner of its family, evaluated on the full 10,000-image test set once (the centralised and FedAvg IID rows are the baseline configurations of Section C.3, retained as their families' winners).
+
+| Configuration (MNIST-16, 10 clients) | Test accuracy | Test macro F1 | Epsilon-hat |
+|---|---|---|---|
+| Centralised (pooled, AdamW, 30 epochs) | **0.9756** | 0.9753 | -- (no privacy) |
+| FedAvg -- IID (15 rounds x 3 local epochs) | 0.9620 | 0.9617 | -- |
+| FedAvg -- non-IID, best (40 rounds x 2 local epochs) | **0.9653** | 0.9651 | -- |
+| FedProx -- non-IID, best (mu = 0.01, 15 x 3) | 0.9520 | 0.9517 | -- |
+| FedAvg + DP-SGD -- sigma = 1.2, lr 2.0, 20 rounds | 0.9054 | 0.9041 | approx. 5.55 (estimate) |
+| FedAvg + DP-SGD -- sigma = 0.7, lr 2.0, 20 rounds | 0.9083 | 0.9070 | approx. 10.2 (estimate) |
+
+What survives from the synthetic chapters is the **ordering**, not the values: centralised at or near the top, IID and non-IID federated runs close behind once rounds are sufficient, and a measurable privacy cost below them. What does not survive is the FedProx story (Section C.7) and every absolute number: on real data the non-IID federated best (0.9653) slightly **exceeds** the IID run (0.9620) -- a rounds effect (40 rounds against 15), not a claim that skew helps -- and the tuned privacy cost is about 6 points, not the baseline's 13 and not the synthetic run's 4.5.
+
+## C.6 The privacy-utility frontier
+
+Best validation-selected test accuracy at each epsilon-hat level (all epsilon-hat values are estimates; see Section C.2):
+
+| Epsilon-hat (estimate) | Sigma | Rounds | Test accuracy |
+|---|---|---|---|
+| approx. 3.81 (estimate) | 1.2 | 10 | 0.7898 |
+| approx. 5.55 (estimate) | 1.2 | 20 | 0.9054 |
+| approx. 10.2 (estimate) | 0.7 | 20 | 0.9083 |
+| approx. 15.31 (estimate) | 0.7 | 40 | 0.9218 |
+
+The frontier flattens fast in this small-MLP federated regime. At epsilon-hat approx. 5.55 (estimate) the DP model gives up about 6 points against the non-private federated best (0.9054 against 0.9653); loosening to epsilon-hat approx. 10.2 (estimate) buys almost nothing (+0.3 points), and the further spend to epsilon-hat approx. 15.31 (estimate) buys +1.6 points. The steep segment is between epsilon-hat approx. 3.81 (estimate) and 5.55 (estimate), where 10 extra rounds at a trainable learning rate recover 11.6 points. Read with the caveat of Section C.2 in force throughout: these epsilon-hat figures are the project's simplified RDP **estimates**, comparable to each other, and to nothing outside this project.
+
+## C.7 Negative results, kept
+
+**FedProx is a negative result on this task at every mu.** Validation accuracy is monotone decreasing in mu -- 0.9492 at mu = 0.01, 0.9074 at mu = 0.1, 0.6684 at mu = 1.0 -- and even the best mu trails plain FedAvg at the same round count (0.9578). At alpha = 0.5 with these round counts the proximal anchor mostly slows learning; the recovery the synthetic chapters report (88.5% against 87.5%) does not transfer, and the final table says so rather than selecting a friendlier framing. **Server-side optimisers also lost:** FedAvgM (validation 0.9198) and FedAdam (validation 0.9498) both finished below plain FedAvg at the screened settings and were never test-evaluated. **Halving the DP clip hurt badly** (validation about 0.737 at both sigma levels): at fixed noise scale, smaller clipped steps simply undertrain. Each of these contradicts a plausible prior -- two of them contradict this report's own main chapters -- which is why they are recorded with their numbers rather than omitted.
+
+## C.8 Comparisons, read with their protocols
+
+**Against the synthetic results of the main chapters** (centralised 0.890, FedAvg IID 0.886, non-IID 0.875, FedProx 0.885, DP 0.839-0.841 at epsilon-hat estimates of about 9.19 and 5.03): the real numbers are **higher** almost everywhere -- MNIST is simply an easier task than the synthetic tabular problem, which is itself the lesson: the synthetic table's ordering (centralised at the top; a privacy cost of a handful of points once DP is properly tuned) survives, and its absolute values did not. Two protocol asymmetries travel with any such comparison: the real DP rows use the non-IID partition where the synthetic DP rows used IID, and the real DP lot size and learning rates differ for the measured reasons of Section C.2.
+
+**Against the literature, with caveats.** Published FedAvg-on-MNIST results at alpha = 0.5 span roughly 85-99%, and the spread is mostly a rounds effect -- exactly what the improvement phase found here. For DP context, Abadi et al.'s centralised DP-SGD reached about 97% at epsilon = 8 on **full** MNIST with a much larger training setup: a different protocol, a different (exact) accountant, full 28x28 inputs and a centralised rather than federated regime, so the epsilon values are not comparable and no ranking is implied. This project's absolute numbers are additionally bounded by its own adaptation: **16x16 inputs put them below 28x28 literature targets** by construction. The honest comparisons are the internal ones in Sections C.3-C.6: same model, same partitions, same full test set, selection on validation only.
+
+## C.9 Limitations
+
+Four limitations bound these results. **Resolution:** 16x16 inputs (256 dimensions) are an adaptation to the project's MLP, stated in Section C.2; absolute accuracies do not estimate 28x28 performance. **Privacy accounting:** epsilon-hat is the project's simplified RDP **estimate** throughout -- suitable for comparing noise levels inside this project, not a formal guarantee; production accounting requires an exact accountant (Opacus / TF-Privacy). **Coverage:** some configurations were dropped for CPU budget with no numbers claimed (Section C.4), and per-config runtimes are contention-variable on the shared build machine, so the about-6,071 s total is a recorded sum, not a benchmark. **Simulation scope:** as in the main chapters, all clients live in one process with full participation every round; client sampling, stragglers, dropout and secure aggregation remain production-path items (Chapter 8), and DP here is example-level within each client, not client-level.
+
+## C.10 Reproduce
+
+```bash
+python3 train_real.py all   # baseline + improvement screening + final test evaluations -> results_real.json
+```
+
+Files: `train_real.py` and the real-data modules it drives, `mnist.npz` (the verified download), `results_real.json` (dataset and split record, partition histograms, the baseline block, all 19 logged improvement entries with decisions, the privacy-utility frontier and the final table), and `checkpoints_real/` (baseline and selected checkpoints), all in the project directory.
 
 *End of report.*

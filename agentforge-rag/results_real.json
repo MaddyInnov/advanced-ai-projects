@@ -1,0 +1,1011 @@
+{
+  "dataset": {
+    "dataset": "SciFact (BEIR)",
+    "source_url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/scifact.zip",
+    "provenance": "BEIR benchmark distribution of SciFact (Wadden et al., EMNLP 2020), downloaded from the UKP Lab BEIR datasets server",
+    "corpus_documents": 5183,
+    "queries_total_in_queries_jsonl": 1109,
+    "test_queries": 300,
+    "test_qrel_rows": 339,
+    "test_qrel_grades": [
+      1
+    ],
+    "train_dev_queries": 809,
+    "train_dev_qrel_rows": 919,
+    "split_used_for_tuning": "train/dev qrels ONLY (Phase-B screening); test qrels never tuned on"
+  },
+  "baseline_config": {
+    "retriever": "rag.Retriever (project code, unmodified)",
+    "alpha_tfidf_fusion_weight": 0.55,
+    "bm25_k1": 1.5,
+    "bm25_b": 0.75,
+    "chunking": "one chunk per SciFact document (title + abstract); doc-level BEIR protocol",
+    "rungs": {
+      "naive_tfidf_only": "mode='tfidf': TF-IDF cosine on the raw query, no query expansion",
+      "hybrid_tfidf_bm25": "mode='hybrid': TF-IDF + BM25 score fusion (BM25 via saturating transform x/(x+8)) WITH the project's query expansion (rag.expand_query)",
+      "hybrid_plus_rerank": "mode='hybrid_rerank': hybrid as above + project cross-score reranker (_cross_score) over the top-20 fused pool, combined 0.55*fused + 0.45*cross"
+    },
+    "index_build_seconds": 6.44,
+    "n_chunks_indexed": 5183,
+    "vocab_size": 35618
+  },
+  "not_benchmarked_by_scifact": "Groundedness / abstention / injection-guardrail numbers are NOT measured by SciFact (it has no unanswerable or adversarial split and no generated answers); those figures remain from the internal self-authored eval in results.json only.",
+  "baseline_test": {
+    "naive_tfidf_only": {
+      "recall_at_3": 0.5727,
+      "recall_at_5": 0.6366,
+      "ndcg_at_10": 0.5769,
+      "mrr_at_10": 0.5394,
+      "mean_latency_ms": 211.72,
+      "median_latency_ms": 204.27,
+      "runtime_seconds_all_queries": 63.54,
+      "n_queries": 300
+    },
+    "hybrid_tfidf_bm25": {
+      "recall_at_3": 0.6521,
+      "recall_at_5": 0.7043,
+      "ndcg_at_10": 0.6269,
+      "mrr_at_10": 0.5901,
+      "mean_latency_ms": 241.49,
+      "median_latency_ms": 221.6,
+      "runtime_seconds_all_queries": 72.46,
+      "n_queries": 300
+    },
+    "hybrid_plus_rerank": {
+      "recall_at_3": 0.6711,
+      "recall_at_5": 0.7164,
+      "ndcg_at_10": 0.6429,
+      "mrr_at_10": 0.6078,
+      "mean_latency_ms": 268.67,
+      "median_latency_ms": 235.01,
+      "runtime_seconds_all_queries": 80.61,
+      "n_queries": 300
+    }
+  },
+  "published_bar": {
+    "source": "REAL_BENCH_IMPROVEMENTS.md (BEIR paper, Thakur et al. 2021)",
+    "bm25_scifact_ndcg_at_10": 0.665,
+    "pure_lexical_frontier_estimate": "0.66-0.70 nDCG@10",
+    "note": "Absolute comparison valid only under the official protocol (full corpus, test queries, title+abstract) \u2014 which this run uses."
+  },
+  "dev_protocol": {
+    "screening_set": "first 250 SciFact train/dev queries (qrels/train.tsv order)",
+    "confirmation_set": "all 809 train/dev queries",
+    "test_evaluations_allowed": "baseline ladder (done) + exactly one final-pipeline evaluation",
+    "adoption_rule": "adopt a lever only if dev-slice nDCG@10 improves by >= 0.003",
+    "rm3_expectation": "brief documents RM3 HURTS on SciFact (query drift on claim-style queries); run only as a dev A/B, expected rejection",
+    "porter_stemmer_self_check": {
+      "passed": true,
+      "results": {
+        "caresses": "caress",
+        "ponies": "poni",
+        "ties": "ti",
+        "cats": "cat",
+        "agreed": "agre",
+        "motoring": "motor",
+        "hopping": "hop",
+        "relational": "relat",
+        "probate": "probat",
+        "rate": "rate",
+        "cease": "ceas",
+        "controll": "control",
+        "roll": "roll"
+      }
+    }
+  },
+  "dev_baseline_slice": {
+    "tfidf_only": {
+      "recall_at_3": 0.5401,
+      "recall_at_5": 0.6655,
+      "ndcg_at_10": 0.575,
+      "mrr_at_10": 0.5162
+    },
+    "bm25_only_component_check": {
+      "recall_at_3": 0.6535,
+      "recall_at_5": 0.7088,
+      "ndcg_at_10": 0.6512,
+      "mrr_at_10": 0.6119
+    },
+    "hybrid_default": {
+      "recall_at_3": 0.6255,
+      "recall_at_5": 0.7188,
+      "ndcg_at_10": 0.6189,
+      "mrr_at_10": 0.5645
+    },
+    "hybrid_rerank_default": {
+      "recall_at_3": 0.6201,
+      "recall_at_5": 0.7168,
+      "ndcg_at_10": 0.6375,
+      "mrr_at_10": 0.5961
+    },
+    "queries_changed_by_project_expansion": "0/250"
+  },
+  "improvement_log": [
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 0.8,
+        "bm25_b": 0.35
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6455,
+        "recall_at_5": 0.6928,
+        "ndcg_at_10": 0.6533,
+        "mrr_at_10": 0.6128
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 0.8,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6375,
+        "recall_at_5": 0.6868,
+        "ndcg_at_10": 0.6527,
+        "mrr_at_10": 0.6143
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 0.8,
+        "bm25_b": 0.65
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6375,
+        "recall_at_5": 0.7088,
+        "ndcg_at_10": 0.6486,
+        "mrr_at_10": 0.6107
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 0.8,
+        "bm25_b": 0.75
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6395,
+        "recall_at_5": 0.7088,
+        "ndcg_at_10": 0.6458,
+        "mrr_at_10": 0.6076
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.0,
+        "bm25_b": 0.35
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6535,
+        "recall_at_5": 0.6928,
+        "ndcg_at_10": 0.6551,
+        "mrr_at_10": 0.6157
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6555,
+        "recall_at_5": 0.6888,
+        "ndcg_at_10": 0.6559,
+        "mrr_at_10": 0.6171
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.0,
+        "bm25_b": 0.65
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6555,
+        "recall_at_5": 0.7048,
+        "ndcg_at_10": 0.6558,
+        "mrr_at_10": 0.6155
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.0,
+        "bm25_b": 0.75
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6555,
+        "recall_at_5": 0.7168,
+        "ndcg_at_10": 0.6541,
+        "mrr_at_10": 0.613
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.2,
+        "bm25_b": 0.35
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6555,
+        "recall_at_5": 0.7008,
+        "ndcg_at_10": 0.6548,
+        "mrr_at_10": 0.6177
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.2,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6595,
+        "recall_at_5": 0.6968,
+        "ndcg_at_10": 0.6553,
+        "mrr_at_10": 0.6195
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.2,
+        "bm25_b": 0.65
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6635,
+        "recall_at_5": 0.7048,
+        "ndcg_at_10": 0.6513,
+        "mrr_at_10": 0.6095
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.2,
+        "bm25_b": 0.75
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6595,
+        "recall_at_5": 0.7088,
+        "ndcg_at_10": 0.6519,
+        "mrr_at_10": 0.6088
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.5,
+        "bm25_b": 0.35
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6555,
+        "recall_at_5": 0.6968,
+        "ndcg_at_10": 0.6517,
+        "mrr_at_10": 0.6123
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.5,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6535,
+        "recall_at_5": 0.6968,
+        "ndcg_at_10": 0.6515,
+        "mrr_at_10": 0.6147
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.5,
+        "bm25_b": 0.65
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6575,
+        "recall_at_5": 0.7048,
+        "ndcg_at_10": 0.6506,
+        "mrr_at_10": 0.6123
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_grid",
+      "config": {
+        "bm25_k1": 1.5,
+        "bm25_b": 0.75
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6535,
+        "recall_at_5": 0.7088,
+        "ndcg_at_10": 0.6512,
+        "mrr_at_10": 0.6119
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "screened",
+      "notes": "BM25-only component screening on dev slice"
+    },
+    {
+      "lever": "bm25_k1_b_selected",
+      "config": {
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6555,
+        "recall_at_5": 0.6888,
+        "ndcg_at_10": 0.6559,
+        "mrr_at_10": 0.6171
+      },
+      "reference_ndcg_at_10": 0.6512,
+      "decision": "adopted_as_component",
+      "notes": "Best BM25-only (k1,b) on dev slice; carried into fusion screening"
+    },
+    {
+      "lever": "fusion_score_alpha",
+      "config": {
+        "fusion": "score",
+        "alpha": 0.0,
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6555,
+        "recall_at_5": 0.6888,
+        "ndcg_at_10": 0.6559,
+        "mrr_at_10": 0.6171
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "screened",
+      "notes": "Score fusion (project saturating BM25 transform), alpha sweep"
+    },
+    {
+      "lever": "fusion_score_alpha",
+      "config": {
+        "fusion": "score",
+        "alpha": 0.15,
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6775,
+        "recall_at_5": 0.7208,
+        "ndcg_at_10": 0.6555,
+        "mrr_at_10": 0.6184
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "screened",
+      "notes": "Score fusion (project saturating BM25 transform), alpha sweep"
+    },
+    {
+      "lever": "fusion_score_alpha",
+      "config": {
+        "fusion": "score",
+        "alpha": 0.3,
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6735,
+        "recall_at_5": 0.7208,
+        "ndcg_at_10": 0.6466,
+        "mrr_at_10": 0.6015
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "screened",
+      "notes": "Score fusion (project saturating BM25 transform), alpha sweep"
+    },
+    {
+      "lever": "fusion_score_alpha",
+      "config": {
+        "fusion": "score",
+        "alpha": 0.45,
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6475,
+        "recall_at_5": 0.7208,
+        "ndcg_at_10": 0.6494,
+        "mrr_at_10": 0.6033
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "screened",
+      "notes": "Score fusion (project saturating BM25 transform), alpha sweep"
+    },
+    {
+      "lever": "fusion_score_alpha",
+      "config": {
+        "fusion": "score",
+        "alpha": 0.55,
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6335,
+        "recall_at_5": 0.7188,
+        "ndcg_at_10": 0.6344,
+        "mrr_at_10": 0.584
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "screened",
+      "notes": "Score fusion (project saturating BM25 transform), alpha sweep"
+    },
+    {
+      "lever": "fusion_score_alpha",
+      "config": {
+        "fusion": "score",
+        "alpha": 0.7,
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6215,
+        "recall_at_5": 0.7188,
+        "ndcg_at_10": 0.6096,
+        "mrr_at_10": 0.5572
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "screened",
+      "notes": "Score fusion (project saturating BM25 transform), alpha sweep"
+    },
+    {
+      "lever": "fusion_score_alpha",
+      "config": {
+        "fusion": "score",
+        "alpha": 0.85,
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.5661,
+        "recall_at_5": 0.7028,
+        "ndcg_at_10": 0.5903,
+        "mrr_at_10": 0.5342
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "screened",
+      "notes": "Score fusion (project saturating BM25 transform), alpha sweep"
+    },
+    {
+      "lever": "fusion_score_alpha",
+      "config": {
+        "fusion": "score",
+        "alpha": 1.0,
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.5401,
+        "recall_at_5": 0.6655,
+        "ndcg_at_10": 0.575,
+        "mrr_at_10": 0.5162
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "screened",
+      "notes": "Score fusion (project saturating BM25 transform), alpha sweep"
+    },
+    {
+      "lever": "fusion_rrf",
+      "config": {
+        "fusion": "rrf",
+        "k": 60,
+        "w_tfidf": 0.3,
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6695,
+        "recall_at_5": 0.7208,
+        "ndcg_at_10": 0.6608,
+        "mrr_at_10": 0.6238
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "screened",
+      "notes": "Reciprocal-rank fusion of TF-IDF and BM25 rankings"
+    },
+    {
+      "lever": "fusion_rrf",
+      "config": {
+        "fusion": "rrf",
+        "k": 60,
+        "w_tfidf": 0.5,
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6641,
+        "recall_at_5": 0.7276,
+        "ndcg_at_10": 0.648,
+        "mrr_at_10": 0.6033
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "screened",
+      "notes": "Reciprocal-rank fusion of TF-IDF and BM25 rankings"
+    },
+    {
+      "lever": "fusion_rrf",
+      "config": {
+        "fusion": "rrf",
+        "k": 60,
+        "w_tfidf": 0.7,
+        "bm25_k1": 1.0,
+        "bm25_b": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6301,
+        "recall_at_5": 0.7328,
+        "ndcg_at_10": 0.6111,
+        "mrr_at_10": 0.5584
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "screened",
+      "notes": "Reciprocal-rank fusion of TF-IDF and BM25 rankings"
+    },
+    {
+      "lever": "fusion_selected",
+      "config": {
+        "fusion": "rrf",
+        "weight": 0.3
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6695,
+        "recall_at_5": 0.7208,
+        "ndcg_at_10": 0.6608,
+        "mrr_at_10": 0.6238
+      },
+      "reference_ndcg_at_10": 0.6189,
+      "decision": "adopted",
+      "notes": "Best fusion on dev slice vs default hybrid first-stage"
+    },
+    {
+      "lever": "rm3_prf",
+      "config": {
+        "alpha_prf": 0.5,
+        "feedback_docs": 10,
+        "expansion_terms": 15
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6361,
+        "recall_at_5": 0.7296,
+        "ndcg_at_10": 0.6085,
+        "mrr_at_10": 0.5495
+      },
+      "reference_ndcg_at_10": 0.6608,
+      "decision": "dropped",
+      "notes": "Negative result: RM3 did not beat the reference on dev \u2014 the brief's documented SciFact RM3 harm (query drift on short claim queries) is consistent with this measurement. Not shipped."
+    },
+    {
+      "lever": "rm3_prf",
+      "config": {
+        "alpha_prf": 0.3,
+        "feedback_docs": 10,
+        "expansion_terms": 15
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6615,
+        "recall_at_5": 0.7356,
+        "ndcg_at_10": 0.6259,
+        "mrr_at_10": 0.5714
+      },
+      "reference_ndcg_at_10": 0.6608,
+      "decision": "dropped",
+      "notes": "Negative result: RM3 did not beat the reference on dev \u2014 the brief's documented SciFact RM3 harm (query drift on short claim queries) is consistent with this measurement. Not shipped."
+    },
+    {
+      "lever": "run_note",
+      "config": {
+        "resumed_from_step": 3,
+        "reason": "first dev process was killed (OOM) during the Step-3 Family rebuild; steps 0-2.5 results are from that run and are unchanged"
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6695,
+        "recall_at_5": 0.7208,
+        "ndcg_at_10": 0.6608,
+        "mrr_at_10": 0.6238
+      },
+      "reference_ndcg_at_10": 0.6608,
+      "decision": "resumed",
+      "notes": "State reconstructed from the logged bm25_k1_b_selected and fusion_selected attempts."
+    },
+    {
+      "lever": "field_weighting_bm25f",
+      "config": {
+        "w_title": 1.5,
+        "w_abstract": 1.0
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6433,
+        "recall_at_5": 0.7176,
+        "ndcg_at_10": 0.6371,
+        "mrr_at_10": 0.6033
+      },
+      "reference_ndcg_at_10": 0.6608,
+      "decision": "dropped",
+      "notes": "BM25F-style: separate title/abstract BM25 indexes, score = w_t*BM25(title) + w_a*BM25(abstract), then fused as current spec"
+    },
+    {
+      "lever": "field_weighting_bm25f",
+      "config": {
+        "w_title": 2.0,
+        "w_abstract": 1.0
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6139,
+        "recall_at_5": 0.6976,
+        "ndcg_at_10": 0.6231,
+        "mrr_at_10": 0.5881
+      },
+      "reference_ndcg_at_10": 0.6608,
+      "decision": "dropped",
+      "notes": "BM25F-style: separate title/abstract BM25 indexes, score = w_t*BM25(title) + w_a*BM25(abstract), then fused as current spec"
+    },
+    {
+      "lever": "field_weighting_bm25f",
+      "config": {
+        "w_title": 3.0,
+        "w_abstract": 1.0
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.5959,
+        "recall_at_5": 0.6716,
+        "ndcg_at_10": 0.5999,
+        "mrr_at_10": 0.5647
+      },
+      "reference_ndcg_at_10": 0.6608,
+      "decision": "dropped",
+      "notes": "BM25F-style: separate title/abstract BM25 indexes, score = w_t*BM25(title) + w_a*BM25(abstract), then fused as current spec"
+    },
+    {
+      "lever": "tfidf_title_boost",
+      "config": {
+        "tfidf_title_beta": 0.25
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6695,
+        "recall_at_5": 0.7336,
+        "ndcg_at_10": 0.6638,
+        "mrr_at_10": 0.6243
+      },
+      "reference_ndcg_at_10": 0.6608,
+      "decision": "dropped",
+      "notes": "TF-IDF side field boost: body+title cosine + beta * title-only cosine"
+    },
+    {
+      "lever": "tfidf_title_boost",
+      "config": {
+        "tfidf_title_beta": 0.5
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.6655,
+        "recall_at_5": 0.7336,
+        "ndcg_at_10": 0.6654,
+        "mrr_at_10": 0.6306
+      },
+      "reference_ndcg_at_10": 0.6608,
+      "decision": "adopted",
+      "notes": "TF-IDF side field boost: body+title cosine + beta * title-only cosine"
+    },
+    {
+      "lever": "tokenisation_v2",
+      "config": {
+        "tokenizer": "porter_stem + hyphen_compounds"
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.54,
+        "recall_at_5": 0.6,
+        "ndcg_at_10": 0.5148,
+        "mrr_at_10": 0.4784
+      },
+      "reference_ndcg_at_10": 0.6654,
+      "decision": "dropped",
+      "notes": "Same selected config family, rebuilt with stemmed/compound tokenisation"
+    },
+    {
+      "lever": "rerank",
+      "config": {
+        "pool": 20,
+        "mix": 0.45,
+        "features": "base"
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.5421,
+        "recall_at_5": 0.6388,
+        "ndcg_at_10": 0.5725,
+        "mrr_at_10": 0.5298
+      },
+      "reference_ndcg_at_10": 0.6654,
+      "decision": "screened",
+      "notes": "Lexical rerank of the fused pool; ext = cross-score + title coverage + IDF-weighted best-sentence overlap"
+    },
+    {
+      "lever": "rerank",
+      "config": {
+        "pool": 50,
+        "mix": 0.45,
+        "features": "base"
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.5321,
+        "recall_at_5": 0.6228,
+        "ndcg_at_10": 0.558,
+        "mrr_at_10": 0.5215
+      },
+      "reference_ndcg_at_10": 0.6654,
+      "decision": "screened",
+      "notes": "Lexical rerank of the fused pool; ext = cross-score + title coverage + IDF-weighted best-sentence overlap"
+    },
+    {
+      "lever": "rerank",
+      "config": {
+        "pool": 50,
+        "mix": 0.3,
+        "features": "base"
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.5401,
+        "recall_at_5": 0.6248,
+        "ndcg_at_10": 0.559,
+        "mrr_at_10": 0.5225
+      },
+      "reference_ndcg_at_10": 0.6654,
+      "decision": "screened",
+      "notes": "Lexical rerank of the fused pool; ext = cross-score + title coverage + IDF-weighted best-sentence overlap"
+    },
+    {
+      "lever": "rerank",
+      "config": {
+        "pool": 50,
+        "mix": 0.6,
+        "features": "base"
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.5281,
+        "recall_at_5": 0.6228,
+        "ndcg_at_10": 0.5574,
+        "mrr_at_10": 0.5208
+      },
+      "reference_ndcg_at_10": 0.6654,
+      "decision": "screened",
+      "notes": "Lexical rerank of the fused pool; ext = cross-score + title coverage + IDF-weighted best-sentence overlap"
+    },
+    {
+      "lever": "rerank",
+      "config": {
+        "pool": 50,
+        "mix": 0.45,
+        "features": "ext"
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.5895,
+        "recall_at_5": 0.6475,
+        "ndcg_at_10": 0.5987,
+        "mrr_at_10": 0.5681
+      },
+      "reference_ndcg_at_10": 0.6654,
+      "decision": "screened",
+      "notes": "Lexical rerank of the fused pool; ext = cross-score + title coverage + IDF-weighted best-sentence overlap"
+    },
+    {
+      "lever": "rerank_selected",
+      "config": {
+        "pool": 50,
+        "mix": 0.45,
+        "features": "ext"
+      },
+      "dev_set": "train/dev slice (first 250 train queries)",
+      "n_queries": 250,
+      "metrics": {
+        "recall_at_3": 0.5895,
+        "recall_at_5": 0.6475,
+        "ndcg_at_10": 0.5987,
+        "mrr_at_10": 0.5681
+      },
+      "reference_ndcg_at_10": 0.6654,
+      "decision": "dropped",
+      "notes": "No rerank config beat the first stage by the adoption epsilon on dev"
+    }
+  ],
+  "final_selection": {
+    "selected_spec": {
+      "tokenizer": "v1",
+      "bm25_k1": 1.0,
+      "bm25_b": 0.5,
+      "field_weights": null,
+      "fusion": "rrf",
+      "fusion_weight": 0.3,
+      "tfidf_title_beta": 0.5,
+      "rerank": null
+    },
+    "selection": "candidate beat project baseline on full dev",
+    "candidate_spec": {
+      "tokenizer": "v1",
+      "bm25_k1": 1.0,
+      "bm25_b": 0.5,
+      "field_weights": null,
+      "fusion": "rrf",
+      "fusion_weight": 0.3,
+      "tfidf_title_beta": 0.5,
+      "rerank": null
+    },
+    "candidate_full_dev_metrics": {
+      "recall_at_3": 0.6699,
+      "recall_at_5": 0.7311,
+      "ndcg_at_10": 0.668,
+      "mrr_at_10": 0.6334
+    },
+    "baseline_full_dev_metrics": {
+      "recall_at_3": 0.6524,
+      "recall_at_5": 0.7235,
+      "ndcg_at_10": 0.6631,
+      "mrr_at_10": 0.6312
+    },
+    "full_dev_n_queries": 809,
+    "candidate_dev_slice_metrics": {
+      "recall_at_3": 0.6655,
+      "recall_at_5": 0.7336,
+      "ndcg_at_10": 0.6654,
+      "mrr_at_10": 0.6306
+    }
+  },
+  "final_test": {
+    "note": "Single test evaluation of the dev-selected pipeline (test touched exactly twice overall: baseline ladder + this run).",
+    "config": {
+      "tokenizer": "v1",
+      "bm25_k1": 1.0,
+      "bm25_b": 0.5,
+      "field_weights": null,
+      "fusion": "rrf",
+      "fusion_weight": 0.3,
+      "tfidf_title_beta": 0.5,
+      "rerank": null
+    },
+    "metrics": {
+      "recall_at_3": 0.6578,
+      "recall_at_5": 0.7059,
+      "ndcg_at_10": 0.6466,
+      "mrr_at_10": 0.609,
+      "mean_latency_ms": 588.3,
+      "median_latency_ms": 594.09,
+      "n_queries": 300
+    }
+  }
+}
