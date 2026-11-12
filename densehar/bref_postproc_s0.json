@@ -1,0 +1,683 @@
+{
+  "model": "model_real_p2_aug_c12_refine_bh10.pt",
+  "thresh": 0.5,
+  "bref_alone": {
+    "accuracy": 0.9336745689655173,
+    "macro_f1": 0.9635837376927606,
+    "per_class_f1": [
+      1.0,
+      1.0,
+      1.0,
+      0.9168882602545969,
+      0.8974636003498483,
+      0.967150565552119
+    ],
+    "per_class_f1_named": {
+      "walking": 1.0,
+      "walking_upstairs": 1.0,
+      "walking_downstairs": 1.0,
+      "sitting": 0.9168882602545969,
+      "standing": 0.8974636003498483,
+      "laying": 0.967150565552119
+    },
+    "transition_window_accuracy": 0.6473846153846153,
+    "transition_window_timesteps": 1625,
+    "boundary_f1": 0.5130890052356021,
+    "boundary_precision": 0.4336283185840708,
+    "boundary_recall": 0.6282051282051282,
+    "boundary_tp": 49,
+    "boundary_fp": 64,
+    "boundary_fn": 29,
+    "segmental_f1@10": 0.8731808731808732,
+    "segmental_f1@25": 0.8690228690228691,
+    "segmental_f1@50": 0.8482328482328481,
+    "edit_score": 88.64367816091955,
+    "edit_distance_mean": 0.3448275862068966,
+    "transition_class_timestep_accuracy": 0.9113112391930835,
+    "transition_class_timesteps": 13880,
+    "non_transition_timestep_accuracy": 0.938817097415507
+  },
+  "grid": [
+    {
+      "median": 1,
+      "theta": 10,
+      "val": {
+        "accuracy": 0.9339709051724138,
+        "macro_f1": 0.963751778822151,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.917081635732609,
+          0.8982344160189428,
+          0.9671946211813547
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.917081635732609,
+          "standing": 0.8982344160189428,
+          "laying": 0.9671946211813547
+        },
+        "transition_window_accuracy": 0.6492307692307693,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.562874251497006,
+        "boundary_precision": 0.5280898876404494,
+        "boundary_recall": 0.6025641025641025,
+        "boundary_tp": 47,
+        "boundary_fp": 42,
+        "boundary_fn": 31,
+        "segmental_f1@10": 0.9190371991247266,
+        "segmental_f1@25": 0.9146608315098469,
+        "segmental_f1@50": 0.8927789934354486,
+        "edit_score": 90.97701149425288,
+        "edit_distance_mean": 0.2,
+        "transition_class_timestep_accuracy": 0.9118876080691642,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9390490390987409
+      }
+    },
+    {
+      "median": 1,
+      "theta": 15,
+      "val": {
+        "accuracy": 0.9338227370689656,
+        "macro_f1": 0.9636786521010494,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.9168160969440722,
+          0.8982793652426635,
+          0.9669764504195615
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.9168160969440722,
+          "standing": 0.8982793652426635,
+          "laying": 0.9669764504195615
+        },
+        "transition_window_accuracy": 0.6492307692307693,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5766871165644172,
+        "boundary_precision": 0.5529411764705883,
+        "boundary_recall": 0.6025641025641025,
+        "boundary_tp": 47,
+        "boundary_fp": 38,
+        "boundary_fn": 31,
+        "segmental_f1@10": 0.9227373068432672,
+        "segmental_f1@25": 0.9183222958057395,
+        "segmental_f1@50": 0.9006622516556291,
+        "edit_score": 90.91954022988506,
+        "edit_distance_mean": 0.18620689655172415,
+        "transition_class_timestep_accuracy": 0.9110951008645534,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9390490390987409
+      }
+    },
+    {
+      "median": 1,
+      "theta": 25,
+      "val": {
+        "accuracy": 0.9334994612068965,
+        "macro_f1": 0.9634780378544604,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.9168160969440722,
+          0.8975988882312067,
+          0.9664532419514834
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.9168160969440722,
+          "standing": 0.8975988882312067,
+          "laying": 0.9664532419514834
+        },
+        "transition_window_accuracy": 0.6461538461538462,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5679012345679013,
+        "boundary_precision": 0.5476190476190477,
+        "boundary_recall": 0.5897435897435898,
+        "boundary_tp": 46,
+        "boundary_fp": 38,
+        "boundary_fn": 32,
+        "segmental_f1@10": 0.920353982300885,
+        "segmental_f1@25": 0.915929203539823,
+        "segmental_f1@50": 0.8982300884955752,
+        "edit_score": 90.57471264367817,
+        "edit_distance_mean": 0.19310344827586207,
+        "transition_class_timestep_accuracy": 0.9093659942363113,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9390490390987409
+      }
+    },
+    {
+      "median": 3,
+      "theta": 0,
+      "val": {
+        "accuracy": 0.933661099137931,
+        "macro_f1": 0.963576969293969,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.9168709689586241,
+          0.8974636003498483,
+          0.9671272464553419
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.9168709689586241,
+          "standing": 0.8974636003498483,
+          "laying": 0.9671272464553419
+        },
+        "transition_window_accuracy": 0.6467692307692308,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5079365079365079,
+        "boundary_precision": 0.43243243243243246,
+        "boundary_recall": 0.6153846153846154,
+        "boundary_tp": 48,
+        "boundary_fp": 63,
+        "boundary_fn": 30,
+        "segmental_f1@10": 0.8768267223382046,
+        "segmental_f1@25": 0.872651356993737,
+        "segmental_f1@50": 0.8517745302713987,
+        "edit_score": 88.52873563218391,
+        "edit_distance_mean": 0.3448275862068966,
+        "transition_class_timestep_accuracy": 0.9113112391930835,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9388005301524188
+      }
+    },
+    {
+      "median": 3,
+      "theta": 10,
+      "val": {
+        "accuracy": 0.9339709051724138,
+        "macro_f1": 0.963751778822151,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.917081635732609,
+          0.8982344160189428,
+          0.9671946211813547
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.917081635732609,
+          "standing": 0.8982344160189428,
+          "laying": 0.9671946211813547
+        },
+        "transition_window_accuracy": 0.6492307692307693,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.562874251497006,
+        "boundary_precision": 0.5280898876404494,
+        "boundary_recall": 0.6025641025641025,
+        "boundary_tp": 47,
+        "boundary_fp": 42,
+        "boundary_fn": 31,
+        "segmental_f1@10": 0.9190371991247266,
+        "segmental_f1@25": 0.9146608315098469,
+        "segmental_f1@50": 0.8927789934354486,
+        "edit_score": 90.97701149425288,
+        "edit_distance_mean": 0.2,
+        "transition_class_timestep_accuracy": 0.9118876080691642,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9390490390987409
+      }
+    },
+    {
+      "median": 3,
+      "theta": 15,
+      "val": {
+        "accuracy": 0.9338227370689656,
+        "macro_f1": 0.9636786521010494,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.9168160969440722,
+          0.8982793652426635,
+          0.9669764504195615
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.9168160969440722,
+          "standing": 0.8982793652426635,
+          "laying": 0.9669764504195615
+        },
+        "transition_window_accuracy": 0.6492307692307693,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5766871165644172,
+        "boundary_precision": 0.5529411764705883,
+        "boundary_recall": 0.6025641025641025,
+        "boundary_tp": 47,
+        "boundary_fp": 38,
+        "boundary_fn": 31,
+        "segmental_f1@10": 0.9227373068432672,
+        "segmental_f1@25": 0.9183222958057395,
+        "segmental_f1@50": 0.9006622516556291,
+        "edit_score": 90.91954022988506,
+        "edit_distance_mean": 0.18620689655172415,
+        "transition_class_timestep_accuracy": 0.9110951008645534,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9390490390987409
+      }
+    },
+    {
+      "median": 3,
+      "theta": 25,
+      "val": {
+        "accuracy": 0.9334994612068965,
+        "macro_f1": 0.9634780378544604,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.9168160969440722,
+          0.8975988882312067,
+          0.9664532419514834
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.9168160969440722,
+          "standing": 0.8975988882312067,
+          "laying": 0.9664532419514834
+        },
+        "transition_window_accuracy": 0.6461538461538462,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5679012345679013,
+        "boundary_precision": 0.5476190476190477,
+        "boundary_recall": 0.5897435897435898,
+        "boundary_tp": 46,
+        "boundary_fp": 38,
+        "boundary_fn": 32,
+        "segmental_f1@10": 0.920353982300885,
+        "segmental_f1@25": 0.915929203539823,
+        "segmental_f1@50": 0.8982300884955752,
+        "edit_score": 90.57471264367817,
+        "edit_distance_mean": 0.19310344827586207,
+        "transition_class_timestep_accuracy": 0.9093659942363113,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9390490390987409
+      }
+    },
+    {
+      "median": 5,
+      "theta": 0,
+      "val": {
+        "accuracy": 0.933661099137931,
+        "macro_f1": 0.9635754550773089,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.916905552202776,
+          0.8974636003498483,
+          0.9670835779112296
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.916905552202776,
+          "standing": 0.8974636003498483,
+          "laying": 0.9670835779112296
+        },
+        "transition_window_accuracy": 0.6467692307692308,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5133689839572193,
+        "boundary_precision": 0.44036697247706424,
+        "boundary_recall": 0.6153846153846154,
+        "boundary_tp": 48,
+        "boundary_fp": 61,
+        "boundary_fn": 30,
+        "segmental_f1@10": 0.8805031446540882,
+        "segmental_f1@25": 0.8763102725366876,
+        "segmental_f1@50": 0.8553459119496856,
+        "edit_score": 88.64367816091955,
+        "edit_distance_mean": 0.33793103448275863,
+        "transition_class_timestep_accuracy": 0.9113112391930835,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9388005301524188
+      }
+    },
+    {
+      "median": 5,
+      "theta": 10,
+      "val": {
+        "accuracy": 0.9339709051724138,
+        "macro_f1": 0.963751778822151,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.917081635732609,
+          0.8982344160189428,
+          0.9671946211813547
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.917081635732609,
+          "standing": 0.8982344160189428,
+          "laying": 0.9671946211813547
+        },
+        "transition_window_accuracy": 0.6492307692307693,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.562874251497006,
+        "boundary_precision": 0.5280898876404494,
+        "boundary_recall": 0.6025641025641025,
+        "boundary_tp": 47,
+        "boundary_fp": 42,
+        "boundary_fn": 31,
+        "segmental_f1@10": 0.9190371991247266,
+        "segmental_f1@25": 0.9146608315098469,
+        "segmental_f1@50": 0.8927789934354486,
+        "edit_score": 90.97701149425288,
+        "edit_distance_mean": 0.2,
+        "transition_class_timestep_accuracy": 0.9118876080691642,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9390490390987409
+      }
+    },
+    {
+      "median": 5,
+      "theta": 15,
+      "val": {
+        "accuracy": 0.9338227370689656,
+        "macro_f1": 0.9636786521010494,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.9168160969440722,
+          0.8982793652426635,
+          0.9669764504195615
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.9168160969440722,
+          "standing": 0.8982793652426635,
+          "laying": 0.9669764504195615
+        },
+        "transition_window_accuracy": 0.6492307692307693,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5766871165644172,
+        "boundary_precision": 0.5529411764705883,
+        "boundary_recall": 0.6025641025641025,
+        "boundary_tp": 47,
+        "boundary_fp": 38,
+        "boundary_fn": 31,
+        "segmental_f1@10": 0.9227373068432672,
+        "segmental_f1@25": 0.9183222958057395,
+        "segmental_f1@50": 0.9006622516556291,
+        "edit_score": 90.91954022988506,
+        "edit_distance_mean": 0.18620689655172415,
+        "transition_class_timestep_accuracy": 0.9110951008645534,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9390490390987409
+      }
+    },
+    {
+      "median": 5,
+      "theta": 25,
+      "val": {
+        "accuracy": 0.9334994612068965,
+        "macro_f1": 0.9634780378544604,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.9168160969440722,
+          0.8975988882312067,
+          0.9664532419514834
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.9168160969440722,
+          "standing": 0.8975988882312067,
+          "laying": 0.9664532419514834
+        },
+        "transition_window_accuracy": 0.6461538461538462,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5679012345679013,
+        "boundary_precision": 0.5476190476190477,
+        "boundary_recall": 0.5897435897435898,
+        "boundary_tp": 46,
+        "boundary_fp": 38,
+        "boundary_fn": 32,
+        "segmental_f1@10": 0.920353982300885,
+        "segmental_f1@25": 0.915929203539823,
+        "segmental_f1@50": 0.8982300884955752,
+        "edit_score": 90.57471264367817,
+        "edit_distance_mean": 0.19310344827586207,
+        "transition_class_timestep_accuracy": 0.9093659942363113,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9390490390987409
+      }
+    },
+    {
+      "median": 11,
+      "theta": 0,
+      "val": {
+        "accuracy": 0.933661099137931,
+        "macro_f1": 0.9635719272665297,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.9169574319609212,
+          0.8973890675241157,
+          0.9670850641141413
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.9169574319609212,
+          "standing": 0.8973890675241157,
+          "laying": 0.9670850641141413
+        },
+        "transition_window_accuracy": 0.6467692307692308,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5227272727272727,
+        "boundary_precision": 0.46938775510204084,
+        "boundary_recall": 0.5897435897435898,
+        "boundary_tp": 46,
+        "boundary_fp": 52,
+        "boundary_fn": 32,
+        "segmental_f1@10": 0.9012875536480688,
+        "segmental_f1@25": 0.8969957081545064,
+        "segmental_f1@50": 0.8755364806866952,
+        "edit_score": 89.70114942528737,
+        "edit_distance_mean": 0.2620689655172414,
+        "transition_class_timestep_accuracy": 0.9111671469740634,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9388336646785951
+      }
+    },
+    {
+      "median": 11,
+      "theta": 10,
+      "val": {
+        "accuracy": 0.9339035560344827,
+        "macro_f1": 0.9637151614420919,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.9170203534981987,
+          0.8981240832711459,
+          0.9671465318832078
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.9170203534981987,
+          "standing": 0.8981240832711459,
+          "laying": 0.9671465318832078
+        },
+        "transition_window_accuracy": 0.648,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5508982035928144,
+        "boundary_precision": 0.5168539325842697,
+        "boundary_recall": 0.5897435897435898,
+        "boundary_tp": 46,
+        "boundary_fp": 43,
+        "boundary_fn": 32,
+        "segmental_f1@10": 0.9190371991247266,
+        "segmental_f1@25": 0.9146608315098469,
+        "segmental_f1@50": 0.8927789934354486,
+        "edit_score": 90.97701149425288,
+        "edit_distance_mean": 0.2,
+        "transition_class_timestep_accuracy": 0.9117435158501441,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9389993373094765
+      }
+    },
+    {
+      "median": 11,
+      "theta": 15,
+      "val": {
+        "accuracy": 0.9337553879310345,
+        "macro_f1": 0.9636420350270067,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.916754756871036,
+          0.898169101008023,
+          0.9669283522829815
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.916754756871036,
+          "standing": 0.898169101008023,
+          "laying": 0.9669283522829815
+        },
+        "transition_window_accuracy": 0.648,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5644171779141104,
+        "boundary_precision": 0.5411764705882353,
+        "boundary_recall": 0.5897435897435898,
+        "boundary_tp": 46,
+        "boundary_fp": 39,
+        "boundary_fn": 32,
+        "segmental_f1@10": 0.9227373068432672,
+        "segmental_f1@25": 0.9183222958057395,
+        "segmental_f1@50": 0.9006622516556291,
+        "edit_score": 90.91954022988506,
+        "edit_distance_mean": 0.18620689655172415,
+        "transition_class_timestep_accuracy": 0.9109510086455331,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9389993373094765
+      }
+    },
+    {
+      "median": 11,
+      "theta": 25,
+      "val": {
+        "accuracy": 0.9334321120689655,
+        "macro_f1": 0.963441426332444,
+        "per_class_f1": [
+          1.0,
+          1.0,
+          1.0,
+          0.916754756871036,
+          0.8974886784685054,
+          0.9664051226551226
+        ],
+        "per_class_f1_named": {
+          "walking": 1.0,
+          "walking_upstairs": 1.0,
+          "walking_downstairs": 1.0,
+          "sitting": 0.916754756871036,
+          "standing": 0.8974886784685054,
+          "laying": 0.9664051226551226
+        },
+        "transition_window_accuracy": 0.6449230769230769,
+        "transition_window_timesteps": 1625,
+        "boundary_f1": 0.5555555555555555,
+        "boundary_precision": 0.5357142857142857,
+        "boundary_recall": 0.5769230769230769,
+        "boundary_tp": 45,
+        "boundary_fp": 39,
+        "boundary_fn": 33,
+        "segmental_f1@10": 0.920353982300885,
+        "segmental_f1@25": 0.915929203539823,
+        "segmental_f1@50": 0.8982300884955752,
+        "edit_score": 90.57471264367817,
+        "edit_distance_mean": 0.19310344827586207,
+        "transition_class_timestep_accuracy": 0.909221902017291,
+        "transition_class_timesteps": 13880,
+        "non_transition_timestep_accuracy": 0.9389993373094765
+      }
+    }
+  ],
+  "best": {
+    "median": 1,
+    "theta": 10,
+    "val": {
+      "accuracy": 0.9339709051724138,
+      "macro_f1": 0.963751778822151,
+      "per_class_f1": [
+        1.0,
+        1.0,
+        1.0,
+        0.917081635732609,
+        0.8982344160189428,
+        0.9671946211813547
+      ],
+      "per_class_f1_named": {
+        "walking": 1.0,
+        "walking_upstairs": 1.0,
+        "walking_downstairs": 1.0,
+        "sitting": 0.917081635732609,
+        "standing": 0.8982344160189428,
+        "laying": 0.9671946211813547
+      },
+      "transition_window_accuracy": 0.6492307692307693,
+      "transition_window_timesteps": 1625,
+      "boundary_f1": 0.562874251497006,
+      "boundary_precision": 0.5280898876404494,
+      "boundary_recall": 0.6025641025641025,
+      "boundary_tp": 47,
+      "boundary_fp": 42,
+      "boundary_fn": 31,
+      "segmental_f1@10": 0.9190371991247266,
+      "segmental_f1@25": 0.9146608315098469,
+      "segmental_f1@50": 0.8927789934354486,
+      "edit_score": 90.97701149425288,
+      "edit_distance_mean": 0.2,
+      "transition_class_timestep_accuracy": 0.9118876080691642,
+      "transition_class_timesteps": 13880,
+      "non_transition_timestep_accuracy": 0.9390490390987409
+    }
+  },
+  "test": null
+}

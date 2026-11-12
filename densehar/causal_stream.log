@@ -1,0 +1,7 @@
+running tiled (semi-online) inference on val ...
+[stream raw]         acc 0.7877 F1 0.6924 transWin 0.4197 transClass 0.6972 bF1 0.0590 seg25 0.3104 edit 50.9
+[stream bref]        acc 0.7921 F1 0.7038 transWin 0.4498 transClass 0.7127 bF1 0.1951 seg25 0.6308 edit 68.8
+[stream bref+mindL]  acc 0.7926 F1 0.7042 transWin 0.4603 transClass 0.7141 bF1 0.2419 seg25 0.7208 edit 74.0
+boundary delay: matched 61 missed 17 mean +10.6 steps (+212 ms) median +13 steps (+260 ms), plus <=15 steps (<=300 ms) algorithmic lag
+saved causal_stream_val.json
+offline refs (val): raw seg25 0.8078 bF1 0.4444 | bref seg25 0.8690 bF1 0.5131 | bref+mindur seg25 0.9147 bF1 0.5629 edit 91.0

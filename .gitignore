@@ -1,0 +1,13 @@
+# Large datasets — public sources, not redistributed (see README "Repository layout & data notes")
+densehar/data_hapt_raw/
+densehar/data_harth.npz
+
+# Local environments
+densehar/.venv-deploy/
+.venv/
+venv/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo

@@ -1,0 +1,95 @@
+=== p2_aug_refine ===
+splits: train 862 val 145 test 177
+[p2_aug_refine] ep 1/20 loss 2.9314 val acc 0.6271 F1 0.3256 trans 0.4166 edit 35.7
+[p2_aug_refine] ep 2/20 loss 1.7186 val acc 0.6997 F1 0.3664 trans 0.4535 edit 55.6
+[p2_aug_refine] ep 3/20 loss 1.4641 val acc 0.7664 F1 0.3972 trans 0.4929 edit 62.7
+[p2_aug_refine] ep 4/20 loss 1.2673 val acc 0.8296 F1 0.5309 trans 0.4917 edit 66.7
+[p2_aug_refine] ep 5/20 loss 1.1912 val acc 0.8052 F1 0.5000 trans 0.4929 edit 64.1
+[p2_aug_refine] ep 6/20 loss 1.1406 val acc 0.8318 F1 0.6487 trans 0.4991 edit 65.8
+[p2_aug_refine] ep 7/20 loss 0.9962 val acc 0.8223 F1 0.5170 trans 0.5286 edit 73.3
+[p2_aug_refine] ep 8/20 loss 1.0074 val acc 0.8404 F1 0.6405 trans 0.5034 edit 69.0
+[p2_aug_refine] ep 9/20 loss 0.9846 val acc 0.8650 F1 0.6765 trans 0.5243 edit 71.7
+[p2_aug_refine] ep 10/20 loss 0.8406 val acc 0.8730 F1 0.8646 trans 0.5612 edit 76.6
+[p2_aug_refine] ep 11/20 loss 0.8423 val acc 0.9022 F1 0.9391 trans 0.5618 edit 78.0
+[p2_aug_refine] ep 12/20 loss 0.8201 val acc 0.8565 F1 0.6674 trans 0.6043 edit 74.6
+[p2_aug_refine] ep 13/20 loss 0.7663 val acc 0.8581 F1 0.7959 trans 0.5520 edit 72.9
+[p2_aug_refine] ep 14/20 loss 0.6906 val acc 0.9095 F1 0.9493 trans 0.5662 edit 82.1
+[p2_aug_refine] ep 15/20 loss 0.6590 val acc 0.9147 F1 0.9273 trans 0.5902 edit 81.9
+[p2_aug_refine] ep 16/20 loss 0.6135 val acc 0.9077 F1 0.9485 trans 0.5902 edit 83.3
+[p2_aug_refine] ep 17/20 loss 0.5997 val acc 0.9193 F1 0.9545 trans 0.6086 edit 83.9
+[p2_aug_refine] ep 18/20 loss 0.5958 val acc 0.9194 F1 0.9546 trans 0.6117 edit 84.6
+[p2_aug_refine] ep 19/20 loss 0.5824 val acc 0.9192 F1 0.9548 trans 0.6135 edit 83.8
+[p2_aug_refine] ep 20/20 loss 0.6110 val acc 0.9206 F1 0.9554 trans 0.6117 edit 83.6
+== p2_aug_refine: val F1 0.9554 | test acc nan F1 nan transWin nan transClass nan [saved to results_real.json]
+=== p2_aug_c12 ===
+splits: train 862 val 145 test 177
+[p2_aug_c12] ep 1/20 loss 1.6667 val acc 0.7818 F1 0.4136 trans 0.4517 edit 47.7
+[p2_aug_c12] ep 2/20 loss 1.1029 val acc 0.8080 F1 0.5101 trans 0.4197 edit 50.4
+[p2_aug_c12] ep 3/20 loss 0.9356 val acc 0.8172 F1 0.6019 trans 0.4529 edit 52.8
+[p2_aug_c12] ep 4/20 loss 0.8079 val acc 0.8609 F1 0.6708 trans 0.5262 edit 54.3
+[p2_aug_c12] ep 5/20 loss 0.7293 val acc 0.8345 F1 0.5204 trans 0.5563 edit 64.9
+[p2_aug_c12] ep 6/20 loss 0.6591 val acc 0.8850 F1 0.7505 trans 0.5772 edit 64.8
+[p2_aug_c12] ep 7/20 loss 0.5828 val acc 0.8509 F1 0.5850 trans 0.5754 edit 68.3
+[p2_aug_c12] ep 8/20 loss 0.6038 val acc 0.8985 F1 0.8502 trans 0.5742 edit 67.1
+[p2_aug_c12] ep 9/20 loss 0.5567 val acc 0.9085 F1 0.9344 trans 0.6234 edit 70.3
+[p2_aug_c12] ep 10/20 loss 0.4838 val acc 0.9127 F1 0.9486 trans 0.5969 edit 75.9
+[p2_aug_c12] ep 11/20 loss 0.4779 val acc 0.9186 F1 0.9546 trans 0.6215 edit 77.7
+[p2_aug_c12] ep 12/20 loss 0.4451 val acc 0.9274 F1 0.9595 trans 0.6486 edit 79.4
+[p2_aug_c12] ep 13/20 loss 0.4395 val acc 0.9074 F1 0.9323 trans 0.6258 edit 79.2
+[p2_aug_c12] ep 14/20 loss 0.4293 val acc 0.9126 F1 0.9517 trans 0.6437 edit 83.5
+[p2_aug_c12] ep 15/20 loss 0.4005 val acc 0.9372 F1 0.9648 trans 0.6265 edit 80.4
+[p2_aug_c12] ep 16/20 loss 0.3793 val acc 0.9341 F1 0.9627 trans 0.6283 edit 81.1
+[p2_aug_c12] ep 17/20 loss 0.3664 val acc 0.9381 F1 0.9645 trans 0.6523 edit 81.5
+[p2_aug_c12] ep 18/20 loss 0.3731 val acc 0.9363 F1 0.9617 trans 0.6548 edit 82.0
+[p2_aug_c12] ep 19/20 loss 0.3608 val acc 0.9353 F1 0.9612 trans 0.6535 edit 81.3
+[p2_aug_c12] ep 20/20 loss 0.3814 val acc 0.9354 F1 0.9632 trans 0.6486 edit 81.8
+== p2_aug_c12: val F1 0.9648 | test acc nan F1 nan transWin nan transClass nan [saved to results_real.json]
+=== p2_aug_f11 ===
+splits: train 862 val 145 test 177
+Traceback (most recent call last):
+  File "/home/hatch/workspace/advanced-ai-projects/densehar/train_real.py", line 783, in <module>
+    main()
+  File "/home/hatch/workspace/advanced-ai-projects/densehar/train_real.py", line 642, in main
+    exp = train_dense(PREFIX + args.name, d, epochs=args.epochs,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/advanced-ai-projects/densehar/train_real.py", line 317, in train_dense
+    Xb, Yb = augment_batch(Xb, Yb, rng, data["meta"]["norm_mean"],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/advanced-ai-projects/densehar/train_real.py", line 208, in augment_batch
+    raw = Xb[i] * std + mean
+          ~~~~~~^~~~~
+ValueError: operands could not be broadcast together with shapes (512,11) (6,) 
+=== p2_aug30 ===
+splits: train 862 val 145 test 177
+[p2_aug30] ep 1/30 loss 1.1385 val acc 0.7797 F1 0.4081 trans 0.4308 edit 51.7
+[p2_aug30] ep 2/30 loss 0.7679 val acc 0.8093 F1 0.4909 trans 0.4400 edit 54.4
+[p2_aug30] ep 3/30 loss 0.6394 val acc 0.8211 F1 0.5996 trans 0.4825 edit 53.7
+[p2_aug30] ep 4/30 loss 0.5584 val acc 0.8535 F1 0.6276 trans 0.4923 edit 60.5
+[p2_aug30] ep 5/30 loss 0.5217 val acc 0.8103 F1 0.5093 trans 0.5157 edit 57.0
+[p2_aug30] ep 6/30 loss 0.5136 val acc 0.8423 F1 0.6556 trans 0.5514 edit 59.2
+[p2_aug30] ep 7/30 loss 0.4551 val acc 0.8518 F1 0.6466 trans 0.5274 edit 71.1
+[p2_aug30] ep 8/30 loss 0.4493 val acc 0.8721 F1 0.8496 trans 0.5274 edit 59.6
+[p2_aug30] ep 9/30 loss 0.4365 val acc 0.8843 F1 0.8056 trans 0.5791 edit 69.2
+[p2_aug30] ep 10/30 loss 0.3881 val acc 0.8917 F1 0.9314 trans 0.5643 edit 73.8
+[p2_aug30] ep 11/30 loss 0.3730 val acc 0.8921 F1 0.9374 trans 0.5680 edit 73.1
+[p2_aug30] ep 12/30 loss 0.3671 val acc 0.9159 F1 0.9520 trans 0.5982 edit 76.4
+[p2_aug30] ep 13/30 loss 0.3371 val acc 0.9140 F1 0.9410 trans 0.6068 edit 77.3
+[p2_aug30] ep 14/30 loss 0.3085 val acc 0.9205 F1 0.9261 trans 0.6425 edit 75.4
+[p2_aug30] ep 15/30 loss 0.3157 val acc 0.9290 F1 0.9589 trans 0.6166 edit 80.7
+[p2_aug30] ep 16/30 loss 0.2776 val acc 0.9026 F1 0.9179 trans 0.6252 edit 79.2
+[p2_aug30] ep 17/30 loss 0.2728 val acc 0.9189 F1 0.9431 trans 0.6523 edit 80.6
+[p2_aug30] ep 18/30 loss 0.2697 val acc 0.9108 F1 0.9450 trans 0.6068 edit 75.6
+[p2_aug30] ep 19/30 loss 0.2612 val acc 0.9054 F1 0.9371 trans 0.6246 edit 78.7
+[p2_aug30] ep 20/30 loss 0.2663 val acc 0.9249 F1 0.9504 trans 0.6295 edit 78.4
+[p2_aug30] ep 21/30 loss 0.2298 val acc 0.9131 F1 0.9393 trans 0.6252 edit 80.8
+[p2_aug30] ep 22/30 loss 0.2658 val acc 0.9273 F1 0.9401 trans 0.6511 edit 82.7
+[p2_aug30] ep 23/30 loss 0.2430 val acc 0.9198 F1 0.9274 trans 0.6382 edit 82.0
+[p2_aug30] ep 24/30 loss 0.2194 val acc 0.9164 F1 0.9311 trans 0.6209 edit 82.0
+[p2_aug30] ep 25/30 loss 0.2056 val acc 0.9151 F1 0.9281 trans 0.6320 edit 79.9
+[p2_aug30] ep 26/30 loss 0.2226 val acc 0.9191 F1 0.9304 trans 0.6529 edit 80.7
+[p2_aug30] ep 27/30 loss 0.2163 val acc 0.9191 F1 0.9337 trans 0.6338 edit 81.1
+[p2_aug30] ep 28/30 loss 0.2034 val acc 0.9204 F1 0.9348 trans 0.6394 edit 81.9
+[p2_aug30] ep 29/30 loss 0.2138 val acc 0.9161 F1 0.9312 trans 0.6345 edit 81.7
+[p2_aug30] ep 30/30 loss 0.1929 val acc 0.9166 F1 0.9311 trans 0.6363 edit 82.1
+== p2_aug30: val F1 0.9589 | test acc nan F1 nan transWin nan transClass nan [saved to results_real.json]
+=== COMBO DONE ===

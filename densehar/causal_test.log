@@ -1,0 +1,14 @@
+splits: train 862 val 145 test 177
+model: p2_aug_c12_causal_bh10 arch=causal boundary_head=True best_epoch=18
+VAL (reproduction check vs exp #35/#36):
+raw          acc 0.8637 F1 0.8563 transWin 0.4985 transClass 0.7562 bF1 0.1178 seg25 0.4218 edit 62.0
+bref         acc 0.8810 F1 0.9302 transWin 0.5108 transClass 0.7850 bF1 0.2609 seg25 0.6890 edit 74.9
+bref+mindL    acc 0.8819 F1 0.9307 transWin 0.5028 transClass 0.7864 bF1 0.3284 seg25 0.7943 edit 82.0
+TEST (single evaluation, 5 unseen subjects):
+raw          acc 0.7728 F1 0.6677 transWin 0.5143 transClass 0.8046 bF1 0.0922 seg25 0.2717 edit 51.4
+bref         acc 0.7801 F1 0.6927 transWin 0.5292 transClass 0.8075 bF1 0.2356 seg25 0.5792 edit 68.0
+bref+mindL    acc 0.7803 F1 0.6926 transWin 0.5282 transClass 0.8069 bF1 0.2857 seg25 0.7035 edit 74.2
+TEST boundary delay: matched 77 missed 20 mean +8.6 steps (+171 ms) median +9 steps (+180 ms)
+TEST per-class F1 (bref+mindL): {'walking': 0.73, 'walking_upstairs': 0.34, 'walking_downstairs': 0.742, 'sitting': 0.734, 'standing': 0.699, 'laying': 0.911}
+== final_causal_bh10_bref_mindL: val F1 0.9307 | test acc 0.7803 F1 0.6926 transWin 0.5282 transClass 0.8069 [saved to results_real.json]
+test_evaluations ledger now: 9

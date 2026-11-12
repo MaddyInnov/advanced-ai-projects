@@ -1,0 +1,61 @@
+=== confirm aug_c12 raw (TEST) ===
+splits: train 862 val 145 test 177
+== final_augc12_raw: val F1 0.9648 | test acc 0.8896 F1 0.9242 transWin 0.6014 transClass 0.8506 [saved to results_real.json]
+=== postproc on aug_c12 (TEST) ===
+splits: train 862 val 145 test 177
+[postproc] sigma=0 theta=0 med=1 val acc 0.9372 F1 0.9648 seg25 0.7193 edit 80.4
+[postproc] sigma=0 theta=0 med=11 val acc 0.9375 F1 0.9650 seg25 0.7938 edit 84.6
+[postproc] sigma=0 theta=10 med=1 val acc 0.9374 F1 0.9649 seg25 0.8512 edit 87.9
+[postproc] sigma=0 theta=10 med=11 val acc 0.9374 F1 0.9649 seg25 0.8512 edit 87.9
+[postproc] sigma=0 theta=15 med=1 val acc 0.9377 F1 0.9650 seg25 0.8779 edit 89.0
+[postproc] sigma=0 theta=15 med=11 val acc 0.9379 F1 0.9652 seg25 0.8798 edit 88.8
+[postproc] sigma=0 theta=25 med=1 val acc 0.9378 F1 0.9651 seg25 0.8904 edit 89.2
+[postproc] sigma=0 theta=25 med=11 val acc 0.9378 F1 0.9651 seg25 0.8904 edit 89.2
+[postproc] sigma=4 theta=0 med=1 val acc 0.9378 F1 0.9651 seg25 0.8240 edit 86.5
+[postproc] sigma=4 theta=0 med=11 val acc 0.9377 F1 0.9651 seg25 0.8306 edit 86.7
+[postproc] sigma=4 theta=10 med=1 val acc 0.9379 F1 0.9652 seg25 0.8679 edit 88.5
+[postproc] sigma=4 theta=10 med=11 val acc 0.9379 F1 0.9652 seg25 0.8679 edit 88.5
+[postproc] sigma=4 theta=15 med=1 val acc 0.9383 F1 0.9654 seg25 0.8846 edit 89.5
+[postproc] sigma=4 theta=15 med=11 val acc 0.9383 F1 0.9654 seg25 0.8846 edit 89.5
+[postproc] sigma=4 theta=25 med=1 val acc 0.9380 F1 0.9653 seg25 0.8923 edit 89.3
+[postproc] sigma=4 theta=25 med=11 val acc 0.9380 F1 0.9653 seg25 0.8923 edit 89.3
+[postproc] sigma=8 theta=0 med=1 val acc 0.9382 F1 0.9654 seg25 0.8776 edit 88.4
+[postproc] sigma=8 theta=0 med=11 val acc 0.9382 F1 0.9654 seg25 0.8776 edit 88.4
+[postproc] sigma=8 theta=10 med=1 val acc 0.9387 F1 0.9656 seg25 0.8951 edit 89.4
+[postproc] sigma=8 theta=10 med=11 val acc 0.9387 F1 0.9656 seg25 0.8951 edit 89.4
+[postproc] sigma=8 theta=15 med=1 val acc 0.9391 F1 0.9659 seg25 0.9028 edit 90.0
+[postproc] sigma=8 theta=15 med=11 val acc 0.9391 F1 0.9659 seg25 0.9028 edit 90.0
+[postproc] sigma=8 theta=25 med=1 val acc 0.9384 F1 0.9655 seg25 0.8972 edit 89.5
+[postproc] sigma=8 theta=25 med=11 val acc 0.9384 F1 0.9655 seg25 0.8972 edit 89.5
+== final_augc12_postproc: val F1 0.9659 | test acc 0.8933 F1 0.9271 transWin 0.5950 transClass 0.8595 [saved to results_real.json]
+=== postproc on aug_c12_refine (TEST) ===
+splits: train 862 val 145 test 177
+[postproc] sigma=0 theta=0 med=1 val acc 0.9340 F1 0.9625 seg25 0.8238 edit 85.6
+[postproc] sigma=0 theta=0 med=11 val acc 0.9339 F1 0.9624 seg25 0.8654 edit 87.5
+[postproc] sigma=0 theta=10 med=1 val acc 0.9342 F1 0.9623 seg25 0.8795 edit 88.6
+[postproc] sigma=0 theta=10 med=11 val acc 0.9341 F1 0.9622 seg25 0.8795 edit 88.6
+[postproc] sigma=0 theta=15 med=1 val acc 0.9346 F1 0.9634 seg25 0.8922 edit 89.6
+[postproc] sigma=0 theta=15 med=11 val acc 0.9343 F1 0.9632 seg25 0.8884 edit 89.1
+[postproc] sigma=0 theta=25 med=1 val acc 0.9344 F1 0.9633 seg25 0.9031 edit 90.6
+[postproc] sigma=0 theta=25 med=11 val acc 0.9343 F1 0.9633 seg25 0.9031 edit 90.6
+[postproc] sigma=4 theta=0 med=1 val acc 0.9339 F1 0.9625 seg25 0.8667 edit 87.6
+[postproc] sigma=4 theta=0 med=11 val acc 0.9339 F1 0.9625 seg25 0.8661 edit 87.7
+[postproc] sigma=4 theta=10 med=1 val acc 0.9339 F1 0.9622 seg25 0.8790 edit 88.2
+[postproc] sigma=4 theta=10 med=11 val acc 0.9339 F1 0.9622 seg25 0.8790 edit 88.2
+[postproc] sigma=4 theta=15 med=1 val acc 0.9338 F1 0.9630 seg25 0.8898 edit 89.1
+[postproc] sigma=4 theta=15 med=11 val acc 0.9338 F1 0.9630 seg25 0.8898 edit 89.1
+[postproc] sigma=4 theta=25 med=1 val acc 0.9343 F1 0.9633 seg25 0.9031 edit 90.6
+[postproc] sigma=4 theta=25 med=11 val acc 0.9343 F1 0.9633 seg25 0.9031 edit 90.6
+[postproc] sigma=8 theta=0 med=1 val acc 0.9342 F1 0.9632 seg25 0.8846 edit 88.8
+[postproc] sigma=8 theta=0 med=11 val acc 0.9342 F1 0.9632 seg25 0.8884 edit 89.1
+[postproc] sigma=8 theta=10 med=1 val acc 0.9340 F1 0.9631 seg25 0.8898 edit 89.1
+[postproc] sigma=8 theta=10 med=11 val acc 0.9340 F1 0.9631 seg25 0.8898 edit 89.1
+[postproc] sigma=8 theta=15 med=1 val acc 0.9343 F1 0.9632 seg25 0.8957 edit 89.9
+[postproc] sigma=8 theta=15 med=11 val acc 0.9343 F1 0.9632 seg25 0.8957 edit 89.9
+[postproc] sigma=8 theta=25 med=1 val acc 0.9343 F1 0.9633 seg25 0.9031 edit 90.6
+[postproc] sigma=8 theta=25 med=11 val acc 0.9343 F1 0.9633 seg25 0.9031 edit 90.6
+== final_augc12ref_postproc: val F1 0.9634 | test acc 0.8990 F1 0.9415 transWin 0.6246 transClass 0.8946 [saved to results_real.json]
+=== ensemble aug_c12 seeds 0,1,2 + postproc (TEST) ===
+splits: train 862 val 145 test 177
+== final_ens_augc12: val F1 0.9675 | test acc 0.9038 F1 0.9398 transWin 0.6093 transClass 0.8744 [saved to results_real.json]
+=== FINALS DONE ===

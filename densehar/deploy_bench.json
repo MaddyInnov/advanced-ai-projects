@@ -1,0 +1,68 @@
+[
+ {
+  "model": "champion_bh10",
+  "ckpt": "model_real_p2_aug_c12_refine_bh10.pt",
+  "onnx": "deploy_champion_bh10.onnx",
+  "size_kb": 715,
+  "params": null,
+  "parity": {
+   "logits_max_abs_diff": 5.7220458984375e-06,
+   "boundary_max_abs_diff": 5.7220458984375e-06
+  },
+  "latency": {
+   "threads1_L512": {
+    "mean_ms": 2.5738223150003137,
+    "p50_ms": 2.3547000000121443,
+    "p95_ms": 3.305855200015627
+   },
+   "threads1_L256": {
+    "mean_ms": 1.2633845300000246,
+    "p50_ms": 1.2580689999879269,
+    "p95_ms": 1.3011587500159294
+   },
+   "threads4_L512": {
+    "mean_ms": 6.57166694499935,
+    "p50_ms": 2.12165499998207,
+    "p95_ms": 64.757307400005
+   },
+   "threads4_L256": {
+    "mean_ms": 3.114895279999388,
+    "p50_ms": 0.9497109999898612,
+    "p95_ms": 3.82223805000021
+   }
+  }
+ },
+ {
+  "model": "causal_bh10",
+  "ckpt": "model_real_p2_aug_c12_causal_bh10.pt",
+  "onnx": "deploy_causal_bh10.onnx",
+  "size_kb": 761,
+  "params": null,
+  "parity": {
+   "logits_max_abs_diff": 4.76837158203125e-06,
+   "boundary_max_abs_diff": 2.384185791015625e-06
+  },
+  "latency": {
+   "threads1_L512": {
+    "mean_ms": 2.565577105001182,
+    "p50_ms": 2.5243849999867507,
+    "p95_ms": 2.8415959999975344
+   },
+   "threads1_L256": {
+    "mean_ms": 1.3602732499997217,
+    "p50_ms": 1.3507074999949964,
+    "p95_ms": 1.4043546000081617
+   },
+   "threads4_L512": {
+    "mean_ms": 8.533312675000673,
+    "p50_ms": 2.9629834999980176,
+    "p95_ms": 65.56266989997538
+   },
+   "threads4_L256": {
+    "mean_ms": 5.570018855000001,
+    "p50_ms": 1.920202499988477,
+    "p95_ms": 62.63995045001421
+   }
+  }
+ }
+]

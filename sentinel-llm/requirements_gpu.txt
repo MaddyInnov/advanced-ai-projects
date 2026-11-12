@@ -1,0 +1,11 @@
+# Sentinel-LLM — GPU fine-tune requirements (Kaggle / Colab only, NOT for local CPU demo)
+# Install: pip install -r requirements_gpu.txt
+torch>=2.3
+transformers>=4.44
+peft>=0.12
+trl>=0.10
+datasets>=2.20
+bitsandbytes>=0.43
+accelerate>=0.33
+sentencepiece
+protobuf

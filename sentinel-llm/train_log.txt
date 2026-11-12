@@ -1,0 +1,54 @@
+Dataset: 1200 total | train 829 | val 180 | test 191 | labels 27
+Labels: ['T1046', 'T1059', 'T1071', 'T1110', 'T1190', 'T1566', 'benign', 'brute_force', 'domain_ioc', 'hash_ioc', 'info_disclosure', 'ip_ioc', 'legitimate', 'malware_beacon', 'multiple_ioc', 'phishing', 'port_scan', 'priv_esc', 'rce', 'sev_critical', 'sev_high', 'sev_low', 'sev_medium', 'sql_injection', 'sqli', 'url_ioc', 'xss']
+
+[Stage A] Brief BASE training (1 epoch, all params)...
+  Untrained test accuracy: 0.0366 (chance ≈ 0.0370)
+    epoch 1/1 loss=2.3185
+  Base test accuracy: 0.8325 | val: 0.8278
+
+[Stage B] FULL fine-tuning baseline (8 epochs, 100% params)...
+    epoch 1/8 loss=0.4875
+    epoch 2/8 loss=0.0776
+    epoch 3/8 loss=0.0191
+    epoch 4/8 loss=0.0102
+    epoch 5/8 loss=0.0064
+    epoch 6/8 loss=0.0055
+    epoch 7/8 loss=0.0047
+    epoch 8/8 loss=0.0047
+  Full-FT test accuracy: 1.0000 | val: 0.9944 | trainable 564251 (100%)
+
+[Stage C] LoRA sweep (4 configs x 10 epochs, selected on VAL)...
+  r= 4 alpha= 8 lr=0.0080: val_acc=0.9944 val_loss=0.0475 trainable=2668 (0.47%) 257s
+  r= 8 alpha=16 lr=0.0080: val_acc=0.9944 val_loss=0.0230 trainable=5336 (0.94%) 229s
+  r=16 alpha=32 lr=0.0080: val_acc=0.9944 val_loss=0.0065 trainable=10672 (1.86%) 271s
+  r= 8 alpha=16 lr=0.0030: val_acc=0.9944 val_loss=0.0426 trainable=5336 (0.94%) 276s
+
+  >> Best config (by val): r=16 alpha=32 lr=0.008 val_acc=0.9944
+  Best LoRA test accuracy: 1.0000 | per-task: {'cve_explanation': 1.0, 'incident_severity': 1.0, 'ioc_extraction': 1.0, 'log_triage': 1.0, 'mitre_mapping': 1.0, 'phishing_detection': 1.0}
+
+Saved checkpoint -> /home/hatch/workspace/advanced-ai-projects/sentinel-llm/sentinel_lora.pt
+Saved results -> /home/hatch/workspace/advanced-ai-projects/sentinel-llm/results.json
+{
+  "base_accuracy": 0.8325,
+  "lora_accuracy": 1.0,
+  "full_finetuning_baseline": {
+    "epochs": 8,
+    "lr": 0.003,
+    "trainable_params": 564251,
+    "trainable_pct": 100.0,
+    "val_accuracy": 0.9944,
+    "test_accuracy": 1.0,
+    "per_task_accuracy": {
+      "cve_explanation": 1.0,
+      "incident_severity": 1.0,
+      "ioc_extraction": 1.0,
+      "log_triage": 1.0,
+      "mitre_mapping": 1.0,
+      "phishing_detection": 1.0
+    },
+    "training_time_sec": 217.6
+  },
+  "trainable_pct": 1.86,
+  "efficiency_summary": "LoRA (best config) trains 10672 of 574923 params (1.86%) vs full FT 564251 (100%) \u2014 test 1.0000 (LoRA) vs 1.0000 (full FT)."
+}
+EXIT:0

@@ -1,0 +1,17 @@
+splits: train 862 val 145 test 177
+model: p2_aug_c12_refine_bh10 arch=densehar boundary_head=True best_epoch=18
+VAL (reproduction check vs causal_stream_val_la64.json, lookahead=64):
+raw          acc 0.8391 F1 0.7710 transWin 0.5975 transClass 0.8425 bF1 0.2242 seg25 0.5208 edit 69.1
+bref         acc 0.8517 F1 0.8219 transWin 0.5908 transClass 0.8653 bF1 0.4533 seg25 0.7379 edit 80.9
+bref+mindL    acc 0.8520 F1 0.8221 transWin 0.5957 transClass 0.8651 bF1 0.4943 seg25 0.8190 edit 83.0
+  val raw: reproduction EXACT (ref seg25 0.5208)
+  val bref: reproduction EXACT (ref seg25 0.7379)
+  val bref_mindL: reproduction EXACT (ref seg25 0.8190)
+TEST (single evaluation, 5 unseen subjects):
+raw          acc 0.8150 F1 0.7218 transWin 0.5762 transClass 0.7827 bF1 0.1500 seg25 0.4371 edit 60.8
+bref         acc 0.8326 F1 0.7735 transWin 0.5722 transClass 0.8192 bF1 0.3786 seg25 0.6940 edit 78.9
+bref+mindL    acc 0.8330 F1 0.7738 transWin 0.5786 transClass 0.8215 bF1 0.4327 seg25 0.7758 edit 81.9
+TEST boundary delay: matched 75 missed 22 mean +0.7 steps (+14 ms) median +1 steps (+20 ms), plus lookahead 64..79 steps (1280..1580 ms) algorithmic delay
+TEST per-class F1 (bref+mindL): {'walking': 0.825, 'walking_upstairs': 0.621, 'walking_downstairs': 0.727, 'sitting': 0.781, 'standing': 0.72, 'laying': 0.969}
+== final_champion_semionline_la64: val F1 0.8221 | test acc 0.8330 F1 0.7738 transWin 0.5786 transClass 0.8215 [saved to results_real.json]
+test_evaluations ledger now: 10

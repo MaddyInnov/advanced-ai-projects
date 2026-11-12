@@ -1,0 +1,23 @@
+splits: train 862 val 145 test 177
+[p2_aug_c12_refine_bh10] ASRF boundary head on: lambda=1.0 radius=2 boundary-positive 0.010 pos_weight=50.0
+[p2_aug_c12_refine_bh10] ep 1/20 loss 5.2914 val acc 0.7453 F1 0.3865 trans 0.4203 edit 54.0
+[p2_aug_c12_refine_bh10] ep 2/20 loss 3.3693 val acc 0.7197 F1 0.3637 trans 0.4098 edit 58.9
+[p2_aug_c12_refine_bh10] ep 3/20 loss 2.7896 val acc 0.8564 F1 0.5462 trans 0.5194 edit 60.7
+[p2_aug_c12_refine_bh10] ep 4/20 loss 2.4406 val acc 0.8641 F1 0.6047 trans 0.5022 edit 68.1
+[p2_aug_c12_refine_bh10] ep 5/20 loss 2.1148 val acc 0.8390 F1 0.5257 trans 0.5655 edit 73.7
+[p2_aug_c12_refine_bh10] ep 6/20 loss 2.0012 val acc 0.8434 F1 0.5269 trans 0.5846 edit 77.0
+[p2_aug_c12_refine_bh10] ep 7/20 loss 1.8469 val acc 0.8378 F1 0.5246 trans 0.5809 edit 77.6
+[p2_aug_c12_refine_bh10] ep 8/20 loss 1.8435 val acc 0.8764 F1 0.6705 trans 0.5809 edit 76.3
+[p2_aug_c12_refine_bh10] ep 9/20 loss 1.7715 val acc 0.8647 F1 0.6063 trans 0.5963 edit 75.8
+[p2_aug_c12_refine_bh10] ep 10/20 loss 1.5694 val acc 0.8784 F1 0.7475 trans 0.6265 edit 75.8
+[p2_aug_c12_refine_bh10] ep 11/20 loss 1.5450 val acc 0.8964 F1 0.7295 trans 0.6234 edit 79.5
+[p2_aug_c12_refine_bh10] ep 12/20 loss 1.4645 val acc 0.8893 F1 0.7346 trans 0.6172 edit 81.1
+[p2_aug_c12_refine_bh10] ep 13/20 loss 1.4115 val acc 0.9064 F1 0.9471 trans 0.6185 edit 81.5
+[p2_aug_c12_refine_bh10] ep 14/20 loss 1.2978 val acc 0.9344 F1 0.9622 trans 0.6234 edit 84.5
+[p2_aug_c12_refine_bh10] ep 15/20 loss 1.2533 val acc 0.9310 F1 0.9616 trans 0.6468 edit 86.0
+[p2_aug_c12_refine_bh10] ep 16/20 loss 1.2081 val acc 0.9287 F1 0.9607 trans 0.6498 edit 86.1
+[p2_aug_c12_refine_bh10] ep 17/20 loss 1.1654 val acc 0.9329 F1 0.9631 trans 0.6388 edit 85.4
+[p2_aug_c12_refine_bh10] ep 18/20 loss 1.1600 val acc 0.9342 F1 0.9639 trans 0.6498 edit 86.3
+[p2_aug_c12_refine_bh10] ep 19/20 loss 1.1445 val acc 0.9334 F1 0.9634 trans 0.6351 edit 87.4
+[p2_aug_c12_refine_bh10] ep 20/20 loss 1.1560 val acc 0.9334 F1 0.9634 trans 0.6388 edit 86.8
+== p2_aug_c12_refine_bh10: val F1 0.9639 | test acc nan F1 nan transWin nan transClass nan [saved to results_real.json]

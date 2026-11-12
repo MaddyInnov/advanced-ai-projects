@@ -1,0 +1,25 @@
+sub-train (257, 512, 6) val (43, 512, 6)
+== Tuning A_width48_boundary ==
+  w48 bw=True ep1/6 loss 1.2851
+  w48 bw=True ep2/6 loss 0.4721
+  w48 bw=True ep3/6 loss 0.2368
+  w48 bw=True ep4/6 loss 0.1534
+  w48 bw=True ep5/6 loss 0.1071
+  w48 bw=True ep6/6 loss 0.0951
+  val acc 0.9932 macroF1 0.9928 segF1@25 0.8824 edit 85.2 [saved]
+== Tuning B_width48_plain ==
+  w48 bw=False ep1/6 loss 1.0326
+  w48 bw=False ep2/6 loss 0.3752
+  w48 bw=False ep3/6 loss 0.1676
+  w48 bw=False ep4/6 loss 0.0919
+  w48 bw=False ep5/6 loss 0.0581
+  w48 bw=False ep6/6 loss 0.0489
+  val acc 0.9913 macroF1 0.9907 segF1@25 0.8571 edit 81.6 [saved]
+== Tuning C_width32_boundary ==
+  w32 bw=True ep1/6 loss 1.3691
+  w32 bw=True ep2/6 loss 0.5189
+  w32 bw=True ep3/6 loss 0.2906
+  w32 bw=True ep4/6 loss 0.1703
+  w32 bw=True ep5/6 loss 0.1651
+  w32 bw=True ep6/6 loss 0.1298
+  val acc 0.9916 macroF1 0.9910 segF1@25 0.8403 edit 77.7 [saved]

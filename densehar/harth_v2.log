@@ -1,0 +1,25 @@
+=== HARTH v2 (class-weight) launch 2026-11-10T09:26:54+00:00 pid 11884 ===
+splits: train 16216 val 3494 test 4699
+[harth_p2_aug_c12_refine_bh10_cw] class weights (median-freq): [0.5, 0.7699999809265137, 1.309999942779541, 3.640000104904175, 4.349999904632568, 0.5, 0.5, 0.5899999737739563, 0.8100000023841858, 5.96999979019165, 7.989999771118164, 10.0]
+[harth_p2_aug_c12_refine_bh10_cw] ASRF boundary head on: lambda=1.0 radius=2 boundary-positive 0.006 pos_weight=50.0
+[harth_p2_aug_c12_refine_bh10_cw] ep 1/20 loss 2.5250 val acc 0.8868 F1 0.5237 trans 0.4224 edit 82.8
+[harth_p2_aug_c12_refine_bh10_cw] ep 2/20 loss 1.8446 val acc 0.8872 F1 0.5874 trans 0.4069 edit 82.6
+[harth_p2_aug_c12_refine_bh10_cw] ep 3/20 loss 1.5869 val acc 0.8815 F1 0.5911 trans 0.3412 edit 82.1
+[harth_p2_aug_c12_refine_bh10_cw] ep 4/20 loss 1.3818 val acc 0.9107 F1 0.6261 trans 0.4571 edit 85.7
+[harth_p2_aug_c12_refine_bh10_cw] ep 5/20 loss 1.2324 val acc 0.9314 F1 0.6659 trans 0.4756 edit 85.4
+[harth_p2_aug_c12_refine_bh10_cw] ep 6/20 loss 1.1541 val acc 0.9017 F1 0.6070 trans 0.4406 edit 84.4
+[harth_p2_aug_c12_refine_bh10_cw] ep 7/20 loss 1.1432 val acc 0.9051 F1 0.6080 trans 0.4085 edit 77.4
+[harth_p2_aug_c12_refine_bh10_cw] ep 8/20 loss 1.0627 val acc 0.9150 F1 0.6428 trans 0.4596 edit 86.3
+[harth_p2_aug_c12_refine_bh10_cw] ep 9/20 loss 1.0426 val acc 0.9289 F1 0.6706 trans 0.4868 edit 87.0
+[harth_p2_aug_c12_refine_bh10_cw] ep 10/20 loss 0.9795 val acc 0.9327 F1 0.6690 trans 0.4748 edit 87.8
+[harth_p2_aug_c12_refine_bh10_cw] ep 11/20 loss 0.9810 val acc 0.9324 F1 0.6633 trans 0.4829 edit 87.2
+[harth_p2_aug_c12_refine_bh10_cw] ep 12/20 loss 0.9401 val acc 0.9378 F1 0.6791 trans 0.4817 edit 87.3
+[harth_p2_aug_c12_refine_bh10_cw] ep 13/20 loss 0.9177 val acc 0.9393 F1 0.6794 trans 0.4825 edit 87.5
+[harth_p2_aug_c12_refine_bh10_cw] ep 14/20 loss 0.8849 val acc 0.9296 F1 0.6595 trans 0.4788 edit 87.3
+[harth_p2_aug_c12_refine_bh10_cw] ep 15/20 loss 0.8785 val acc 0.9358 F1 0.6655 trans 0.4766 edit 86.7
+[harth_p2_aug_c12_refine_bh10_cw] ep 16/20 loss 0.8518 val acc 0.9372 F1 0.6876 trans 0.4792 edit 87.3
+[harth_p2_aug_c12_refine_bh10_cw] ep 17/20 loss 0.8297 val acc 0.9406 F1 0.6853 trans 0.4835 edit 87.7
+[harth_p2_aug_c12_refine_bh10_cw] ep 18/20 loss 0.8159 val acc 0.9422 F1 0.6939 trans 0.4846 edit 87.4
+[harth_p2_aug_c12_refine_bh10_cw] ep 19/20 loss 0.8140 val acc 0.9405 F1 0.6875 trans 0.4852 edit 87.4
+[harth_p2_aug_c12_refine_bh10_cw] ep 20/20 loss 0.8020 val acc 0.9416 F1 0.6889 trans 0.4856 edit 87.5
+== harth_p2_aug_c12_refine_bh10_cw: val F1 0.6939 | test acc nan F1 nan transWin nan transClass nan [saved to results_real.json]

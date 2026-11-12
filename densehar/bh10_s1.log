@@ -1,0 +1,23 @@
+splits: train 862 val 145 test 177
+[p2_aug_c12_refine_bh10_s1] ASRF boundary head on: lambda=1.0 radius=2 boundary-positive 0.010 pos_weight=50.0
+[p2_aug_c12_refine_bh10_s1] ep 1/20 loss 5.9971 val acc 0.6279 F1 0.3229 trans 0.4277 edit 35.4
+[p2_aug_c12_refine_bh10_s1] ep 2/20 loss 3.7410 val acc 0.7676 F1 0.3989 trans 0.4474 edit 53.2
+[p2_aug_c12_refine_bh10_s1] ep 3/20 loss 3.1479 val acc 0.8048 F1 0.4241 trans 0.4868 edit 56.3
+[p2_aug_c12_refine_bh10_s1] ep 4/20 loss 2.7172 val acc 0.8294 F1 0.5209 trans 0.5348 edit 57.9
+[p2_aug_c12_refine_bh10_s1] ep 5/20 loss 2.3639 val acc 0.8430 F1 0.5274 trans 0.5206 edit 67.8
+[p2_aug_c12_refine_bh10_s1] ep 6/20 loss 2.0489 val acc 0.8352 F1 0.5342 trans 0.5711 edit 70.1
+[p2_aug_c12_refine_bh10_s1] ep 7/20 loss 1.9701 val acc 0.8216 F1 0.5180 trans 0.6123 edit 69.4
+[p2_aug_c12_refine_bh10_s1] ep 8/20 loss 1.8809 val acc 0.8516 F1 0.5701 trans 0.5932 edit 73.7
+[p2_aug_c12_refine_bh10_s1] ep 9/20 loss 1.6858 val acc 0.8501 F1 0.6302 trans 0.5828 edit 74.1
+[p2_aug_c12_refine_bh10_s1] ep 10/20 loss 1.6406 val acc 0.8397 F1 0.5324 trans 0.6111 edit 76.3
+[p2_aug_c12_refine_bh10_s1] ep 11/20 loss 1.4983 val acc 0.8741 F1 0.6938 trans 0.5932 edit 75.2
+[p2_aug_c12_refine_bh10_s1] ep 12/20 loss 1.5290 val acc 0.8934 F1 0.8465 trans 0.6240 edit 73.5
+[p2_aug_c12_refine_bh10_s1] ep 13/20 loss 1.4096 val acc 0.8615 F1 0.6118 trans 0.6443 edit 78.2
+[p2_aug_c12_refine_bh10_s1] ep 14/20 loss 1.4172 val acc 0.9013 F1 0.8858 trans 0.5982 edit 78.2
+[p2_aug_c12_refine_bh10_s1] ep 15/20 loss 1.3358 val acc 0.9094 F1 0.9338 trans 0.6351 edit 78.0
+[p2_aug_c12_refine_bh10_s1] ep 16/20 loss 1.2926 val acc 0.9221 F1 0.9518 trans 0.6412 edit 83.8
+[p2_aug_c12_refine_bh10_s1] ep 17/20 loss 1.2034 val acc 0.9166 F1 0.9498 trans 0.6215 edit 83.8
+[p2_aug_c12_refine_bh10_s1] ep 18/20 loss 1.2240 val acc 0.9128 F1 0.9461 trans 0.6129 edit 81.6
+[p2_aug_c12_refine_bh10_s1] ep 19/20 loss 1.1306 val acc 0.9159 F1 0.9518 trans 0.6258 edit 82.9
+[p2_aug_c12_refine_bh10_s1] ep 20/20 loss 1.1749 val acc 0.9181 F1 0.9523 trans 0.6215 edit 83.2
+== p2_aug_c12_refine_bh10_s1: val F1 0.9523 | test acc nan F1 nan transWin nan transClass nan [saved to results_real.json]

@@ -1,0 +1,11 @@
+{
+  "dataset_size": 600,
+  "train_size": 480,
+  "training_seconds": 14.12,
+  "intent_accuracy": 1.0,
+  "intent_macro_f1": 1.0,
+  "priority_accuracy": 0.9833333333333333,
+  "priority_macro_f1": 0.9833147942157954,
+  "n_test": 120,
+  "model_file": "triage_model.npz"
+}

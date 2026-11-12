@@ -1,0 +1,27 @@
+splits: train 862 val 145 test 177
+[p1_dense] ep 1/14 loss 0.9983 val acc 0.7980 F1 0.4653 trans 0.4425 edit 53.7
+[p1_dense] ep 2/14 loss 0.5974 val acc 0.8025 F1 0.5102 trans 0.4634 edit 53.0
+[p1_dense] ep 3/14 loss 0.4757 val acc 0.8406 F1 0.6677 trans 0.5046 edit 60.0
+[p1_dense] ep 4/14 loss 0.3785 val acc 0.8644 F1 0.8043 trans 0.4972 edit 56.9
+[p1_dense] ep 5/14 loss 0.3384 val acc 0.8532 F1 0.6647 trans 0.5354 edit 64.4
+[p1_dense] ep 6/14 loss 0.2975 val acc 0.8830 F1 0.8647 trans 0.5729 edit 65.3
+[p1_dense] ep 7/14 loss 0.2523 val acc 0.8704 F1 0.9037 trans 0.5317 edit 72.8
+[p1_dense] ep 8/14 loss 0.2189 val acc 0.8863 F1 0.9099 trans 0.5889 edit 71.2
+[p1_dense] ep 9/14 loss 0.2027 val acc 0.8940 F1 0.9189 trans 0.5815 edit 75.2
+[p1_dense] ep 10/14 loss 0.1847 val acc 0.8902 F1 0.9135 trans 0.5846 edit 74.0
+[p1_dense] ep 11/14 loss 0.1680 val acc 0.8892 F1 0.9119 trans 0.6142 edit 75.4
+[p1_dense] ep 12/14 loss 0.1532 val acc 0.8925 F1 0.9128 trans 0.6123 edit 77.5
+[p1_dense] ep 13/14 loss 0.1436 val acc 0.8909 F1 0.9127 trans 0.5982 edit 75.1
+[p1_dense] ep 14/14 loss 0.1399 val acc 0.8913 F1 0.9128 trans 0.6098 edit 75.9
+== p1_dense: val F1 0.9189 | test acc 0.7886 F1 0.7253 transWin 0.5955 transClass 0.8571 [saved to results_real.json]
+[p1_base] ep 1/10 loss 0.6601 val acc 0.8183 F1 0.6708
+[p1_base] ep 2/10 loss 0.3402 val acc 0.8691 F1 0.7582
+[p1_base] ep 3/10 loss 0.2785 val acc 0.8499 F1 0.6991
+[p1_base] ep 4/10 loss 0.2299 val acc 0.8842 F1 0.8799
+[p1_base] ep 5/10 loss 0.2010 val acc 0.8825 F1 0.9038
+[p1_base] ep 6/10 loss 0.1790 val acc 0.8946 F1 0.9179
+[p1_base] ep 7/10 loss 0.1528 val acc 0.8900 F1 0.9157
+[p1_base] ep 8/10 loss 0.1353 val acc 0.8781 F1 0.9096
+[p1_base] ep 9/10 loss 0.1195 val acc 0.8814 F1 0.9111
+[p1_base] ep 10/10 loss 0.1118 val acc 0.8780 F1 0.9208
+== p1_base: val F1 0.9208 | test acc 0.7891 F1 0.7258 transWin 0.4787 transClass 0.7730 [saved to results_real.json]

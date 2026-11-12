@@ -1,0 +1,101 @@
+[
+  {
+    "name": "A_width48_boundary",
+    "width": 48,
+    "boundary_weighted": true,
+    "epochs": 6,
+    "smoothing_lambda": 0.15,
+    "params": 68898,
+    "val": {
+      "accuracy": 0.9932321947674418,
+      "macro_f1": 0.9927676093849479,
+      "per_class_f1": [
+        0.9784946236559139,
+        0.9939463822427212,
+        0.9904761904761905,
+        0.9984179490867252,
+        0.9965082738727797,
+        0.9987622369753572
+      ],
+      "transition_window_accuracy": 0.9160401002506265,
+      "transition_timesteps": 1596,
+      "boundary_f1": 0.8494623655913979,
+      "boundary_precision": 0.7383177570093458,
+      "boundary_recall": 1.0,
+      "boundary_tp": 79,
+      "boundary_fp": 28,
+      "boundary_fn": 0,
+      "segmental_f1@10": 0.8823529411764706,
+      "segmental_f1@25": 0.8823529411764706,
+      "segmental_f1@50": 0.8823529411764706,
+      "edit_score": 85.15503875968992,
+      "edit_distance_mean": 0.6976744186046512
+    }
+  },
+  {
+    "name": "B_width48_plain",
+    "width": 48,
+    "boundary_weighted": false,
+    "epochs": 6,
+    "smoothing_lambda": 0.0,
+    "params": 68898,
+    "val": {
+      "accuracy": 0.9912790697674418,
+      "macro_f1": 0.9906898384705379,
+      "per_class_f1": [
+        0.9717815995992654,
+        0.9926417544365893,
+        0.9874611756585759,
+        0.9975557153127246,
+        0.9960498328775449,
+        0.9986489529385275
+      ],
+      "transition_window_accuracy": 0.8972431077694235,
+      "transition_timesteps": 1596,
+      "boundary_f1": 0.8144329896907216,
+      "boundary_precision": 0.6869565217391305,
+      "boundary_recall": 1.0,
+      "boundary_tp": 79,
+      "boundary_fp": 36,
+      "boundary_fn": 0,
+      "segmental_f1@10": 0.8571428571428572,
+      "segmental_f1@25": 0.8571428571428572,
+      "segmental_f1@50": 0.8571428571428572,
+      "edit_score": 81.63898117386488,
+      "edit_distance_mean": 0.8837209302325582
+    }
+  },
+  {
+    "name": "C_width32_boundary",
+    "width": 32,
+    "boundary_weighted": true,
+    "epochs": 6,
+    "smoothing_lambda": 0.15,
+    "params": 39662,
+    "val": {
+      "accuracy": 0.9916424418604651,
+      "macro_f1": 0.9909519677419927,
+      "per_class_f1": [
+        0.9743762643290627,
+        0.988565639021566,
+        0.9912130548898779,
+        0.9979856115107913,
+        0.9951471034273582,
+        0.9984241332733003
+      ],
+      "transition_window_accuracy": 0.8984962406015038,
+      "transition_timesteps": 1596,
+      "boundary_f1": 0.7821782178217822,
+      "boundary_precision": 0.6422764227642277,
+      "boundary_recall": 1.0,
+      "boundary_tp": 79,
+      "boundary_fp": 44,
+      "boundary_fn": 0,
+      "segmental_f1@10": 0.8402777777777779,
+      "segmental_f1@25": 0.8402777777777779,
+      "segmental_f1@50": 0.8402777777777779,
+      "edit_score": 77.73532668881508,
+      "edit_distance_mean": 1.0465116279069768
+    }
+  }
+]

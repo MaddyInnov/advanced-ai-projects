@@ -1,0 +1,23 @@
+splits: train 862 val 145 test 177
+[p2_aug_c12_refine_distill_a05] TBDM-style boundary distillation on: teacher=model_real_p2_aug_c12_refine_bh10.pt alpha=0.5 theta=10
+[p2_aug_c12_refine_distill_a05] ep 1/20 loss 5.5254 val acc 0.7516 F1 0.3907 trans 0.4191 edit 52.6
+[p2_aug_c12_refine_distill_a05] ep 2/20 loss 2.9967 val acc 0.6906 F1 0.3431 trans 0.4074 edit 59.0
+[p2_aug_c12_refine_distill_a05] ep 3/20 loss 2.4264 val acc 0.8385 F1 0.5369 trans 0.5329 edit 66.0
+[p2_aug_c12_refine_distill_a05] ep 4/20 loss 2.1645 val acc 0.8470 F1 0.5879 trans 0.5582 edit 67.9
+[p2_aug_c12_refine_distill_a05] ep 5/20 loss 1.9000 val acc 0.8285 F1 0.5185 trans 0.5569 edit 73.1
+[p2_aug_c12_refine_distill_a05] ep 6/20 loss 1.7436 val acc 0.8461 F1 0.6314 trans 0.5809 edit 73.5
+[p2_aug_c12_refine_distill_a05] ep 7/20 loss 1.4928 val acc 0.8545 F1 0.6810 trans 0.5723 edit 74.8
+[p2_aug_c12_refine_distill_a05] ep 8/20 loss 1.5152 val acc 0.8820 F1 0.7957 trans 0.6037 edit 74.2
+[p2_aug_c12_refine_distill_a05] ep 9/20 loss 1.4668 val acc 0.8869 F1 0.8810 trans 0.5840 edit 77.0
+[p2_aug_c12_refine_distill_a05] ep 10/20 loss 1.3161 val acc 0.8922 F1 0.8868 trans 0.6197 edit 80.0
+[p2_aug_c12_refine_distill_a05] ep 11/20 loss 1.2205 val acc 0.9029 F1 0.9367 trans 0.6363 edit 80.0
+[p2_aug_c12_refine_distill_a05] ep 12/20 loss 1.0910 val acc 0.9141 F1 0.9461 trans 0.6443 edit 81.4
+[p2_aug_c12_refine_distill_a05] ep 13/20 loss 1.0222 val acc 0.9131 F1 0.9521 trans 0.6197 edit 85.8
+[p2_aug_c12_refine_distill_a05] ep 14/20 loss 0.9560 val acc 0.9215 F1 0.9557 trans 0.6560 edit 84.4
+[p2_aug_c12_refine_distill_a05] ep 15/20 loss 0.9550 val acc 0.9239 F1 0.9570 trans 0.6529 edit 85.6
+[p2_aug_c12_refine_distill_a05] ep 16/20 loss 0.8844 val acc 0.9300 F1 0.9610 trans 0.6462 edit 88.0
+[p2_aug_c12_refine_distill_a05] ep 17/20 loss 0.8447 val acc 0.9254 F1 0.9581 trans 0.6665 edit 86.6
+[p2_aug_c12_refine_distill_a05] ep 18/20 loss 0.8571 val acc 0.9271 F1 0.9592 trans 0.6714 edit 86.1
+[p2_aug_c12_refine_distill_a05] ep 19/20 loss 0.8567 val acc 0.9304 F1 0.9611 trans 0.6634 edit 87.0
+[p2_aug_c12_refine_distill_a05] ep 20/20 loss 0.8588 val acc 0.9288 F1 0.9602 trans 0.6652 edit 87.8
+== p2_aug_c12_refine_distill_a05: val F1 0.9611 | test acc nan F1 nan transWin nan transClass nan [saved to results_real.json]

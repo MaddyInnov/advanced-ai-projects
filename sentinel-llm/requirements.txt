@@ -1,0 +1,4 @@
+# Sentinel-LLM — local CPU demo requirements
+torch>=2.0
+numpy
+pandas

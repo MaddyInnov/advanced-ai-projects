@@ -1,0 +1,23 @@
+splits: train 862 val 145 test 177
+[p2_aug_c12_causal_bh10] ASRF boundary head on: lambda=1.0 radius=2 boundary-positive 0.010 pos_weight=50.0
+[p2_aug_c12_causal_bh10] ep 1/20 loss 5.4110 val acc 0.7301 F1 0.3814 trans 0.4154 edit 36.5
+[p2_aug_c12_causal_bh10] ep 2/20 loss 3.4785 val acc 0.7461 F1 0.3858 trans 0.4486 edit 51.5
+[p2_aug_c12_causal_bh10] ep 3/20 loss 3.0603 val acc 0.7861 F1 0.5126 trans 0.4289 edit 57.8
+[p2_aug_c12_causal_bh10] ep 4/20 loss 2.9810 val acc 0.8006 F1 0.4957 trans 0.4480 edit 57.4
+[p2_aug_c12_causal_bh10] ep 5/20 loss 2.7343 val acc 0.7850 F1 0.4938 trans 0.4603 edit 55.1
+[p2_aug_c12_causal_bh10] ep 6/20 loss 2.5517 val acc 0.8044 F1 0.5677 trans 0.4671 edit 57.9
+[p2_aug_c12_causal_bh10] ep 7/20 loss 2.4512 val acc 0.7771 F1 0.4916 trans 0.4412 edit 55.9
+[p2_aug_c12_causal_bh10] ep 8/20 loss 2.3809 val acc 0.8254 F1 0.5583 trans 0.4486 edit 61.4
+[p2_aug_c12_causal_bh10] ep 9/20 loss 2.2903 val acc 0.8277 F1 0.5982 trans 0.4609 edit 62.4
+[p2_aug_c12_causal_bh10] ep 10/20 loss 2.1284 val acc 0.8094 F1 0.6691 trans 0.4702 edit 60.4
+[p2_aug_c12_causal_bh10] ep 11/20 loss 2.1737 val acc 0.8062 F1 0.5507 trans 0.5028 edit 59.6
+[p2_aug_c12_causal_bh10] ep 12/20 loss 2.0779 val acc 0.8512 F1 0.7180 trans 0.5034 edit 66.1
+[p2_aug_c12_causal_bh10] ep 13/20 loss 2.0082 val acc 0.8290 F1 0.8288 trans 0.4800 edit 58.6
+[p2_aug_c12_causal_bh10] ep 14/20 loss 1.9534 val acc 0.8689 F1 0.8336 trans 0.5034 edit 64.2
+[p2_aug_c12_causal_bh10] ep 15/20 loss 1.9033 val acc 0.8565 F1 0.8320 trans 0.4911 edit 62.7
+[p2_aug_c12_causal_bh10] ep 16/20 loss 1.9063 val acc 0.8683 F1 0.8536 trans 0.5108 edit 58.1
+[p2_aug_c12_causal_bh10] ep 17/20 loss 1.8358 val acc 0.8673 F1 0.8350 trans 0.5015 edit 65.1
+[p2_aug_c12_causal_bh10] ep 18/20 loss 1.8350 val acc 0.8637 F1 0.8563 trans 0.4985 edit 62.0
+[p2_aug_c12_causal_bh10] ep 19/20 loss 1.8124 val acc 0.8665 F1 0.8386 trans 0.5095 edit 64.1
+[p2_aug_c12_causal_bh10] ep 20/20 loss 1.8185 val acc 0.8679 F1 0.8426 trans 0.5083 edit 63.7
+== p2_aug_c12_causal_bh10: val F1 0.8563 | test acc nan F1 nan transWin nan transClass nan [saved to results_real.json]

@@ -1,0 +1,119 @@
+{
+  "stream_raw": {
+    "accuracy": 0.7876751077586207,
+    "macro_f1": 0.6924439106550407,
+    "per_class_f1": [
+      0.5258239055582882,
+      0.6146682188591386,
+      0.5974276527331189,
+      0.7876486382815496,
+      0.7211551198834282,
+      0.9079399286147215
+    ],
+    "per_class_f1_named": {
+      "walking": 0.5258239055582882,
+      "walking_upstairs": 0.6146682188591386,
+      "walking_downstairs": 0.5974276527331189,
+      "sitting": 0.7876486382815496,
+      "standing": 0.7211551198834282,
+      "laying": 0.9079399286147215
+    },
+    "transition_window_accuracy": 0.4196923076923077,
+    "transition_window_timesteps": 1625,
+    "boundary_f1": 0.05901639344262295,
+    "boundary_precision": 0.03225806451612903,
+    "boundary_recall": 0.34615384615384615,
+    "boundary_tp": 27,
+    "boundary_fp": 810,
+    "boundary_fn": 51,
+    "segmental_f1@10": 0.3319502074688797,
+    "segmental_f1@25": 0.3103734439834025,
+    "segmental_f1@50": 0.2721991701244813,
+    "edit_score": 50.933189287485824,
+    "edit_distance_mean": 5.303448275862069,
+    "transition_class_timestep_accuracy": 0.6971902017291066,
+    "transition_class_timesteps": 13880,
+    "non_transition_timestep_accuracy": 0.8084824387011266
+  },
+  "stream_bref": {
+    "accuracy": 0.7920932112068966,
+    "macro_f1": 0.7038249930760715,
+    "per_class_f1": [
+      0.5714285714285715,
+      0.5920786354437699,
+      0.6301003344481605,
+      0.7880107102267254,
+      0.7249614791987673,
+      0.9163702277104337
+    ],
+    "per_class_f1_named": {
+      "walking": 0.5714285714285715,
+      "walking_upstairs": 0.5920786354437699,
+      "walking_downstairs": 0.6301003344481605,
+      "sitting": 0.7880107102267254,
+      "standing": 0.7249614791987673,
+      "laying": 0.9163702277104337
+    },
+    "transition_window_accuracy": 0.44984615384615384,
+    "transition_window_timesteps": 1625,
+    "boundary_f1": 0.19512195121951223,
+    "boundary_precision": 0.1339712918660287,
+    "boundary_recall": 0.358974358974359,
+    "boundary_tp": 28,
+    "boundary_fp": 181,
+    "boundary_fn": 50,
+    "segmental_f1@10": 0.6516464471403813,
+    "segmental_f1@25": 0.6308492201039863,
+    "segmental_f1@50": 0.5961871750433276,
+    "edit_score": 68.83083583083584,
+    "edit_distance_mean": 1.1172413793103448,
+    "transition_class_timestep_accuracy": 0.7126801152737752,
+    "transition_class_timesteps": 13880,
+    "non_transition_timestep_accuracy": 0.8103545394300862
+  },
+  "stream_bref_mindur_left": {
+    "accuracy": 0.7926185344827587,
+    "macro_f1": 0.7041569922344298,
+    "per_class_f1": [
+      0.5714285714285715,
+      0.5920786354437699,
+      0.6301003344481605,
+      0.7881612139184687,
+      0.7262457960001026,
+      0.9169274021675056
+    ],
+    "per_class_f1_named": {
+      "walking": 0.5714285714285715,
+      "walking_upstairs": 0.5920786354437699,
+      "walking_downstairs": 0.6301003344481605,
+      "sitting": 0.7881612139184687,
+      "standing": 0.7262457960001026,
+      "laying": 0.9169274021675056
+    },
+    "transition_window_accuracy": 0.4603076923076923,
+    "transition_window_timesteps": 1625,
+    "boundary_f1": 0.24186046511627907,
+    "boundary_precision": 0.1897810218978102,
+    "boundary_recall": 0.3333333333333333,
+    "boundary_tp": 26,
+    "boundary_fp": 111,
+    "boundary_fn": 52,
+    "segmental_f1@10": 0.7445544554455444,
+    "segmental_f1@25": 0.7207920792079208,
+    "segmental_f1@50": 0.6772277227722772,
+    "edit_score": 74.04761904761905,
+    "edit_distance_mean": 0.6620689655172414,
+    "transition_class_timestep_accuracy": 0.7141210374639769,
+    "transition_class_timesteps": 13880,
+    "non_transition_timestep_accuracy": 0.8106693174287608
+  },
+  "boundary_delay": {
+    "n_matched": 61,
+    "n_missed": 17,
+    "mean_steps": 10.60655737704918,
+    "median_steps": 13.0,
+    "mean_ms": 212.1311475409836,
+    "median_ms": 260.0,
+    "note": "emitted switch position minus GT boundary, tol +-25 steps; excludes the <=15-step algorithmic lag, which adds to it"
+  }
+}

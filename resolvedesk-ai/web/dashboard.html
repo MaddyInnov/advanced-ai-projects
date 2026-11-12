@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ResolveDesk AI — Dashboard</title>
+<style>body{font-family:system-ui,Arial;margin:0;background:#f1f5f9;color:#0f172a}header{background:#4f46e5;color:#fff;padding:16px 5%}
+main{padding:20px 5%;display:grid;gap:18px}.card{background:#fff;border-radius:14px;padding:18px;border:1px solid #e2e8f0}
+input,textarea,select{width:100%;padding:9px;margin:5px 0;border:1px solid #cbd5e1;border-radius:8px}
+button{background:#4f46e5;color:#fff;border:0;padding:9px 16px;border-radius:8px;cursor:pointer;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.stat{font-size:26px;font-weight:800}
+table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #e2e8f0;padding:7px;text-align:left;font-size:14px}
+.pill{padding:2px 8px;border-radius:99px;background:#eef2ff;font-size:12px}</style></head><body>
+<header><h2>ResolveDesk AI — Owner Dashboard</h2><div id="who">Demo login: demo@urbankart.in / demo1234</div></header>
+<main>
+<div class="card" id="loginBox"><h3>Login</h3><input id="email" value="demo@urbankart.in"><input id="pw" type="password" value="demo1234"><button onclick="doLogin()">Login</button> <span id="loginMsg"></span></div>
+<div class="card"><h3>Analytics</h3><div class="stats">
+<div>Total conversations<div class="stat" id="aTotal">–</div></div>
+<div>AI-resolved<div class="stat" id="aRes">–</div></div>
+<div>Deflection rate<div class="stat" id="aDefl">–</div></div>
+<div>Tickets<div class="stat" id="aTick">–</div></div>
+<div>Avg confidence<div class="stat" id="aConf">–</div></div></div><div id="aIntents"></div></div>
+<div class="card"><h3>Knowledge base</h3><input id="kbTitle" placeholder="Article title"><textarea id="kbBody" rows="3" placeholder="Article body"></textarea><button onclick="addKb()">Add article</button><div id="kbList"></div></div>
+<div class="card"><h3>Tickets (priority order)</h3><table><thead><tr><th>ID</th><th>Message</th><th>Intent</th><th>Priority</th><th>Sentiment</th><th>Status</th></tr></thead><tbody id="tickBody"></tbody></table></div>
+<div class="card"><h3>Live chat tester</h3><div id="me"></div><input id="chatMsg" placeholder="Ask like a customer… e.g. How do I track my order?"><button onclick="sendChat()">Send</button><pre id="chatOut" style="white-space:pre-wrap"></pre></div>
+</main>
+<script>
+let token=localStorage.getItem('rd_token')||'', me=null;
+const H=()=>({Authorization:'Bearer '+token,'Content-Type':'application/json'});
+async function doLogin(){const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:pw.value})});const j=await r.json();if(j.token){token=j.token;localStorage.setItem('rd_token',token);loginMsg.textContent='Logged in ✓';refresh();}else loginMsg.textContent='Login failed';}
+async function refresh(){if(!token)return;me=await (await fetch('/api/me',{headers:H()})).json();if(me.name){document.getElementById('me').textContent='Widget key: '+me.widget_key+' · Business: '+me.name;}
+const a=await (await fetch('/api/analytics',{headers:H()})).json();aTotal.textContent=a.total_conversations;aRes.textContent=a.ai_resolved;aDefl.textContent=Math.round(a.deflection_rate*100)+'%';aTick.textContent=a.tickets_created;aConf.textContent=a.avg_confidence;aIntents.textContent='Intents: '+JSON.stringify(a.intent_breakdown);
+const kb=await (await fetch('/api/kb',{headers:H()})).json();kbList.innerHTML=kb.kb.map(k=>'<p><b>'+k.title+'</b></p>').join('');
+const t=await (await fetch('/api/tickets',{headers:H()})).json();tickBody.innerHTML=t.tickets.map(x=>'<tr><td>'+x.id+'</td><td>'+x.message.slice(0,60)+'</td><td>'+x.intent+'</td><td><span class="pill">'+x.priority+'</span></td><td>'+x.sentiment+'</td><td>'+x.status+'</td></tr>').join('');}
+async function addKb(){await fetch('/api/kb',{method:'POST',headers:H(),body:JSON.stringify({title:kbTitle.value,body:kbBody.value})});refresh();}
+async function sendChat(){const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({widget_key:me.widget_key,message:chatMsg.value})});chatOut.textContent=JSON.stringify(await r.json(),null,2);refresh();}
+refresh();
+</script></body></html>

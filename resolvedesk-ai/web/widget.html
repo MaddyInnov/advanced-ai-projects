@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UrbanKart — powered by ResolveDesk AI</title>
+<style>body{font-family:system-ui,Arial;margin:0;background:#fff7ed}header{padding:18px 5%;background:#fff;border-bottom:1px solid #fed7aa}
+main{padding:30px 5%}.chat{position:fixed;right:18px;bottom:18px;width:min(360px,92vw);background:#fff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 12px 32px rgba(0,0,0,.15)}
+.chat h3{background:#ea580c;color:#fff;margin:0;padding:12px;border-radius:16px 16px 0 0}
+#log{height:260px;overflow:auto;padding:12px;font-size:14px}.row{display:flex;gap:8px;padding:10px}input{flex:1;padding:9px;border:1px solid #cbd5e1;border-radius:8px}
+button{background:#ea580c;color:#fff;border:0;border-radius:8px;padding:9px 14px;cursor:pointer}.cite{color:#64748b;font-size:12px}</style></head><body>
+<header><b style="font-size:22px">🛒 UrbanKart</b> — demo store (fictional) · chat widget by ResolveDesk AI</header>
+<main><h1>UrbanKart Demo Store</h1><p>Ask the chat widget (bottom right) things like “How do I track my order?”, “What is your returns policy?” — or something we don't cover, and watch it create a ticket instead of guessing.</p></main>
+<div class="chat"><h3>UrbanKart Support</h3><div id="log"><p><b>Bot:</b> Hi! How can I help you today?</p></div>
+<div class="row"><input id="m" placeholder="Type your question…"><button onclick="send()">Send</button></div></div>
+<script>
+let wk=null;
+(async()=>{const j=await (await fetch('/api/demo-tenants')).json();const uk=j.tenants.find(t=>t.name==='UrbanKart');wk=uk.widget_key;})();
+async function send(){const msg=m.value;m.value='';log.innerHTML+='<p><b>You:</b> '+msg+'</p>';
+const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({widget_key:wk,message:msg})});const j=await r.json();
+log.innerHTML+='<p><b>Bot:</b> '+j.answer+(j.citation?' <span class="cite">[Source: '+j.citation+']</span>':'')+(j.ticket_created?' <span class="cite">(Ticket #'+j.ticket_id+' · '+j.intent+' · '+j.priority+')</span>':'')+'</p>';log.scrollTop=1e6;}
+</script></body></html>

@@ -1,0 +1,295 @@
+{
+  "config": {
+    "chunk_words": 200,
+    "overlap_words": 20,
+    "abstention_threshold": 0.2,
+    "n_chunks": 28
+  },
+  "tuning": {
+    "chosen": {
+      "chunk_words": 200,
+      "overlap_words": 20,
+      "abstention_threshold": 0.2,
+      "n_chunks": 28
+    },
+    "threshold_accuracy_on_eval": 1.0,
+    "min_answerable_top_score": 0.2105,
+    "max_unanswerable_top_score": 0.1919,
+    "grid_top5": [
+      {
+        "chunk_words": 200,
+        "overlap_words": 20,
+        "n_chunks": 28,
+        "recall_at_5_combined": 1.0,
+        "recall_at_3_combined": 1.0
+      },
+      {
+        "chunk_words": 200,
+        "overlap_words": 30,
+        "n_chunks": 28,
+        "recall_at_5_combined": 1.0,
+        "recall_at_3_combined": 1.0
+      },
+      {
+        "chunk_words": 200,
+        "overlap_words": 40,
+        "n_chunks": 28,
+        "recall_at_5_combined": 1.0,
+        "recall_at_3_combined": 1.0
+      },
+      {
+        "chunk_words": 160,
+        "overlap_words": 20,
+        "n_chunks": 42,
+        "recall_at_5_combined": 1.0,
+        "recall_at_3_combined": 1.0
+      },
+      {
+        "chunk_words": 160,
+        "overlap_words": 30,
+        "n_chunks": 42,
+        "recall_at_5_combined": 1.0,
+        "recall_at_3_combined": 1.0
+      }
+    ]
+  },
+  "corpus": {
+    "n_documents": 14,
+    "n_chunks": 28
+  },
+  "eval_set_size": 28,
+  "paraphrase_set_size": 14,
+  "ablation": {
+    "naive_tfidf_only": {
+      "main_recall_at_3": 1.0,
+      "main_recall_at_5": 1.0,
+      "paraphrase_recall_at_3": 0.8571,
+      "paraphrase_recall_at_5": 0.9286
+    },
+    "hybrid_tfidf_bm25_expansion": {
+      "main_recall_at_3": 1.0,
+      "main_recall_at_5": 1.0,
+      "paraphrase_recall_at_3": 0.9286,
+      "paraphrase_recall_at_5": 1.0
+    },
+    "hybrid_plus_rerank": {
+      "main_recall_at_3": 1.0,
+      "main_recall_at_5": 1.0,
+      "paraphrase_recall_at_3": 1.0,
+      "paraphrase_recall_at_5": 1.0
+    }
+  },
+  "metrics": {
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "paraphrase_recall_at_3": 1.0,
+    "paraphrase_recall_at_5": 1.0,
+    "groundedness_rate": 1.0,
+    "answered_questions": 28,
+    "abstention_correctness": 1.0,
+    "unanswerable_questions": 5,
+    "injection_block_rate": 1.0,
+    "injection_block_rate_end_to_end": 1.0,
+    "attack_prompts": 5,
+    "mean_latency_ms": 10.56,
+    "median_latency_ms": 5.29
+  },
+  "per_question": [
+    {
+      "question": "How many characters must a password be at least and how often do passwords expire?",
+      "expected_doc": "password-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "What happens after 5 consecutive failed login attempts and how long is the account locked?",
+      "expected_doc": "password-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "Does remote access over the VPN require multi factor authentication and when does a session disconnect for inactivity?",
+      "expected_doc": "vpn-remote-access-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "What are the device requirements for a laptop to connect over the VPN and what happens if the health check fails?",
+      "expected_doc": "vpn-remote-access-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "What is a Severity 1 incident and within how many minutes must the response start?",
+      "expected_doc": "incident-response-playbook",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "Within how many hours must the regulator be notified of a confirmed personal data breach?",
+      "expected_doc": "incident-response-playbook",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "How should an employee report a phishing message and what button should they use?",
+      "expected_doc": "phishing-response-playbook",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "What happens if an employee entered credentials on a fake phishing page?",
+      "expected_doc": "phishing-response-playbook",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "What is the company policy on paying a ransom in a ransomware attack?",
+      "expected_doc": "ransomware-response-playbook",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "In what priority order are systems recovered from backups after ransomware, starting with domain controllers?",
+      "expected_doc": "ransomware-response-playbook",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "What are the four data classification levels and what is Restricted data?",
+      "expected_doc": "data-classification-and-handling-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "What does the data loss prevention system monitor email and web uploads for?",
+      "expected_doc": "data-classification-and-handling-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "Is cryptocurrency mining on company hardware a prohibited use?",
+      "expected_doc": "acceptable-use-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "How can employees install new software and where must software be installed from?",
+      "expected_doc": "acceptable-use-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "How is administrator access granted under the principle of least privilege and what is a separate privileged account?",
+      "expected_doc": "access-control-and-privilege-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "How often are access reviews done for production systems and when are inactive accounts disabled?",
+      "expected_doc": "access-control-and-privilege-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "What is the 3-2-1 backup rule for copies of data and media types?",
+      "expected_doc": "backup-and-disaster-recovery-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "What is the Recovery Time Objective RTO for critical customer systems?",
+      "expected_doc": "backup-and-disaster-recovery-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "Within how many hours must a lost or stolen BYOD device be reported to the helpdesk?",
+      "expected_doc": "bring-your-own-device-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "What can the company wipe from a personal BYOD device and what is the work container?",
+      "expected_doc": "bring-your-own-device-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "Within how many days must new employees complete security awareness training?",
+      "expected_doc": "security-awareness-and-training-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "How often are simulated phishing campaigns run and what happens after a click?",
+      "expected_doc": "security-awareness-and-training-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "Within how many days must a critical vulnerability with CVSS 9.0 on an internet facing system be patched?",
+      "expected_doc": "vulnerability-management-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "How long do medium severity vulnerabilities have to be patched?",
+      "expected_doc": "vulnerability-management-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "How many business days before a start date must Human Resources notify IT about a new joiner onboarding?",
+      "expected_doc": "employee-onboarding-and-offboarding-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "Within how many business days must equipment be returned during offboarding after the last day?",
+      "expected_doc": "employee-onboarding-and-offboarding-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "How long are customer account records retained after an account closes?",
+      "expected_doc": "data-retention-and-privacy-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    },
+    {
+      "question": "Within how many days must a privacy rights request for access to personal data be answered?",
+      "expected_doc": "data-retention-and-privacy-policy",
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "abstained": false
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "lookahead": 64,
+  "stream_raw": {
+    "accuracy": 0.8391029094827587,
+    "macro_f1": 0.771035675759259,
+    "per_class_f1": [
+      0.6507936507936508,
+      0.711975167456298,
+      0.7121548714693748,
+      0.8386318665787242,
+      0.7747358309317965,
+      0.9379226673257094
+    ],
+    "per_class_f1_named": {
+      "walking": 0.6507936507936508,
+      "walking_upstairs": 0.711975167456298,
+      "walking_downstairs": 0.7121548714693748,
+      "sitting": 0.8386318665787242,
+      "standing": 0.7747358309317965,
+      "laying": 0.9379226673257094
+    },
+    "transition_window_accuracy": 0.5975384615384616,
+    "transition_window_timesteps": 1625,
+    "boundary_f1": 0.22417582417582418,
+    "boundary_precision": 0.13527851458885942,
+    "boundary_recall": 0.6538461538461539,
+    "boundary_tp": 51,
+    "boundary_fp": 326,
+    "boundary_fn": 27,
+    "segmental_f1@10": 0.5476510067114094,
+    "segmental_f1@25": 0.5208053691275168,
+    "segmental_f1@50": 0.48322147651006725,
+    "edit_score": 69.09790271707108,
+    "edit_distance_mean": 2.1241379310344826,
+    "transition_class_timestep_accuracy": 0.842507204610951,
+    "transition_class_timesteps": 13880,
+    "non_transition_timestep_accuracy": 0.8383200795228628
+  },
+  "stream_bref": {
+    "accuracy": 0.8516567887931035,
+    "macro_f1": 0.8219139448604933,
+    "per_class_f1": [
+      0.8561872909698998,
+      0.6541041200894282,
+      0.8471714044469462,
+      0.8462093595603339,
+      0.785789431091689,
+      0.9420220630046627
+    ],
+    "per_class_f1_named": {
+      "walking": 0.8561872909698998,
+      "walking_upstairs": 0.6541041200894282,
+      "walking_downstairs": 0.8471714044469462,
+      "sitting": 0.8462093595603339,
+      "standing": 0.785789431091689,
+      "laying": 0.9420220630046627
+    },
+    "transition_window_accuracy": 0.5907692307692308,
+    "transition_window_timesteps": 1625,
+    "boundary_f1": 0.45333333333333325,
+    "boundary_precision": 0.3469387755102041,
+    "boundary_recall": 0.6538461538461539,
+    "boundary_tp": 51,
+    "boundary_fp": 96,
+    "boundary_fn": 27,
+    "segmental_f1@10": 0.7650485436893205,
+    "segmental_f1@25": 0.7378640776699029,
+    "segmental_f1@50": 0.7145631067961166,
+    "edit_score": 80.88401253918495,
+    "edit_distance_mean": 0.5862068965517241,
+    "transition_class_timestep_accuracy": 0.8653458213256484,
+    "transition_class_timesteps": 13880,
+    "non_transition_timestep_accuracy": 0.8485089463220676
+  },
+  "stream_bref_mindur_left": {
+    "accuracy": 0.8519800646551724,
+    "macro_f1": 0.8220916692000659,
+    "per_class_f1": [
+      0.8571428571428571,
+      0.6532695374800638,
+      0.8471714044469462,
+      0.8473760231102552,
+      0.7865447384748185,
+      0.9410454545454545
+    ],
+    "per_class_f1_named": {
+      "walking": 0.8571428571428571,
+      "walking_upstairs": 0.6532695374800638,
+      "walking_downstairs": 0.8471714044469462,
+      "sitting": 0.8473760231102552,
+      "standing": 0.7865447384748185,
+      "laying": 0.9410454545454545
+    },
+    "transition_window_accuracy": 0.5956923076923077,
+    "transition_window_timesteps": 1625,
+    "boundary_f1": 0.4942528735632184,
+    "boundary_precision": 0.4479166666666667,
+    "boundary_recall": 0.5512820512820513,
+    "boundary_tp": 43,
+    "boundary_fp": 53,
+    "boundary_fn": 35,
+    "segmental_f1@10": 0.8362068965517241,
+    "segmental_f1@25": 0.8189655172413793,
+    "segmental_f1@50": 0.7887931034482759,
+    "edit_score": 83.03448275862068,
+    "edit_distance_mean": 0.3448275862068966,
+    "transition_class_timestep_accuracy": 0.8651296829971181,
+    "transition_class_timesteps": 13880,
+    "non_transition_timestep_accuracy": 0.8489562624254473
+  },
+  "boundary_delay": {
+    "n_matched": 66,
+    "n_missed": 12,
+    "mean_steps": 5.893939393939394,
+    "median_steps": 5.5,
+    "mean_ms": 117.87878787878788,
+    "median_ms": 110.0,
+    "note": "emitted switch position minus GT boundary, tol +-25 steps; excludes the algorithmic delay (lookahead + up to 15 steps), which adds to it"
+  }
+}

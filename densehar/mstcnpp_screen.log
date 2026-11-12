@@ -1,0 +1,22 @@
+splits: train 862 val 145 test 177
+[p2_aug_c12_mstcnpp] ep 1/20 loss 7.7151 val acc 0.5517 F1 0.2722 trans 0.3963 edit 46.7
+[p2_aug_c12_mstcnpp] ep 2/20 loss 4.3068 val acc 0.8002 F1 0.5693 trans 0.5052 edit 60.1
+[p2_aug_c12_mstcnpp] ep 3/20 loss 3.4300 val acc 0.8360 F1 0.5206 trans 0.5458 edit 74.3
+[p2_aug_c12_mstcnpp] ep 4/20 loss 3.3453 val acc 0.8215 F1 0.5334 trans 0.4849 edit 64.7
+[p2_aug_c12_mstcnpp] ep 5/20 loss 2.7037 val acc 0.8305 F1 0.5220 trans 0.5711 edit 73.7
+[p2_aug_c12_mstcnpp] ep 6/20 loss 2.3296 val acc 0.8523 F1 0.7044 trans 0.5994 edit 70.4
+[p2_aug_c12_mstcnpp] ep 7/20 loss 2.2123 val acc 0.8137 F1 0.5135 trans 0.5502 edit 71.9
+[p2_aug_c12_mstcnpp] ep 8/20 loss 2.1138 val acc 0.9180 F1 0.9372 trans 0.6135 edit 79.9
+[p2_aug_c12_mstcnpp] ep 9/20 loss 2.3786 val acc 0.9096 F1 0.9063 trans 0.5698 edit 79.1
+[p2_aug_c12_mstcnpp] ep 10/20 loss 2.1650 val acc 0.9051 F1 0.7453 trans 0.6129 edit 84.5
+[p2_aug_c12_mstcnpp] ep 11/20 loss 1.8967 val acc 0.9177 F1 0.7534 trans 0.6098 edit 83.9
+[p2_aug_c12_mstcnpp] ep 12/20 loss 1.5747 val acc 0.9366 F1 0.8585 trans 0.6449 edit 86.0
+[p2_aug_c12_mstcnpp] ep 13/20 loss 1.3695 val acc 0.9234 F1 0.9570 trans 0.6105 edit 85.7
+[p2_aug_c12_mstcnpp] ep 14/20 loss 1.3194 val acc 0.9482 F1 0.9672 trans 0.6265 edit 88.3
+[p2_aug_c12_mstcnpp] ep 15/20 loss 1.2733 val acc 0.9387 F1 0.9657 trans 0.6166 edit 88.2
+[p2_aug_c12_mstcnpp] ep 16/20 loss 1.2385 val acc 0.9308 F1 0.9620 trans 0.6388 edit 87.5
+[p2_aug_c12_mstcnpp] ep 17/20 loss 1.1218 val acc 0.9482 F1 0.9710 trans 0.6412 edit 87.3
+[p2_aug_c12_mstcnpp] ep 18/20 loss 1.1369 val acc 0.9481 F1 0.9712 trans 0.6560 edit 88.9
+[p2_aug_c12_mstcnpp] ep 19/20 loss 1.1214 val acc 0.9504 F1 0.9725 trans 0.6320 edit 90.1
+[p2_aug_c12_mstcnpp] ep 20/20 loss 1.1403 val acc 0.9502 F1 0.9724 trans 0.6375 edit 90.0
+== p2_aug_c12_mstcnpp: val F1 0.9725 | test acc nan F1 nan transWin nan transClass nan [saved to results_real.json]

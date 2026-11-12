@@ -1,0 +1,28 @@
+classifier real-test accuracy: 99.75%
+{
+  "timesteps_T": 300,
+  "noise_pred_mse_heldout": 0.0666,
+  "classifier_real_test_accuracy_pct": 99.75,
+  "ddpm": {
+    "steps": 300,
+    "fidelity_pct": 98.44,
+    "seconds_for_64_samples": 87.4,
+    "diversity_pairwise_l2": 10.758
+  },
+  "ddim50": {
+    "steps": 50,
+    "fidelity_pct": 85.94,
+    "seconds_for_64_samples": 13.4,
+    "diversity_pairwise_l2": 10.301
+  },
+  "real_data_diversity_pairwise_l2": 11.599,
+  "guidance_ablation_fidelity_pct": {
+    "0.0": 28.12,
+    "1.5": 85.94,
+    "3.0": 54.69
+  },
+  "model_params": 179281,
+  "train_epochs": 90,
+  "final_train_loss": 0.06127,
+  "train_seconds": 1040.8
+}

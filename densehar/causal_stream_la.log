@@ -1,0 +1,14 @@
+running tiled (semi-online) inference on val, lookahead=64 ...
+[stream raw]         acc 0.8391 F1 0.7710 transWin 0.5975 transClass 0.8425 bF1 0.2242 seg25 0.5208 edit 69.1
+[stream bref]        acc 0.8517 F1 0.8219 transWin 0.5908 transClass 0.8653 bF1 0.4533 seg25 0.7379 edit 80.9
+[stream bref+mindL]  acc 0.8520 F1 0.8221 transWin 0.5957 transClass 0.8651 bF1 0.4943 seg25 0.8190 edit 83.0
+boundary delay: matched 66 missed 12 mean +5.9 steps (+118 ms) median +6 steps (+110 ms), plus lookahead 64..79 steps (1280..1580 ms) algorithmic delay
+saved /home/hatch/workspace/advanced-ai-projects/densehar/causal_stream_val_la64.json
+offline refs (val): raw seg25 0.8078 bF1 0.4444 | bref seg25 0.8690 bF1 0.5131 | bref+mindur seg25 0.9147 bF1 0.5629 edit 91.0
+running tiled (semi-online) inference on val, lookahead=128 ...
+[stream raw]         acc 0.8657 F1 0.8233 transWin 0.6394 transClass 0.8508 bF1 0.2759 seg25 0.6364 edit 74.5
+[stream bref]        acc 0.8955 F1 0.9388 transWin 0.6185 transClass 0.8781 bF1 0.5128 seg25 0.8165 edit 87.4
+[stream bref+mindL]  acc 0.8954 F1 0.9388 transWin 0.6105 transClass 0.8782 bF1 0.5311 seg25 0.8437 edit 87.4
+boundary delay: matched 69 missed 9 mean +5.6 steps (+112 ms) median +4 steps (+80 ms), plus lookahead 128..143 steps (2560..2860 ms) algorithmic delay
+saved /home/hatch/workspace/advanced-ai-projects/densehar/causal_stream_val_la128.json
+offline refs (val): raw seg25 0.8078 bF1 0.4444 | bref seg25 0.8690 bF1 0.5131 | bref+mindur seg25 0.9147 bF1 0.5629 edit 91.0

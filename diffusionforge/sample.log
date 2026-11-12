@@ -1,0 +1,6 @@
+saved samples_ddpm.png  (32 samples)
+saved samples_ddim50.png  (32 samples)
+saved samples_cfg_w0.0.png  (32 samples)
+saved samples_cfg_w1.5.png  (32 samples)
+saved samples_cfg_w3.0.png  (32 samples)
+DDPM 300 steps: 37.5s | DDIM 50 steps: 7.0s for 32 samples

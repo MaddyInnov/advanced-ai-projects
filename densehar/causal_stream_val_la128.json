@@ -1,0 +1,120 @@
+{
+  "lookahead": 128,
+  "stream_raw": {
+    "accuracy": 0.8657327586206897,
+    "macro_f1": 0.8232961585478925,
+    "per_class_f1": [
+      0.7352160270335507,
+      0.791098844229774,
+      0.7963414634146341,
+      0.8584606731039656,
+      0.8079283683609214,
+      0.9507315751445087
+    ],
+    "per_class_f1_named": {
+      "walking": 0.7352160270335507,
+      "walking_upstairs": 0.791098844229774,
+      "walking_downstairs": 0.7963414634146341,
+      "sitting": 0.8584606731039656,
+      "standing": 0.8079283683609214,
+      "laying": 0.9507315751445087
+    },
+    "transition_window_accuracy": 0.6393846153846154,
+    "transition_window_timesteps": 1625,
+    "boundary_f1": 0.27586206896551724,
+    "boundary_precision": 0.17777777777777778,
+    "boundary_recall": 0.6153846153846154,
+    "boundary_tp": 48,
+    "boundary_fp": 222,
+    "boundary_fn": 30,
+    "segmental_f1@10": 0.658307210031348,
+    "segmental_f1@25": 0.6363636363636364,
+    "segmental_f1@50": 0.5736677115987461,
+    "edit_score": 74.47072467762123,
+    "edit_distance_mean": 1.4206896551724137,
+    "transition_class_timestep_accuracy": 0.850792507204611,
+    "transition_class_timesteps": 13880,
+    "non_transition_timestep_accuracy": 0.8691683233929755
+  },
+  "stream_bref": {
+    "accuracy": 0.8955145474137931,
+    "macro_f1": 0.9388146104668383,
+    "per_class_f1": [
+      1.0,
+      0.9787803479258268,
+      1.0,
+      0.8719540702784583,
+      0.8239936858721391,
+      0.9581595587246066
+    ],
+    "per_class_f1_named": {
+      "walking": 1.0,
+      "walking_upstairs": 0.9787803479258268,
+      "walking_downstairs": 1.0,
+      "sitting": 0.8719540702784583,
+      "standing": 0.8239936858721391,
+      "laying": 0.9581595587246066
+    },
+    "transition_window_accuracy": 0.6184615384615385,
+    "transition_window_timesteps": 1625,
+    "boundary_f1": 0.5128205128205128,
+    "boundary_precision": 0.42735042735042733,
+    "boundary_recall": 0.6410256410256411,
+    "boundary_tp": 50,
+    "boundary_fp": 67,
+    "boundary_fn": 28,
+    "segmental_f1@10": 0.8247422680412372,
+    "segmental_f1@25": 0.8164948453608247,
+    "segmental_f1@50": 0.7835051546391752,
+    "edit_score": 87.38095238095238,
+    "edit_distance_mean": 0.38620689655172413,
+    "transition_class_timestep_accuracy": 0.8780979827089337,
+    "transition_class_timesteps": 13880,
+    "non_transition_timestep_accuracy": 0.899519549370444
+  },
+  "stream_bref_mindur_left": {
+    "accuracy": 0.895447198275862,
+    "macro_f1": 0.9387568214554712,
+    "per_class_f1": [
+      1.0,
+      0.9787803479258268,
+      1.0,
+      0.8723209104692736,
+      0.8234304785430846,
+      0.9580091917946417
+    ],
+    "per_class_f1_named": {
+      "walking": 1.0,
+      "walking_upstairs": 0.9787803479258268,
+      "walking_downstairs": 1.0,
+      "sitting": 0.8723209104692736,
+      "standing": 0.8234304785430846,
+      "laying": 0.9580091917946417
+    },
+    "transition_window_accuracy": 0.6104615384615385,
+    "transition_window_timesteps": 1625,
+    "boundary_f1": 0.5310734463276835,
+    "boundary_precision": 0.47474747474747475,
+    "boundary_recall": 0.6025641025641025,
+    "boundary_tp": 47,
+    "boundary_fp": 52,
+    "boundary_fn": 31,
+    "segmental_f1@10": 0.8522483940042827,
+    "segmental_f1@25": 0.8436830835117773,
+    "segmental_f1@50": 0.8137044967880086,
+    "edit_score": 87.44827586206897,
+    "edit_distance_mean": 0.30344827586206896,
+    "transition_class_timestep_accuracy": 0.8781700288184437,
+    "transition_class_timesteps": 13880,
+    "non_transition_timestep_accuracy": 0.8994201457919152
+  },
+  "boundary_delay": {
+    "n_matched": 69,
+    "n_missed": 9,
+    "mean_steps": 5.608695652173913,
+    "median_steps": 4.0,
+    "mean_ms": 112.17391304347827,
+    "median_ms": 80.0,
+    "note": "emitted switch position minus GT boundary, tol +-25 steps; excludes the algorithmic delay (lookahead + up to 15 steps), which adds to it"
+  }
+}
