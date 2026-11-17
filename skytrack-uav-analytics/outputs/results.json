@@ -1,0 +1,72 @@
+{
+  "model": "YOLOv8n (COCO pretrained, Ultralytics)",
+  "device": "CPU",
+  "detection_coco128": {
+    "mAP50": 0.6066964536374996,
+    "mAP50_95": 0.4456748723963751,
+    "precision_mean": 0.638566500599946,
+    "recall_mean": 0.5361413293550935,
+    "note": "COCO128 = first 128 COCO train2017 images (Ultralytics mirror); small-sample estimate, not full COCO val2017."
+  },
+  "coco128_images_found": 40,
+  "detection_latency_cpu_ms": {
+    "mean": 114.49097714814924,
+    "p50": 107.70199200001684,
+    "p95": 191.96804370001246,
+    "n": 27
+  },
+  "enhancement_synthetic_lowlight": {
+    "n_images": 30,
+    "psnr_before": 14.05722513063945,
+    "psnr_after": 15.56506289960586,
+    "ssim_before": 0.7647137869189091,
+    "ssim_after": 0.8071412016649273,
+    "note": "Degradation is synthetic (gamma 2.2 + Gaussian noise sigma 12) and labelled as such; enhancement recovery is measured against the clean originals."
+  },
+  "tracking_vtest": {
+    "video": "vtest.avi (OpenCV sample surveillance video, elevated camera)",
+    "frames_processed": 450,
+    "resolution": "768x576",
+    "unique_confirmed_tracks": 35,
+    "tracks_by_class": {
+      "person": 29,
+      "truck": 1,
+      "car": 1,
+      "bird": 3,
+      "skis": 1
+    },
+    "mean_detections_per_frame": 7.895555555555555,
+    "end_to_end_fps_cpu": 10.927060333595824,
+    "frame_latency_ms": {
+      "mean": 91.51592189213481,
+      "p50": 92.61235799999668,
+      "p95": 117.7583085999856
+    },
+    "note": "No identity ground truth for vtest.avi; MOTA/IDF1 are NOT claimed. Unique-track count includes fragmentation from occlusions \u2014 reported as observed."
+  },
+  "enhancement_real_lolv2": {
+    "dataset": "LOLv2-Real test split (real paired photographs, exposure-varied capture)",
+    "n_pairs": 100,
+    "psnr_raw_vs_gt": 9.718215782037019,
+    "psnr_enhanced_vs_gt": 11.470903636827595,
+    "ssim_raw_vs_gt": 0.168823379781682,
+    "ssim_enhanced_vs_gt": 0.40047619186415007,
+    "note": "Both the low-light inputs and the normal-light references are real photographs; nothing in this evaluation is synthetic."
+  },
+  "detection_exdark_lowlight": {
+    "dataset": "ExDark test split (734 real low-light images, human annotations; labels remapped ExDark->COCO)",
+    "enhancement_variant": "enhance_frame_fast (CLAHE + unsharp, no NLM) for the enhanced copy",
+    "raw": {
+      "mAP50": 0.4849852480006871,
+      "mAP50_95": 0.2528265261163066,
+      "precision_mean": 0.5541067915186096,
+      "recall_mean": 0.45966827030079843
+    },
+    "enhanced": {
+      "mAP50": 0.3739435362404602,
+      "mAP50_95": 0.19169510924949612,
+      "precision_mean": 0.5285398177908639,
+      "recall_mean": 0.3478982562587951
+    }
+  }
+}
